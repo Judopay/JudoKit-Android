@@ -275,4 +275,16 @@
     <string name="generate_payment_session_title">Generate payment session</string>
     <string name="generate_payment_session_summary">Tap to generate a new payment session using the token/secret pair from the above.</string>
 
+    <string name="import_settings">Import Settings</string>
+    <string name="export_settings">Export Settings</string>
+    <string name="import_settings_title">Import Settings from JSON</string>
+    <string name="import_settings_hint">Paste JSON here…</string>
+    <string name="import_action">Import</string>
+    <string name="import_from_file">Choose File</string>
+    <string name="import_settings_success">Settings imported successfully</string>
+    <string name="import_settings_invalid_json">Invalid JSON: %1$s</string>
+    <string name="import_settings_error">Import failed: %1$s</string>
+    <string name="import_read_file_error">Failed to read file: %1$s</string>
+    <string name="export_settings_copied">Settings copied to clipboard</string>
+
 </resources>

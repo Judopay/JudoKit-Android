@@ -19,10 +19,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.judopay.judo3ds2.model.CompletionEvent
-import com.judopay.judo3ds2.model.ProtocolErrorEvent
-import com.judopay.judo3ds2.model.RuntimeErrorEvent
-import com.judopay.judo3ds2.transaction.challenge.ChallengeStatusReceiver
+import com.judopay.judokit.android.JudoCardTransactionCallback
+import com.judopay.judokit.android.JudoCardTransactionClient
 import com.judopay.judokit.android.JudoSharedAction
 import com.judopay.judokit.android.JudoSharedViewModel
 import com.judopay.judokit.android.R
@@ -33,10 +31,6 @@ import com.judopay.judokit.android.cardRepository
 import com.judopay.judokit.android.databinding.PaymentMethodsFragmentBinding
 import com.judopay.judokit.android.judo
 import com.judopay.judokit.android.model.JudoPaymentResult
-import com.judopay.judokit.android.service.CardTransactionRepository
-import com.judopay.judokit.android.service.THREE_DS_TWO_MIN_TIMEOUT
-import com.judopay.judokit.android.service.ThreeDSSDKChallengeStatus
-import com.judopay.judokit.android.service.toFormattedEventString
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.common.ANIMATION_DURATION_150
 import com.judopay.judokit.android.ui.common.LANDSCAPE_COLLAPSE_THRESHOLD
@@ -70,13 +64,13 @@ class PaymentMethodsFragment : Fragment() {
             PaymentMethodsViewModel(
                 CardDate(),
                 cardRepository(),
-                CardTransactionRepository.create(requireContext(), judo),
                 requireActivity().application,
                 judo,
             )
         }
     }
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
+    private val transactionClient by lazy { JudoCardTransactionClient.create(requireContext(), judo) }
     private var viewBinding: PaymentMethodsFragmentBinding? = null
     private val binding get() = viewBinding!!
 
@@ -135,36 +129,31 @@ class PaymentMethodsFragment : Fragment() {
                     findNavController()
                         .currentBackStackEntry
                         ?.savedStateHandle
-                        ?.getStateFlow(USER_CANCELLED, false)
-                        ?.filter { it }
-                        ?.collect { viewModel.send(PaymentMethodsAction.UpdateButtonState(true)) }
+                        ?.let { handle ->
+                            handle
+                                .getStateFlow(USER_CANCELLED, false)
+                                .filter { it }
+                                .collect {
+                                    // Reset to false so the next cancel triggers a fresh
+                                    // false -> true emission.
+                                    handle[USER_CANCELLED] = false
+                                    viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
+                                }
+                        }
                 }
-            }
-        }
-
-        // repeatOnLifecycle(STARTED) is safe here because StateFlow replays its current value when
-        // STARTED is re-entered, so a recreated Fragment will immediately receive any pending challenge.
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.pendingChallenge.filterNotNull().collect { data ->
-                    data.transaction.doChallenge(
-                        requireActivity(),
-                        data.challengeParameters,
-                        object : ChallengeStatusReceiver {
-                            override fun completed(event: CompletionEvent) = viewModel.onChallengeResult(event.toFormattedEventString())
-
-                            override fun cancelled() = viewModel.onChallengeResult(ThreeDSSDKChallengeStatus.CANCELLED)
-
-                            override fun protocolError(event: ProtocolErrorEvent) =
-                                viewModel.onChallengeResult(event.toFormattedEventString())
-
-                            override fun runtimeError(event: RuntimeErrorEvent) =
-                                viewModel.onChallengeResult(event.toFormattedEventString())
-
-                            override fun timedout() = viewModel.onChallengeResult(ThreeDSSDKChallengeStatus.TIMEOUT)
-                        },
-                        THREE_DS_TWO_MIN_TIMEOUT,
-                    )
+                launch {
+                    viewModel.startTransactionEffect.collect { effect ->
+                        val callback =
+                            JudoCardTransactionCallback { result ->
+                                viewModel.send(PaymentMethodsAction.TransactionResult(result))
+                            }
+                        when (effect) {
+                            is StartTransactionEffect.PayWithToken ->
+                                transactionClient.paymentWithToken(requireActivity(), effect.details, callback)
+                            is StartTransactionEffect.PreAuthWithToken ->
+                                transactionClient.preAuthWithToken(requireActivity(), effect.details, callback)
+                        }
+                    }
                 }
             }
         }

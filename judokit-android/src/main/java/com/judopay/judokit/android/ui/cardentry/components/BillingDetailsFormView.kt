@@ -87,10 +87,22 @@ class BillingDetailsFormView
         }
 
         override fun onViewWillAppear() {
+            val savedAdminDivisionIsoCode = model.administrativeDivision
             selectedCountry = countries.firstOrNull { it.numericCode == model.countryCode }
             editTextForType(BillingDetailsFieldType.COUNTRY).apply {
                 val text = selectedCountry?.name ?: ""
                 setText(text)
+            }
+            if (savedAdminDivisionIsoCode.isNotEmpty()) {
+                val divisionName =
+                    selectedCountry
+                        ?.adminDivisionConfig()
+                        ?.divisions
+                        ?.firstOrNull { it.isoCode == savedAdminDivisionIsoCode }
+                        ?.name ?: ""
+                if (divisionName.isNotEmpty()) {
+                    editTextForType(BillingDetailsFieldType.ADMINISTRATIVE_DIVISION).setText(divisionName)
+                }
             }
         }
 
