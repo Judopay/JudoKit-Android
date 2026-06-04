@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     `kotlin-dsl`
@@ -14,8 +15,8 @@ java {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 
@@ -25,8 +26,7 @@ dependencies {
     compileOnly(libs.nexus.publish.gradle.plugin)
     compileOnly(libs.kotlin.binary.compatibility.validator)
 
-    compileOnly(libs.bundles.dokka)
-    runtimeOnly(libs.bundles.dokka)
+    compileOnly(libs.dokka.gradle.plugin)
 
     compileOnly(libs.kover.gradle.plugin)
     compileOnly(libs.ktlint.gradle.plugin)

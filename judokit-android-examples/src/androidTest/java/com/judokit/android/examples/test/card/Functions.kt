@@ -157,11 +157,9 @@ fun fillBillingDetails(
 
     Thread.sleep(500)
 
-    if (country == "India" || country == "China") {
-        if (state != null) {
-            fillTextField(SDK.id.administrativeDivisionTextInputEditText, state)
-            onView(withText(state)).perform(click())
-        }
+    if ((country == "India" || country == "China") && state != null) {
+        fillTextField(SDK.id.administrativeDivisionTextInputEditText, state)
+        onView(withText(state)).perform(click())
     }
 
     fillTextField(SDK.id.mobileNumberTextInputEditText, phone)

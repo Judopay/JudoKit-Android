@@ -175,12 +175,9 @@ fun Transaction.toThreeDSecureTwo(
     var myScaExemption = judo.scaExemption
     var myChallengeRequestIndicator = judo.challengeRequestIndicator
 
-    if (overrides != null) {
-        myScaExemption = overrides.exemption
-    }
-
-    if (overrides != null) {
-        myChallengeRequestIndicator = overrides.challengeRequestIndicator
+    overrides?.let {
+        myScaExemption = it.exemption
+        myChallengeRequestIndicator = it.challengeRequestIndicator
     }
 
     return ThreeDSecureTwo

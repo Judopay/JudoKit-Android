@@ -22,3 +22,7 @@
 
 # Prevents crash when using Kotlin reflections on SDK 23
 -keep class kotlin.Metadata { *; }
+
+# Keep the Retrofit interface and all model classes in the apiclient package
+# with their original names.
+-keep class com.judokit.android.examples.apiclient.** { *; }

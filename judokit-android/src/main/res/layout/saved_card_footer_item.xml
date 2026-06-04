@@ -15,6 +15,9 @@
         android:layout_height="wrap_content"
         android:text="@string/jp_add_card"
         app:icon="@drawable/ic_add_card"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/space_6"
+        app:iconTint="@color/jpBlackColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

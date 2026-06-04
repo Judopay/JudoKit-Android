@@ -5,9 +5,13 @@ import com.judopay.judokit.android.R
 import kotlinx.parcelize.Parcelize
 
 /**
- * A set of values that is used to invoke any of the defined payment flows. It is a mandatory
- * parameter when creating a [com.judopay.judokit.android.Judo] configuration object through it's builder.
- * @see com.judopay.judokit.android.Judo.Builder
+ * A set of values representing the available payment flows in the Judo SDK.
+ *
+ * The payment widget type is now determined by the [com.judopay.judokit.android.JudoActivityResultContracts]
+ * subclass you register (e.g. [com.judopay.judokit.android.JudoActivityResultContracts.CardPayment]),
+ * rather than being passed to [com.judopay.judokit.android.Judo.Builder].
+ *
+ * @see com.judopay.judokit.android.JudoActivityResultContracts
  */
 @Parcelize
 enum class PaymentWidgetType : Parcelable {

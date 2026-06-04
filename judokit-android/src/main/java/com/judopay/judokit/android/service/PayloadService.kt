@@ -21,6 +21,13 @@ class PayloadService(
 
     private fun getThreeDSecureInfo(): ThreeDSecure = ThreeDSecure(getBrowserInfo())
 
-    @Suppress("SwallowedException")
-    private fun getBrowserInfo(): Browser = Browser(WebSettings.getDefaultUserAgent(context))
+    private fun getBrowserInfo(): Browser {
+        // getDefaultUserAgent requires an Activity context; System.getProperty may throw
+        // SecurityException in restricted profiles — both are caught, empty string is the last resort.
+        val userAgent =
+            runCatching { WebSettings.getDefaultUserAgent(context) }
+                .recoverCatching { System.getProperty("http.agent") ?: "" }
+                .getOrDefault("")
+        return Browser(userAgent)
+    }
 }

@@ -10,13 +10,12 @@ class NetworkTokenisationDetails(
     val virtualPan: VirtualPan? = null,
     val accountDetailsUpdated: Boolean? = null,
 ) : Parcelable {
-    override fun toString(): String {
-        return """
+    override fun toString(): String =
+        """
             NetworkTokenisationDetails(
             networkTokenProvisioned=$networkTokenProvisioned,
             networkTokenUsed=$networkTokenUsed,
             virtualPan=$virtualPan,
             accountDetailsUpdated=$accountDetailsUpdated)
         """
-    }
 }

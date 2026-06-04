@@ -1,10 +1,8 @@
 package com.judopay.judokit.android
 
 import android.app.Activity
-import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import androidx.annotation.RequiresApi
 import com.judopay.judokit.android.api.model.Authorization
 import com.judopay.judokit.android.api.model.request.Address
 import com.judopay.judokit.android.api.model.response.CardToken
@@ -67,6 +65,12 @@ class Judo internal constructor(
     val supportedCardNetworks: Array<CardNetwork>,
     val primaryAccountDetails: PrimaryAccountDetails?,
     val googlePayConfiguration: GooglePayConfiguration?,
+    @Deprecated(
+        message =
+            "The payment widget type is now inferred from the JudoActivityResultContracts subclass " +
+                "you register (e.g. JudoActivityResultContracts.CardPayment()). " +
+                "This property will be removed in a future major version.",
+    )
     val paymentWidgetType: PaymentWidgetType,
     val address: Address?,
     val initialRecurringPayment: Boolean?,
@@ -89,13 +93,25 @@ class Judo internal constructor(
     val extras: Bundle,
 ) : Parcelable {
     /**
-     * Builder class to create a [Judo] object since it's constructor is private
-     * @param paymentWidgetType Property used to decide which payment widget to invoke for a transaction
+     * Builder class to create a [Judo] object.
+     *
+     * The payment widget type is now determined by the [JudoActivityResultContracts] subclass you
+     * register (e.g. [JudoActivityResultContracts.CardPayment]). Build a [Judo] instance with
+     * this no-arg constructor and pass it to your launcher:
+     *
+     * ```kotlin
+     * val judo = Judo.Builder()
+     *     .setJudoId("your-judo-id")
+     *     // ...other configuration...
+     *     .build()
+     *
+     * val launcher = registerForActivityResult(JudoActivityResultContracts.CardPayment()) { result -> ... }
+     * launcher.launch(judo)
+     * ```
      */
     @Suppress("TooManyFunctions")
-    class Builder(
-        private val paymentWidgetType: PaymentWidgetType,
-    ) {
+    class Builder() {
+        private var paymentWidgetType: PaymentWidgetType? = null
         private var judoId: String? = null
         private var authorization: Authorization? = null
         private var isSandboxed: Boolean? = null
@@ -124,6 +140,22 @@ class Judo internal constructor(
         private var recommendationConfiguration: RecommendationConfiguration? = null
         private var disableNetworkTokenisation: Boolean = false
         private var extras: Bundle = Bundle()
+
+        /**
+         * @param paymentWidgetType Property used to decide which payment widget to invoke for a transaction.
+         * @deprecated Use [Judo.Builder] (no-arg) and register a [JudoActivityResultContracts]
+         * subclass to specify the payment widget type instead.
+         */
+        @Deprecated(
+            message =
+                "Specify the payment widget type by registering a JudoActivityResultContracts subclass " +
+                    "(e.g. JudoActivityResultContracts.CardPayment()) instead of passing it to the Builder. " +
+                    "Use Judo.Builder() (no-arg) when building the configuration.",
+            replaceWith = ReplaceWith("Judo.Builder()"),
+        )
+        constructor(paymentWidgetType: PaymentWidgetType) : this() {
+            this.paymentWidgetType = paymentWidgetType
+        }
 
         /**
          * Sets the unique merchant ID
@@ -284,8 +316,6 @@ class Judo internal constructor(
 
         fun setSubProductInfo(subProductInfo: SubProductInfo) = apply { this.subProductInfo = subProductInfo }
 
-        // Recommendation Feature works only on Android API 22 (or higher).
-        @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
         fun setRecommendationConfiguration(recommendationConfiguration: RecommendationConfiguration?) =
             apply { this.recommendationConfiguration = recommendationConfiguration }
 
@@ -381,7 +411,9 @@ class Judo internal constructor(
                 supportedCardNetworks = mySupportedCardNetworks,
                 primaryAccountDetails = primaryAccountDetails,
                 googlePayConfiguration = googlePayConfiguration,
-                paymentWidgetType = paymentWidgetType,
+                // Fallback used when the no-arg Builder() is used with JudoActivityResultContracts,
+                // which overrides the type in createIntent before launching the Activity.
+                paymentWidgetType = paymentWidgetType ?: PaymentWidgetType.CARD_PAYMENT,
                 address = address,
                 initialRecurringPayment = initialRecurringPayment,
                 networkTimeout = myNetworkTimeout,
@@ -416,6 +448,7 @@ class Judo internal constructor(
         }
     }
 
+    @Suppress("DEPRECATION")
     override fun toString(): String =
         """
             Judo(

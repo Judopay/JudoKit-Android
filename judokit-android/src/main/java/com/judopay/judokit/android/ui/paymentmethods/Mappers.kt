@@ -10,6 +10,18 @@ import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethod
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
 import kotlin.random.Random
 
+fun TokenizedCardEntity.toPaymentCardViewModel(
+    newTitle: String,
+    selectedPattern: CardPattern,
+) = PaymentCardViewModel(
+    id = id,
+    cardNetwork = network,
+    name = newTitle,
+    maskedNumber = ending,
+    expireDate = expireDate,
+    pattern = selectedPattern,
+)
+
 fun TokenizedCardEntity.toPaymentMethodSavedCardItem() =
     PaymentMethodSavedCardItem(
         id = id,
@@ -38,7 +50,7 @@ fun CardToken.toTokenizedCardEntity(
     cardholderName: String,
 ): TokenizedCardEntity {
     val network = CardNetwork.withIdentifier(type, scheme)
-    val patterns = CardPattern.values()
+    val patterns = CardPattern.entries
     return TokenizedCardEntity(
         token = token ?: "",
         title = context.getString(network.defaultCardNameResId),

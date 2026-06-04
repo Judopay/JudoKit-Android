@@ -6,6 +6,7 @@ object CardDetails {
     const val CARD_EXPIRY = "12/30"
     const val CARD_SECURITY_CODE = "341"
     const val WRONG_CV2 = "123"
+    const val FRICTIONLESS_SUCCESSFUL = "Frictionless Successful"
 }
 
 object FeaturesList {
@@ -31,6 +32,24 @@ object Other {
     const val CANCELLED_PAYMENT_TOAST = "User cancelled the payment."
     const val TRANSACTION_PREVENTED = "The recommendation server has prevented this transaction."
     const val TRANSACTION_HALTED = "There was an error when retrieving the recommendation response."
+    const val AUTH_CODE_PREFIX = "AuthCode: "
+    const val COMPLETE_BUTTON = "COMPLETE"
+    const val CARD_DECLINED_CV2_MSG = "Card declined: CV2 policy"
+    const val THREE_DS_AUTH_FAILED_MSG = "Unable to process transaction. Card authentication failed with 3DS Server."
+}
+
+object Results {
+    const val SUCCESS = "Success"
+    const val DECLINED = "Declined"
+    const val ERROR = "Error"
+    const val PAYMENT = "Payment"
+    const val PRE_AUTH = "PreAuth"
+    const val CHECK_CARD = "CheckCard"
+}
+
+object Settings {
+    const val CHALLENGE_NO_PREFERENCE = "NO_PREFERENCE"
+    const val SCA_LOW_VALUE = "LOW_VALUE"
 }
 
 object BillingInfo {

@@ -2,11 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Settings, should appear as action button -->
+    <item
+        android:id="@+id/action_import_settings"
+        android:icon="@drawable/ic_import_24"
+        android:title="@string/import_settings"
+        app:showAsAction="always" />
+
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_settings_24"
         android:title="@string/title_settings"
         app:showAsAction="always" />
-
 </menu>

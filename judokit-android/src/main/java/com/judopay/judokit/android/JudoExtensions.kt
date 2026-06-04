@@ -6,7 +6,6 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Point
 import android.graphics.Rect
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
@@ -25,6 +24,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.ViewAnimator
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
 import androidx.core.widget.NestedScrollView
@@ -39,7 +39,10 @@ import com.judopay.judokit.android.api.model.request.PaymentRequest
 import com.judopay.judokit.android.api.model.request.SaveCardRequest
 import com.judopay.judokit.android.api.model.request.TokenRequest
 import com.judopay.judokit.android.api.model.request.threedsecure.ThreeDSecureTwo
+import com.judopay.judokit.android.db.JudoRoomDatabase
+import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.model.ApiEnvironment
+import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.googlepay.GooglePayAddress
 import com.judopay.judokit.android.ui.common.ANIMATION_DURATION_500
 import com.judopay.judokit.android.ui.common.parcelable
@@ -134,6 +137,11 @@ val FragmentActivity.judo: Judo
 val Fragment.judo: Judo
     get() = requireActivity().judo
 
+internal fun Fragment.cardRepository(): TokenizedCardRepository {
+    val application = requireActivity().application
+    return TokenizedCardRepository(JudoRoomDatabase.getDatabase(application).tokenizedCardDao())
+}
+
 val String.withWhitespacesRemoved: String
     get() = replace("\\s".toRegex(), "")
 
@@ -198,7 +206,7 @@ internal fun EditText.moveCursorToEnd() {
 
 @Suppress("MagicNumber")
 internal fun Window.applyDialogStyling() {
-    setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
     requestFeature(Window.FEATURE_NO_TITLE)
     setFlags(
         WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
@@ -422,3 +430,36 @@ fun ViewAnimator.initAutofillAndAccessibilityOnAttach() {
         it.toggleAutofillAndAccessibilityForVisibleChild()
     }
 }
+
+internal fun Judo.withPaymentWidgetType(type: PaymentWidgetType): Judo =
+    Judo(
+        judoId = judoId,
+        authorization = authorization,
+        isSandboxed = isSandboxed,
+        amount = amount,
+        reference = reference,
+        uiConfiguration = uiConfiguration,
+        paymentMethods = paymentMethods,
+        supportedCardNetworks = supportedCardNetworks,
+        primaryAccountDetails = primaryAccountDetails,
+        googlePayConfiguration = googlePayConfiguration,
+        paymentWidgetType = type,
+        address = address,
+        initialRecurringPayment = initialRecurringPayment,
+        networkTimeout = networkTimeout,
+        challengeRequestIndicator = challengeRequestIndicator,
+        scaExemption = scaExemption,
+        mobileNumber = mobileNumber,
+        phoneCountryCode = phoneCountryCode,
+        emailAddress = emailAddress,
+        threeDSTwoMaxTimeout = threeDSTwoMaxTimeout,
+        threeDSTwoMessageVersion = threeDSTwoMessageVersion,
+        delayedAuthorisation = delayedAuthorisation,
+        allowIncrement = allowIncrement,
+        cardToken = cardToken,
+        cardSecurityCode = cardSecurityCode,
+        subProductInfo = subProductInfo,
+        recommendationConfiguration = recommendationConfiguration,
+        disableNetworkTokenisation = disableNetworkTokenisation,
+        extras = extras,
+    )

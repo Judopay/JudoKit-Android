@@ -24,7 +24,6 @@ import okhttp3.OkHttpClient
 import okhttp3.TlsVersion
 import java.math.BigDecimal
 import java.security.KeyStore
-import java.util.Arrays
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
@@ -88,14 +87,11 @@ object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
 
             val trustManagers = trustManagerFactory.trustManagers
             check(!(trustManagers.size != 1 || trustManagers.first() !is X509TrustManager)) {
-                "Unexpected default trust managers: " +
-                    Arrays.toString(
-                        trustManagers,
-                    )
+                "Unexpected default trust managers: ${trustManagers.contentToString()}"
             }
 
             val trustManager = trustManagers.first() as X509TrustManager
-            val specs: MutableList<ConnectionSpec> = ArrayList()
+            val specs = mutableListOf<ConnectionSpec>()
 
             specs.add(
                 ConnectionSpec

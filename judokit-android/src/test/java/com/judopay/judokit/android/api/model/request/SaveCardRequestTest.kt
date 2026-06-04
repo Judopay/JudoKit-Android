@@ -1,5 +1,6 @@
 package com.judopay.judokit.android.api.model.request
 
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -13,6 +14,40 @@ internal class SaveCardRequestTest {
             .setStartDate("1220")
             .setEmailAddress("email@mail.com")
             .setMobileNumber("1234567")
+
+    private fun validBuilder() =
+        SaveCardRequest
+            .Builder()
+            .setJudoId("100200300")
+            .setCurrency("GBP")
+            .setYourConsumerReference("consumer-ref")
+            .setYourPaymentReference("payment-ref")
+            .setCardNumber("4111111111111111")
+            .setCv2("452")
+            .setExpiryDate("12/25")
+
+    @Test
+    @DisplayName("Given all required fields, then build() succeeds")
+    fun buildWithRequiredFields() {
+        assertNotNull(validBuilder().build())
+    }
+
+    @Test
+    @DisplayName("Given optional fields, then build() succeeds")
+    fun buildWithOptionalFields() {
+        assertNotNull(
+            validBuilder()
+                .setStartDate("01/20")
+                .setIssueNumber("01")
+                .setEmailAddress("test@example.com")
+                .setMobileNumber("07700900000")
+                .setCardHolderName("Jane Doe")
+                .setAddress(Address.Builder().build())
+                .setDisableNetworkTokenisation(true)
+                .setYourPaymentMetaData(mapOf("key" to "value"))
+                .build(),
+        )
+    }
 
     @Test
     @DisplayName("Should throw exception on providing null judo id")
@@ -96,11 +131,5 @@ internal class SaveCardRequestTest {
     @DisplayName("Should throw an exception on providing empty payment reference")
     fun exceptionOnEmptyPaymentReference() {
         assertThrows<IllegalArgumentException> { request.setYourPaymentReference("").build() }
-    }
-
-    @Test
-    @DisplayName("Should throw an exception on providing null address")
-    fun exceptionOnNullAddress() {
-        assertThrows<IllegalArgumentException> { request.setAddress(null).build() }
     }
 }

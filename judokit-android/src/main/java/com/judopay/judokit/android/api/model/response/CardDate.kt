@@ -73,7 +73,9 @@ class CardDate(
             maxDate[Calendar.MONTH] = maxDate[Calendar.MONTH] + 2
 
             val cardDate = Calendar.getInstance()
-            cardDate[year, month] = 2
+            cardDate[Calendar.YEAR] = year
+            cardDate[Calendar.MONTH] = month - 1
+            cardDate[Calendar.DAY_OF_MONTH] = cardDate.getActualMaximum(Calendar.DAY_OF_MONTH)
 
             val now =
                 Calendar.getInstance().apply {

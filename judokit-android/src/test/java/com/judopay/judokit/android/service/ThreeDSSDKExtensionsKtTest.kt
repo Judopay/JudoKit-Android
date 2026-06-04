@@ -12,7 +12,7 @@ class ThreeDSSDKExtensionsKtTest {
     fun `toFormattedEventString should format CompletionEvent correctly`() {
         val completionEvent =
             CompletionEvent(
-                SDKTransactionID = "12345",
+                sdkTransactionID = "12345",
                 transactionStatus = "Y",
             )
 
@@ -26,7 +26,7 @@ class ThreeDSSDKExtensionsKtTest {
     fun `toFormattedEventString should handle CompletionEvent with empty fields`() {
         val completionEvent =
             CompletionEvent(
-                SDKTransactionID = "",
+                sdkTransactionID = "",
                 transactionStatus = "",
             )
 

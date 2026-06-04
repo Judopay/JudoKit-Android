@@ -6,18 +6,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.judopay.judokit.android.R
+import com.judopay.judokit.android.cardRepository
 import com.judopay.judokit.android.databinding.EditCardFragmentBinding
-import com.judopay.judokit.android.db.JudoRoomDatabase
-import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.dismissKeyboard
 import com.judopay.judokit.android.ui.common.LengthFilter
+import com.judopay.judokit.android.ui.common.viewModelFactory
 import com.judopay.judokit.android.ui.editcard.adapter.ColorPickerAdapter
 import com.judopay.judokit.android.ui.editcard.adapter.ColorPickerItem
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.launch
 
 const val JUDO_TOKENIZED_CARD_ID = "com.judopay.judokit.android.judo-tokenized-card-id"
 
@@ -33,21 +38,21 @@ private const val CARD_TITLE_MAX_CHARACTERS = 28
 
 class EditCardFragment : Fragment() {
     private lateinit var viewModel: EditCardViewModel
-    private var _binding: EditCardFragmentBinding? = null
-    private val binding get() = _binding!!
+    private var viewBinding: EditCardFragmentBinding? = null
+    private val binding get() = viewBinding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = EditCardFragmentBinding.inflate(inflater, container, false)
+        viewBinding = EditCardFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        viewBinding = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,15 +72,16 @@ class EditCardFragment : Fragment() {
 
     private fun initializeViewModel() {
         val cardId = arguments?.getInt(JUDO_TOKENIZED_CARD_ID) ?: -1
-        val application = requireActivity().application
-        val tokenizedCardDao = JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
-        val cardRepository = TokenizedCardRepository(tokenizedCardDao)
-        val factory = EditCardViewModelFactory(cardId, cardRepository, application)
-        viewModel = ViewModelProvider(this, factory).get(EditCardViewModel::class.java)
+        val factory = viewModelFactory { EditCardViewModel(cardId, cardRepository(), requireActivity().application) }
+        viewModel = ViewModelProvider(this, factory)[EditCardViewModel::class.java]
     }
 
     private fun initializeViewModelObserving() {
-        viewModel.model.observe(viewLifecycleOwner) { updateWithModel(it) }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.filterNotNull().collect { updateWithModel(it) }
+            }
+        }
     }
 
     private fun updateWithModel(model: EditCardModel) {

@@ -9,6 +9,7 @@ ruby ">= 2.6.10"
 # gem "rails"
 
 gem "fastlane", "~> 2.220"
+gem "multi_json"
 
 plugins_path = File.join(File.dirname(__FILE__), 'fastlane', 'Pluginfile')
 eval_gemfile(plugins_path) if File.exist?(plugins_path)

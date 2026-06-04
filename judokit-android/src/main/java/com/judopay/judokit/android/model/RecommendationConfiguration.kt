@@ -1,8 +1,6 @@
 package com.judopay.judokit.android.model
 
-import android.os.Build
 import android.os.Parcelable
-import androidx.annotation.RequiresApi
 import com.judopay.judokit.android.requireNotNullOrEmpty
 import com.judopay.judokit.android.ui.common.REGEX_URL
 import kotlinx.parcelize.Parcelize
@@ -11,7 +9,6 @@ import kotlinx.parcelize.Parcelize
  * Recommendation configuration object that is required for Recommendation Feature.
  */
 @Parcelize
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
 class RecommendationConfiguration internal constructor(
     val url: String,
     val rsaPublicKey: String,

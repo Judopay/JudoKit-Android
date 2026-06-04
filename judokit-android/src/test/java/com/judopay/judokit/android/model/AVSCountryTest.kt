@@ -82,4 +82,52 @@ internal class AVSCountryTest {
     fun returnEightOnPostCodeMaxLengthCallWithOther() {
         assertEquals(POSTAL_CODE_MAX_LENGTH_OTHER, AVSCountry.OTHER.postcodeMaxLength)
     }
+
+    @DisplayName("Given ISONumericCode is called on GB, then return 826")
+    @Test
+    fun returnGBISONumericCode() {
+        assertEquals(826, AVSCountry.GB.ISONumericCode)
+    }
+
+    @DisplayName("Given ISONumericCode is called on US, then return 840")
+    @Test
+    fun returnUSISONumericCode() {
+        assertEquals(840, AVSCountry.US.ISONumericCode)
+    }
+
+    @DisplayName("Given ISONumericCode is called on CA, then return 124")
+    @Test
+    fun returnCAISONumericCode() {
+        assertEquals(124, AVSCountry.CA.ISONumericCode)
+    }
+
+    @DisplayName("Given ISONumericCode is called on OTHER, then return null")
+    @Test
+    fun returnNullISONumericCodeForOther() {
+        assertEquals(null, AVSCountry.OTHER.ISONumericCode)
+    }
+
+    @DisplayName("Given asAVSCountry is called with numeric code 826, then return GB")
+    @Test
+    fun returnGBOnIntAsAVSCountryCall() {
+        assertEquals(AVSCountry.GB, 826.asAVSCountry())
+    }
+
+    @DisplayName("Given asAVSCountry is called with numeric code 840, then return US")
+    @Test
+    fun returnUSOnIntAsAVSCountryCall() {
+        assertEquals(AVSCountry.US, 840.asAVSCountry())
+    }
+
+    @DisplayName("Given asAVSCountry is called with numeric code 124, then return CA")
+    @Test
+    fun returnCAOnIntAsAVSCountryCall() {
+        assertEquals(AVSCountry.CA, 124.asAVSCountry())
+    }
+
+    @DisplayName("Given asAVSCountry is called with an unknown code, then return null")
+    @Test
+    fun returnNullOnUnknownIntAsAVSCountryCall() {
+        assertEquals(null, 999.asAVSCountry())
+    }
 }

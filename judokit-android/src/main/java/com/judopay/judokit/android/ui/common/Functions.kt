@@ -4,11 +4,12 @@ import android.content.Context
 import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.os.Build
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.ConfigurationCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -80,35 +81,18 @@ internal fun isDependencyPresent(className: String) =
 
 @Suppress("NestedBlockDepth", "ReturnCount", "CyclomaticComplexMethod")
 internal fun isInternetAvailable(context: Context): Boolean {
-    var result = false
     val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager ?: return false
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        val networkCapabilities = connectivityManager.activeNetwork ?: return false
-        val actNw =
-            connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
-        result =
-            when {
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-                else -> false
-            }
-    } else {
-        connectivityManager.run {
-            @Suppress("DEPRECATION") // Updated solution implemented for Android API 23+.
-            connectivityManager.activeNetworkInfo?.run {
-                result =
-                    when (type) {
-                        ConnectivityManager.TYPE_WIFI -> true
-                        ConnectivityManager.TYPE_MOBILE -> true
-                        ConnectivityManager.TYPE_ETHERNET -> true
-                        else -> false
-                    }
-            }
-        }
+    val networkCapabilities = connectivityManager.activeNetwork ?: return false
+    val actNw =
+        connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
+
+    return when {
+        actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+        actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+        actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+        else -> false
     }
-    return result
 }
 
 /**
@@ -122,6 +106,18 @@ val View.heightWithInsetsAndMargins: Int
     get() {
         val internalPadding = paddingTop + paddingBottom
         return height + internalPadding + calculateVerticalMargins()
+    }
+
+/**
+ * Creates a [ViewModelProvider.Factory] from a lambda, eliminating the need for individual
+ * factory subclasses when the ViewModel has constructor parameters.
+ */
+internal fun <VM : ViewModel> viewModelFactory(creator: () -> VM): ViewModelProvider.Factory =
+    object : ViewModelProvider.NewInstanceFactory() {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            @Suppress("UNCHECKED_CAST")
+            return creator() as T
+        }
     }
 
 private fun View.calculateVerticalMargins(): Int {

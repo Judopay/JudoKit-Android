@@ -3,6 +3,7 @@ package com.judopay.judokit.android.ui.cardentry.components
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.ViewAnimator
+import com.judopay.judokit.android.showChildWithAutofill
 
 class CardEntryViewAnimator
     @JvmOverloads
@@ -23,4 +24,8 @@ class CardEntryViewAnimator
                 child.onViewWillAppear()
             }
         }
+
+        fun showCard() = showChildWithAutofill(0)
+
+        fun showBilling() = showChildWithAutofill(1)
     }

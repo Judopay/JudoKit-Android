@@ -7,31 +7,34 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.judopay.judokit.android.JudoCardTransactionCallback
+import com.judopay.judokit.android.JudoCardTransactionClient
 import com.judopay.judokit.android.JudoSharedAction
 import com.judopay.judokit.android.JudoSharedViewModel
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.animateWithAlpha
-import com.judopay.judokit.android.api.JudoApiService
-import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
 import com.judopay.judokit.android.api.model.response.CardDate
 import com.judopay.judokit.android.applyHorizontalCutoutPadding
+import com.judopay.judokit.android.cardRepository
 import com.judopay.judokit.android.databinding.PaymentMethodsFragmentBinding
-import com.judopay.judokit.android.db.JudoRoomDatabase
-import com.judopay.judokit.android.db.repository.TokenizedCardRepository
 import com.judopay.judokit.android.judo
 import com.judopay.judokit.android.model.JudoPaymentResult
-import com.judopay.judokit.android.service.CardTransactionManager
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.common.ANIMATION_DURATION_150
 import com.judopay.judokit.android.ui.common.LANDSCAPE_COLLAPSE_THRESHOLD
+import com.judopay.judokit.android.ui.common.viewModelFactory
 import com.judopay.judokit.android.ui.editcard.JUDO_TOKENIZED_CARD_ID
 import com.judopay.judokit.android.ui.paymentmethods.adapter.PaymentMethodsAdapter
 import com.judopay.judokit.android.ui.paymentmethods.adapter.SwipeToDeleteCallback
@@ -43,8 +46,12 @@ import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethod
 import com.judopay.judokit.android.ui.paymentmethods.components.PaymentCallToActionType
 import com.judopay.judokit.android.ui.paymentmethods.components.PaymentMethodsHeaderViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentMethodModel
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.launch
 
 internal const val CARD_ENTRY_OPTIONS = "com.judopay.judokit.android.cardEntryOptions"
+internal const val USER_CANCELLED = "com.judopay.judokit.android.userCancelled"
 
 data class PaymentMethodsModel(
     val headerModel: PaymentMethodsHeaderViewModel,
@@ -52,30 +59,33 @@ data class PaymentMethodsModel(
 )
 
 class PaymentMethodsFragment : Fragment() {
-    private lateinit var viewModel: PaymentMethodsViewModel
-    private lateinit var service: JudoApiService
-    private lateinit var cardTransactionManager: CardTransactionManager
+    private val viewModel: PaymentMethodsViewModel by viewModels {
+        viewModelFactory {
+            PaymentMethodsViewModel(
+                CardDate(),
+                cardRepository(),
+                requireActivity().application,
+                judo,
+            )
+        }
+    }
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
-    private var _binding: PaymentMethodsFragmentBinding? = null
-    private val binding get() = _binding!!
+    private val transactionClient by lazy { JudoCardTransactionClient.create(requireContext(), judo) }
+    private var viewBinding: PaymentMethodsFragmentBinding? = null
+    private val binding get() = viewBinding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = PaymentMethodsFragmentBinding.inflate(inflater, container, false)
+        viewBinding = PaymentMethodsFragmentBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initializeViewModel()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        viewBinding = null
     }
 
     override fun onViewCreated(
@@ -91,77 +101,62 @@ class PaymentMethodsFragment : Fragment() {
         initializeViewModelObserving()
     }
 
-    private fun initializeViewModel() {
-        val application =
-            requireActivity().application
-        val tokenizedCardDao =
-            JudoRoomDatabase.getDatabase(application).tokenizedCardDao()
-        service =
-            JudoApiServiceFactory.create(application, judo)
-        cardTransactionManager =
-            CardTransactionManager.getInstance(requireActivity())
-        cardTransactionManager.configureWith(judo)
-
-        val factory =
-            PaymentMethodsViewModelFactory(
-                CardDate(),
-                TokenizedCardRepository(tokenizedCardDao),
-                cardTransactionManager,
-                application,
-                judo,
-            )
-
-        viewModel =
-            ViewModelProvider(this, factory)[PaymentMethodsViewModel::class.java]
-    }
-
     private fun initializeViewModelObserving() {
-        viewModel.model.observe(viewLifecycleOwner) { updateWithModel(it) }
-
-        viewModel.judoPaymentResult.observe(
-            viewLifecycleOwner,
-        ) { sharedViewModel.paymentResult.postValue((it)) }
-
-        viewModel.allCardsSync.observe(
-            viewLifecycleOwner,
-        ) {
-            viewModel.send(PaymentMethodsAction.Update)
-        }
-
-        viewModel.displayCardEntryObserver.observe(
-            viewLifecycleOwner,
-        ) {
-            it.getContentIfNotHandled()?.let { cardEntryOptions ->
-                findNavController().navigate(
-                    R.id.action_paymentMethodsFragment_to_cardEntryFragment,
-                    bundleOf(
-                        CARD_ENTRY_OPTIONS to cardEntryOptions,
-                    ),
-                )
-            }
-        }
-
-        sharedViewModel.paymentMethodsResult.observe(
-            viewLifecycleOwner,
-        ) { result ->
-            viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
-            sharedViewModel.paymentResult.postValue(result)
-        }
-        sharedViewModel.cardEntryToPaymentMethodResult.observe(
-            viewLifecycleOwner,
-        ) { transactionDetailBuilder ->
-            viewModel.send(PaymentMethodsAction.PayWithCard(transactionDetailBuilder))
-        }
-
-        findNavController()
-            .currentBackStackEntry
-            ?.savedStateHandle
-            ?.getLiveData<Boolean>("user-cancelled")
-            ?.observe(viewLifecycleOwner) {
-                if (it) {
-                    viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.uiState.filterNotNull().collect { updateWithModel(it) } }
+                launch { viewModel.paymentResultEffect.collect { sharedViewModel.postPaymentResult(it) } }
+                launch {
+                    viewModel.cardEntryEffect.collect { cardEntryOptions ->
+                        findNavController().navigate(
+                            R.id.action_paymentMethodsFragment_to_cardEntryFragment,
+                            bundleOf(CARD_ENTRY_OPTIONS to cardEntryOptions),
+                        )
+                    }
+                }
+                launch {
+                    sharedViewModel.paymentMethodsResultEffect.collect { result ->
+                        viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
+                        sharedViewModel.postPaymentResult(result)
+                    }
+                }
+                launch {
+                    sharedViewModel.cardEntryToPaymentMethodResultEffect.collect { transactionDetailBuilder ->
+                        viewModel.send(PaymentMethodsAction.PayWithCard(transactionDetailBuilder))
+                    }
+                }
+                launch {
+                    findNavController()
+                        .currentBackStackEntry
+                        ?.savedStateHandle
+                        ?.let { handle ->
+                            handle
+                                .getStateFlow(USER_CANCELLED, false)
+                                .filter { it }
+                                .collect {
+                                    // Reset to false so the next cancel triggers a fresh
+                                    // false -> true emission.
+                                    handle[USER_CANCELLED] = false
+                                    viewModel.send(PaymentMethodsAction.UpdateButtonState(true))
+                                }
+                        }
+                }
+                launch {
+                    viewModel.startTransactionEffect.collect { effect ->
+                        val callback =
+                            JudoCardTransactionCallback { result ->
+                                viewModel.send(PaymentMethodsAction.TransactionResult(result))
+                            }
+                        when (effect) {
+                            is StartTransactionEffect.PayWithToken ->
+                                transactionClient.paymentWithToken(requireActivity(), effect.details, callback)
+                            is StartTransactionEffect.PreAuthWithToken ->
+                                transactionClient.preAuthWithToken(requireActivity(), effect.details, callback)
+                        }
+                    }
                 }
             }
+        }
     }
 
     // handle callbacks from the recycler view elements
@@ -275,7 +270,9 @@ class PaymentMethodsFragment : Fragment() {
         }
         ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { view, insets ->
             view.applyHorizontalCutoutPadding(insets)
-            view.updatePadding(bottom = insets.systemWindowInsets.bottom + resources.getDimension(R.dimen.space_48).toInt())
+            view.updatePadding(
+                bottom = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom + resources.getDimension(R.dimen.space_48).toInt(),
+            )
             insets
         }
         ViewCompat.setOnApplyWindowInsetsListener(binding.toolbar) { view, insets ->
@@ -323,16 +320,6 @@ class PaymentMethodsFragment : Fragment() {
         view.isEnabled = false
 
         // post the event
-        sharedViewModel.paymentResult.postValue(JudoPaymentResult.UserCancelled())
-    }
-
-    override fun onStart() {
-        super.onStart()
-        viewModel.send(PaymentMethodsAction.SubscribeToCardTransactionManagerResults)
-    }
-
-    override fun onDestroy() {
-        viewModel.send(PaymentMethodsAction.UnSubscribeToCardTransactionManagerResults)
-        super.onDestroy()
+        sharedViewModel.postPaymentResult(JudoPaymentResult.UserCancelled())
     }
 }

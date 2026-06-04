@@ -1,16 +1,16 @@
 package com.judopay.judokit.android.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.judopay.judokit.android.db.entity.TokenizedCardEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TokenizedCardDao {
     @Query("SELECT * from tokenized_card ORDER BY isDefault DESC")
-    fun getAllSortedByIsDefaultSync(): LiveData<List<TokenizedCardEntity>>
+    fun getAllSortedByIsDefault(): Flow<List<TokenizedCardEntity>>
 
     @Query("SELECT * from tokenized_card ORDER BY timestamp ASC")
     suspend fun getAllSortedByDateAdded(): List<TokenizedCardEntity>
