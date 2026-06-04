@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
+import android.widget.Filter
 import android.widget.FrameLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.NestedScrollView
@@ -70,7 +71,16 @@ class CardEntryFormView
 
         private val countriesAdapter: ArrayAdapter<String> by lazy {
             val countries = AVSCountry.entries.map { context.getString(it.translatableName) }
-            ArrayAdapter(context, android.R.layout.simple_list_item_1, countries)
+            // We need this as AutoCompleteTextView filters the dropdown by input text, so pre-filled UK hides the other AVS countries.
+            object : ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, countries) {
+                override fun getFilter() =
+                    object : Filter() {
+                        override fun performFiltering(c: CharSequence?) =
+                            FilterResults().apply { values = countries; count = countries.size }
+
+                        override fun publishResults(c: CharSequence?, r: FilterResults?) = notifyDataSetChanged()
+                    }
+            }
         }
 
         private val securityCodeFormatter: SecurityCodeInputMaskTextWatcher by lazy {
