@@ -192,6 +192,7 @@ GEM
     mime-types-data (3.2026.0414)
     mini_magick (4.13.2)
     mini_mime (1.1.5)
+    multi_json (1.21.1)
     multipart-post (2.4.1)
     mutex_m (0.3.0)
     nanaimo (0.4.0)
@@ -257,6 +258,7 @@ DEPENDENCIES
   fastlane (~> 2.220)
   fastlane-plugin-browserstack
   fastlane-plugin-firebase_app_distribution
+  multi_json
 
 RUBY VERSION
    ruby 3.3.0p0
