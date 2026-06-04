@@ -139,6 +139,9 @@ class CardEntryViewModel
             // Initialize the card AVS country so PostcodeValidator uses the right regex from the start.
             cardDetailsFormValidator.country = cardDetailsModel.country.asAVSCountry() ?: AVSCountry.OTHER
 
+            // AVS country is always valid (user chooses among pre-selected values).
+            cardFieldValidity[CardDetailsFieldType.COUNTRY] = true
+
             // Initialize the billing country so country-aware validators are ready.
             val initialBillingCountry = Country.list(context).firstOrNull { it.numericCode == billingAddressModel.countryCode }
             billingDetailsFormValidator.country = initialBillingCountry
