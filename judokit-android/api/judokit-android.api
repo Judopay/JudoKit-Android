@@ -167,13 +167,13 @@ public abstract interface class com/judopay/judokit/android/JudoCardTransactionC
 
 public final class com/judopay/judokit/android/JudoCardTransactionClient {
 	public static final field Companion Lcom/judopay/judokit/android/JudoCardTransactionClient$Companion;
-	public final fun check (Landroidx/fragment/app/FragmentActivity;Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)V
+	public final fun check (Landroid/content/Context;Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)V
 	public static final fun create (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Lcom/judopay/judokit/android/JudoCardTransactionClient;
-	public final fun payment (Landroidx/fragment/app/FragmentActivity;Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)V
-	public final fun paymentWithToken (Landroidx/fragment/app/FragmentActivity;Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)V
-	public final fun preAuth (Landroidx/fragment/app/FragmentActivity;Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)V
-	public final fun preAuthWithToken (Landroidx/fragment/app/FragmentActivity;Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)V
-	public final fun save (Landroidx/fragment/app/FragmentActivity;Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)V
+	public final fun payment (Landroid/content/Context;Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)V
+	public final fun paymentWithToken (Landroid/content/Context;Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)V
+	public final fun preAuth (Landroid/content/Context;Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)V
+	public final fun preAuthWithToken (Landroid/content/Context;Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)V
+	public final fun save (Landroid/content/Context;Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)V
 }
 
 public final class com/judopay/judokit/android/JudoCardTransactionClient$Companion {
@@ -181,12 +181,12 @@ public final class com/judopay/judokit/android/JudoCardTransactionClient$Compani
 }
 
 public final class com/judopay/judokit/android/JudoCardTransactionClientKt {
-	public static final fun check (Lcom/judopay/judokit/android/JudoCardTransactionClient;Landroidx/fragment/app/FragmentActivity;Lcom/judopay/judokit/android/model/TransactionDetails;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun payment (Lcom/judopay/judokit/android/JudoCardTransactionClient;Landroidx/fragment/app/FragmentActivity;Lcom/judopay/judokit/android/model/TransactionDetails;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun paymentWithToken (Lcom/judopay/judokit/android/JudoCardTransactionClient;Landroidx/fragment/app/FragmentActivity;Lcom/judopay/judokit/android/model/TransactionDetails;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun preAuth (Lcom/judopay/judokit/android/JudoCardTransactionClient;Landroidx/fragment/app/FragmentActivity;Lcom/judopay/judokit/android/model/TransactionDetails;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun preAuthWithToken (Lcom/judopay/judokit/android/JudoCardTransactionClient;Landroidx/fragment/app/FragmentActivity;Lcom/judopay/judokit/android/model/TransactionDetails;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun save (Lcom/judopay/judokit/android/JudoCardTransactionClient;Landroidx/fragment/app/FragmentActivity;Lcom/judopay/judokit/android/model/TransactionDetails;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun check (Lcom/judopay/judokit/android/JudoCardTransactionClient;Landroid/content/Context;Lcom/judopay/judokit/android/model/TransactionDetails;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun payment (Lcom/judopay/judokit/android/JudoCardTransactionClient;Landroid/content/Context;Lcom/judopay/judokit/android/model/TransactionDetails;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun paymentWithToken (Lcom/judopay/judokit/android/JudoCardTransactionClient;Landroid/content/Context;Lcom/judopay/judokit/android/model/TransactionDetails;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun preAuth (Lcom/judopay/judokit/android/JudoCardTransactionClient;Landroid/content/Context;Lcom/judopay/judokit/android/model/TransactionDetails;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun preAuthWithToken (Lcom/judopay/judokit/android/JudoCardTransactionClient;Landroid/content/Context;Lcom/judopay/judokit/android/model/TransactionDetails;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun save (Lcom/judopay/judokit/android/JudoCardTransactionClient;Landroid/content/Context;Lcom/judopay/judokit/android/model/TransactionDetails;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class com/judopay/judokit/android/JudoExtensionsKt {

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.google.gson.JsonParseException
 import com.judokit.android.examples.R
+import java.io.IOException
 
 fun AppCompatActivity.showImportSettingsDialog(
     onFilePick: () -> Unit,
@@ -41,7 +42,7 @@ fun AppCompatActivity.applyImportSettings(
         Toast
             .makeText(this, getString(R.string.import_settings_invalid_json, e.localizedMessage), Toast.LENGTH_LONG)
             .show()
-    } catch (e: Exception) {
+    } catch (e: IllegalArgumentException) {
         Toast
             .makeText(this, getString(R.string.import_settings_error, e.localizedMessage), Toast.LENGTH_LONG)
             .show()
@@ -60,7 +61,11 @@ fun AppCompatActivity.readImportedJson(
                 ?.use { it.bufferedReader().readText() }
                 ?: return
         onJson(json)
-    } catch (e: Exception) {
+    } catch (e: IOException) {
+        Toast
+            .makeText(this, getString(R.string.import_read_file_error, e.localizedMessage), Toast.LENGTH_LONG)
+            .show()
+    } catch (e: SecurityException) {
         Toast
             .makeText(this, getString(R.string.import_read_file_error, e.localizedMessage), Toast.LENGTH_LONG)
             .show()
