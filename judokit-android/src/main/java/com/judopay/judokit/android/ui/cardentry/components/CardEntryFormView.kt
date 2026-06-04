@@ -76,9 +76,15 @@ class CardEntryFormView
                 override fun getFilter() =
                     object : Filter() {
                         override fun performFiltering(c: CharSequence?) =
-                            FilterResults().apply { values = countries; count = countries.size }
+                            FilterResults().apply {
+                                values = countries
+                                count = countries.size
+                            }
 
-                        override fun publishResults(c: CharSequence?, r: FilterResults?) = notifyDataSetChanged()
+                        override fun publishResults(
+                            c: CharSequence?,
+                            r: FilterResults?,
+                        ) = notifyDataSetChanged()
                     }
             }
         }
