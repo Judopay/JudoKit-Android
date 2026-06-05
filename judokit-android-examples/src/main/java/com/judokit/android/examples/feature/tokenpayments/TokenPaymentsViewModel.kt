@@ -3,13 +3,16 @@ package com.judokit.android.examples.feature.tokenpayments
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.model.PaymentWidgetType
 import com.judopay.judokit.android.model.isTokenPayment
 
-class TokenPaymentsViewModel {
-    lateinit var initialJudoConfig: Judo
+class TokenPaymentsViewModel(
+    val initialJudoConfig: Judo,
+) : ViewModel() {
     var scheme by mutableStateOf("")
     var token by mutableStateOf("")
     var lastFour by mutableStateOf("")
@@ -49,4 +52,11 @@ class TokenPaymentsViewModel {
         }
 
     private fun getCardToken() = CardToken(lastFour = lastFour, token = token, type = scheme.toInt(), cardHolderName = cardholderName)
+
+    class Factory(
+        private val judo: Judo,
+    ) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T = TokenPaymentsViewModel(judo) as T
+    }
 }
