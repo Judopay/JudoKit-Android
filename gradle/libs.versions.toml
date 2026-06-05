@@ -24,7 +24,7 @@ ravelinEncrypt = "7.0.0"
 junitVersion = "5.10.0"
 okhttpBom = "4.12.0"
 mockk = "1.14.2"
-googleTruth = "1.4.4"
+googleTruth = "1.4.5"
 androidxCoreTesting = "2.2.0"
 
 # shared
