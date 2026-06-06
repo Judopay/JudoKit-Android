@@ -2,7 +2,6 @@ package com.judopay.judokit.android
 
 import android.content.Context
 import androidx.annotation.MainThread
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.judopay.judo3ds2.model.CompletionEvent
@@ -22,34 +21,21 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import java.lang.ref.WeakReference
 
 /**
- * Handles the 3DS2 native challenge for activity and returns the raw challenge status string.
+ * Handles the 3DS2 native challenge and returns the raw challenge status string.
  *
  * Bridges [ChallengeStatusReceiver] callbacks into a coroutine continuation. Safe to cancel:
  * if the coroutine is cancelled the continuation is never resumed.
- *
- * Guards against stale Activity references: if the Activity has been destroyed or is finishing
- * (e.g. due to a configuration change between the network request and the challenge start),
- * returns [ThreeDSSDKChallengeStatus.CANCELLED] immediately without calling [doChallenge].
  */
-private suspend fun FragmentActivity.runChallenge(
+private suspend fun runChallenge(
+    context: Context,
     transaction: Transaction,
     params: ChallengeParameters,
-): String? {
-    // doChallenge requires a FragmentActivity today because the 3DS SDK starts a new
-    // Activity via Intent(ctx, ChallengeActivity::class.java). Once the 3DS SDK accepts a plain
-    // Context (or handles its own back-stack), replace this with an application-context call and
-    // remove the WeakReference guard entirely.
-    val ref = WeakReference(this)
-    val live = ref.get()
-    if (live == null || live.isDestroyed || live.isFinishing) {
-        return ThreeDSSDKChallengeStatus.CANCELLED
-    }
-    return suspendCancellableCoroutine { cont ->
+): String? =
+    suspendCancellableCoroutine { cont ->
         transaction.doChallenge(
-            live,
+            context.applicationContext,
             params,
             object : ChallengeStatusReceiver {
                 override fun completed(event: CompletionEvent) = cont.resumeWith(Result.success(event.toFormattedEventString()))
@@ -65,7 +51,6 @@ private suspend fun FragmentActivity.runChallenge(
             THREE_DS_TWO_MIN_TIMEOUT,
         )
     }
-}
 
 /**
  * Receives the outcome of a card transaction initiated via [JudoCardTransactionClient].
@@ -75,12 +60,12 @@ private suspend fun FragmentActivity.runChallenge(
  *
  * Java example:
  * ```java
- * client.payment(activity, details, result -> handleResult(result));
+ * client.payment(context, details, result -> handleResult(result));
  * ```
  *
  * Kotlin example:
  * ```kotlin
- * client.payment(activity, details) { result -> handleResult(result) }
+ * client.payment(context, details) { result -> handleResult(result) }
  * ```
  */
 fun interface JudoCardTransactionCallback {
@@ -101,21 +86,19 @@ fun interface JudoCardTransactionCallback {
  * whichever transaction method matches your use-case. All methods are callback-based and work
  * identically from Java and Kotlin.
  *
- * When the issuing bank requires a 3DS2 challenge, the SDK presents the challenge screen on top
- * of the supplied [FragmentActivity] and resumes automatically. Callers do not need to handle
- * the 3DS2 flow themselves.
+ * When the issuing bank requires a 3DS2 challenge, the SDK presents the challenge screen using the
+ * supplied [Context] and resumes automatically. Callers do not need to handle the 3DS2 flow
+ * themselves.
  *
- * callback is always invoked on the **main thread**. The operation is tied to the
+ * The callback is always invoked on the **main thread**. The operation is tied to the
  * application's process lifecycle ([ProcessLifecycleOwner]) and will complete even if the
- * [FragmentActivity] is destroyed mid-transaction (e.g. rotation). If the activity is destroyed
- * between the network request and the 3DS2 challenge start, the challenge is treated as cancelled
- * and the callback receives [JudoPaymentResult.UserCancelled] rather than hanging indefinitely.
+ * originating component is destroyed mid-transaction (e.g. rotation).
  *
  * Java example:
  * ```java
  * JudoCardTransactionClient client = JudoCardTransactionClient.create(context, judo);
  *
- * client.payment(activity, details, result -> {
+ * client.payment(context, details, result -> {
  *     if (result instanceof JudoPaymentResult.Success) { ... }
  * });
  * ```
@@ -124,7 +107,7 @@ fun interface JudoCardTransactionCallback {
  * ```kotlin
  * val client = JudoCardTransactionClient.create(context, judo)
  *
- * client.payment(activity, details) { result ->
+ * client.payment(context, details) { result ->
  *     when (result) {
  *         is JudoPaymentResult.Success      -> handleSuccess(result.result)
  *         is JudoPaymentResult.Error        -> handleError(result.error)
@@ -135,7 +118,7 @@ fun interface JudoCardTransactionCallback {
  *
  * Kotlin example (suspend API — see extension functions below):
  * ```kotlin
- * val result = client.payment(activity, details)
+ * val result = client.payment(context, details)
  * ```
  */
 class JudoCardTransactionClient internal constructor(
@@ -146,95 +129,94 @@ class JudoCardTransactionClient internal constructor(
     /**
      * Performs a card payment.
      *
-     * @param activity The [FragmentActivity] used to present the 3DS2 challenge if required.
+     * @param context  Any Android [Context]; the application context is used internally.
      * @param details  Card and billing details for the transaction.
      * @param callback Invoked on the main thread with the transaction result.
      */
     fun payment(
-        activity: FragmentActivity,
+        context: Context,
         details: TransactionDetails,
         callback: JudoCardTransactionCallback,
-    ) = execute(activity, callback) {
-        repository.payment(details) { t, p -> activity.runChallenge(t, p) }
+    ) = execute(callback) {
+        repository.payment(details) { t, p -> runChallenge(context, t, p) }
     }
 
     /**
      * Performs a card pre-authorisation.
      *
-     * @param activity The [FragmentActivity] used to present the 3DS2 challenge if required.
+     * @param context  Any Android [Context]; the application context is used internally.
      * @param details  Card and billing details for the transaction.
      * @param callback Invoked on the main thread with the transaction result.
      */
     fun preAuth(
-        activity: FragmentActivity,
+        context: Context,
         details: TransactionDetails,
         callback: JudoCardTransactionCallback,
-    ) = execute(activity, callback) {
-        repository.preAuth(details) { t, p -> activity.runChallenge(t, p) }
+    ) = execute(callback) {
+        repository.preAuth(details) { t, p -> runChallenge(context, t, p) }
     }
 
     /**
      * Performs a token payment using a previously saved card.
      *
-     * @param activity The [FragmentActivity] used to present the 3DS2 challenge if required.
+     * @param context  Any Android [Context]; the application context is used internally.
      * @param details  Token and billing details for the transaction.
      * @param callback Invoked on the main thread with the transaction result.
      */
     fun paymentWithToken(
-        activity: FragmentActivity,
+        context: Context,
         details: TransactionDetails,
         callback: JudoCardTransactionCallback,
-    ) = execute(activity, callback) {
-        repository.paymentWithToken(details) { t, p -> activity.runChallenge(t, p) }
+    ) = execute(callback) {
+        repository.paymentWithToken(details) { t, p -> runChallenge(context, t, p) }
     }
 
     /**
      * Performs a token pre-authorisation using a previously saved card.
      *
-     * @param activity The [FragmentActivity] used to present the 3DS2 challenge if required.
+     * @param context  Any Android [Context]; the application context is used internally.
      * @param details  Token and billing details for the transaction.
      * @param callback Invoked on the main thread with the transaction result.
      */
     fun preAuthWithToken(
-        activity: FragmentActivity,
+        context: Context,
         details: TransactionDetails,
         callback: JudoCardTransactionCallback,
-    ) = execute(activity, callback) {
-        repository.preAuthWithToken(details) { t, p -> activity.runChallenge(t, p) }
+    ) = execute(callback) {
+        repository.preAuthWithToken(details) { t, p -> runChallenge(context, t, p) }
     }
 
     /**
      * Saves a card without performing a payment (register card flow).
      *
-     * @param activity The [FragmentActivity] used to present the 3DS2 challenge if required.
+     * @param context  Any Android [Context]; the application context is used internally.
      * @param details  Card and billing details.
      * @param callback Invoked on the main thread with the transaction result.
      */
     fun save(
-        activity: FragmentActivity,
+        context: Context,
         details: TransactionDetails,
         callback: JudoCardTransactionCallback,
-    ) = execute(activity, callback) {
-        repository.save(details) { t, p -> activity.runChallenge(t, p) }
+    ) = execute(callback) {
+        repository.save(details) { t, p -> runChallenge(context, t, p) }
     }
 
     /**
      * Checks a card without performing a payment.
      *
-     * @param activity The [FragmentActivity] used to present the 3DS2 challenge if required.
+     * @param context  Any Android [Context]; the application context is used internally.
      * @param details  Card and billing details.
      * @param callback Invoked on the main thread with the transaction result.
      */
     fun check(
-        activity: FragmentActivity,
+        context: Context,
         details: TransactionDetails,
         callback: JudoCardTransactionCallback,
-    ) = execute(activity, callback) {
-        repository.check(details) { t, p -> activity.runChallenge(t, p) }
+    ) = execute(callback) {
+        repository.check(details) { t, p -> runChallenge(context, t, p) }
     }
 
     private fun execute(
-        activity: FragmentActivity,
         callback: JudoCardTransactionCallback,
         block: suspend () -> JudoPaymentResult,
     ) {
@@ -280,46 +262,46 @@ private suspend fun awaitResult(block: (JudoCardTransactionCallback) -> Unit): J
  * Suspend variant of [JudoCardTransactionClient.payment] for Kotlin coroutine callers.
  */
 suspend fun JudoCardTransactionClient.payment(
-    activity: FragmentActivity,
+    context: Context,
     details: TransactionDetails,
-): JudoPaymentResult = awaitResult { payment(activity, details, it) }
+): JudoPaymentResult = awaitResult { payment(context, details, it) }
 
 /**
  * Suspend variant of [JudoCardTransactionClient.preAuth] for Kotlin coroutine callers.
  */
 suspend fun JudoCardTransactionClient.preAuth(
-    activity: FragmentActivity,
+    context: Context,
     details: TransactionDetails,
-): JudoPaymentResult = awaitResult { preAuth(activity, details, it) }
+): JudoPaymentResult = awaitResult { preAuth(context, details, it) }
 
 /**
  * Suspend variant of [JudoCardTransactionClient.paymentWithToken] for Kotlin coroutine callers.
  */
 suspend fun JudoCardTransactionClient.paymentWithToken(
-    activity: FragmentActivity,
+    context: Context,
     details: TransactionDetails,
-): JudoPaymentResult = awaitResult { paymentWithToken(activity, details, it) }
+): JudoPaymentResult = awaitResult { paymentWithToken(context, details, it) }
 
 /**
  * Suspend variant of [JudoCardTransactionClient.preAuthWithToken] for Kotlin coroutine callers.
  */
 suspend fun JudoCardTransactionClient.preAuthWithToken(
-    activity: FragmentActivity,
+    context: Context,
     details: TransactionDetails,
-): JudoPaymentResult = awaitResult { preAuthWithToken(activity, details, it) }
+): JudoPaymentResult = awaitResult { preAuthWithToken(context, details, it) }
 
 /**
  * Suspend variant of [JudoCardTransactionClient.save] for Kotlin coroutine callers.
  */
 suspend fun JudoCardTransactionClient.save(
-    activity: FragmentActivity,
+    context: Context,
     details: TransactionDetails,
-): JudoPaymentResult = awaitResult { save(activity, details, it) }
+): JudoPaymentResult = awaitResult { save(context, details, it) }
 
 /**
  * Suspend variant of [JudoCardTransactionClient.check] for Kotlin coroutine callers.
  */
 suspend fun JudoCardTransactionClient.check(
-    activity: FragmentActivity,
+    context: Context,
     details: TransactionDetails,
-): JudoPaymentResult = awaitResult { check(activity, details, it) }
+): JudoPaymentResult = awaitResult { check(context, details, it) }

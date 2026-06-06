@@ -45,7 +45,7 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
         viewModel =
             ViewModelProvider(
                 this,
-                DemoNoUiPaymentViewModel.Factory(this, judo),
+                DemoNoUiPaymentViewModel.Factory(application, judo),
             )[DemoNoUiPaymentViewModel::class.java]
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.nestedScrollView) { view, insets ->
