@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.ViewModelProvider
 import com.judokit.android.examples.common.parcelable
 import com.judokit.android.examples.common.startResultActivity
 import com.judokit.android.examples.common.toResult
@@ -21,7 +22,7 @@ import com.judopay.judokit.android.model.code
 import com.judopay.judokit.android.model.toIntent
 
 class TokenPaymentsActivity : ComponentActivity() {
-    private val viewModel = TokenPaymentsViewModel()
+    private lateinit var viewModel: TokenPaymentsViewModel
     private val tokenizeCardLauncher =
         registerForActivityResult(JudoActivityResultContracts.CreateCardToken()) { result ->
             handleTokenizeNewCardResult(result)
@@ -41,10 +42,13 @@ class TokenPaymentsActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
 
-        val judo = intent.parcelable<Judo>(JUDO_OPTIONS)
-        check(judo != null) { "Judo object is required" }
+        val judo = requireNotNull(intent.parcelable<Judo>(JUDO_OPTIONS)) { "Judo object is required" }
 
-        viewModel.initialJudoConfig = judo
+        viewModel =
+            ViewModelProvider(
+                this,
+                TokenPaymentsViewModel.Factory(judo),
+            )[TokenPaymentsViewModel::class.java]
 
         setContent {
             JudoKitAndroidTheme {
