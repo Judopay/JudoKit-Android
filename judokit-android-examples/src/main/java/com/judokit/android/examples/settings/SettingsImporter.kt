@@ -25,22 +25,22 @@ object SettingsImporter {
                 ),
             "recommendation" to
                 listOf(
-                    "is_recommendation_feature_enabled",
+                    "is_recommendation_enabled",
                     "recommendation_url",
                     "rsa_key",
                     "recommendation_timeout",
-                    "halt_transaction_in_case_of_any_error_enabled",
+                    "is_recommendation_halt_transaction_enabled",
                 ),
             "three_ds" to
                 listOf(
                     "should_ask_for_billing_information",
-                    "challengeRequestIndicator",
-                    "scaExemption",
-                    "threeDSTwoMaxTimeout",
+                    "challenge_request_indicator",
+                    "sca_exemption",
+                    "three_ds_two_max_timeout",
                     "connect_timeout",
                     "read_timeout",
                     "write_timeout",
-                    "threeDSTwoMessageVersion",
+                    "three_ds_two_message_version",
                 ),
             "three_ds_ui_customisation" to
                 listOf(
@@ -105,9 +105,9 @@ object SettingsImporter {
                     "address_billing_country",
                     "address_country_code",
                     "address_administrative_division",
-                    "phone_country_code",
-                    "mobile_number",
-                    "email_address",
+                    "address_phone_country_code",
+                    "address_mobile_number",
+                    "address_email_address",
                 ),
             "primary_account" to
                 listOf(
@@ -139,7 +139,7 @@ object SettingsImporter {
                 listOf(
                     "is_avs_enabled",
                     "should_payment_methods_verify_security_code",
-                    "should_display_amount",
+                    "should_payment_methods_display_amount",
                     "should_payment_button_display_amount",
                     "is_initial_recurring_payment",
                     "is_delayed_authorisation_on",

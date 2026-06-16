@@ -110,14 +110,14 @@ class CardPaymentTest {
             .edit()
             .apply {
                 putString("judo_id", BuildConfig.JUDO_ID)
-                putString("challengeRequestIndicator", "CHALLENGE_AS_MANDATE")
+                putString("challenge_request_indicator", "CHALLENGE_AS_MANDATE")
                 putBoolean("is_payment_session_enabled", false)
                 putString("token", BuildConfig.API_TEST_TOKEN)
                 putString("secret", BuildConfig.API_TEST_SECRET)
                 putString("amount", "0.15")
                 putString("currency", "GBP")
                 putBoolean("should_ask_for_csc", false)
-                putBoolean("is_recommendation_feature_enabled", false)
+                putBoolean("is_recommendation_enabled", false)
             }.commit()
     }
 
@@ -391,7 +391,7 @@ class CardPaymentTest {
         sharedPrefs
             .edit()
             .apply {
-                putString("challengeRequestIndicator", CHALLENGE_NO_PREFERENCE)
+                putString("challenge_request_indicator", CHALLENGE_NO_PREFERENCE)
             }.commit()
 
         onView(withText(PAY_WITH_CARD_LABEL))
@@ -417,7 +417,7 @@ class CardPaymentTest {
         sharedPrefs
             .edit()
             .apply {
-                putString("challengeRequestIndicator", CHALLENGE_NO_PREFERENCE)
+                putString("challenge_request_indicator", CHALLENGE_NO_PREFERENCE)
             }.commit()
 
         onView(withText(PAY_WITH_CARD_LABEL))
@@ -443,7 +443,7 @@ class CardPaymentTest {
         sharedPrefs
             .edit()
             .apply {
-                putString("challengeRequestIndicator", CHALLENGE_NO_PREFERENCE)
+                putString("challenge_request_indicator", CHALLENGE_NO_PREFERENCE)
             }.commit()
 
         onView(withText(PAY_WITH_CARD_LABEL))
@@ -851,8 +851,8 @@ class CardPaymentTest {
         sharedPrefs
             .edit()
             .apply {
-                putString("challengeRequestIndicator", CHALLENGE_NO_PREFERENCE)
-                putString("scaExemption", SCA_LOW_VALUE)
+                putString("challenge_request_indicator", CHALLENGE_NO_PREFERENCE)
+                putString("sca_exemption", SCA_LOW_VALUE)
             }.commit()
         onView(withText(PAY_WITH_CARD_LABEL))
             .perform(click())
@@ -880,8 +880,8 @@ class CardPaymentTest {
         sharedPrefs
             .edit()
             .apply {
-                putString("challengeRequestIndicator", CHALLENGE_NO_PREFERENCE)
-                putString("scaExemption", SCA_LOW_VALUE)
+                putString("challenge_request_indicator", CHALLENGE_NO_PREFERENCE)
+                putString("sca_exemption", SCA_LOW_VALUE)
             }.commit()
         onView(withText(PREAUTH_WITH_CARD_LABEL))
             .perform(click())

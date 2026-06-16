@@ -78,26 +78,26 @@
         <SwitchPreference
             app:defaultValue="false"
             app:iconSpaceReserved="false"
-            app:key="is_recommendation_feature_enabled"
+            app:key="is_recommendation_enabled"
             app:summary="@string/is_recommendation_feature_enabled_summary"
             app:title="@string/is_recommendation_feature_encryption_enabled_title" />
 
         <EditTextPreference
-            app:dependency="is_recommendation_feature_enabled"
+            app:dependency="is_recommendation_enabled"
             app:iconSpaceReserved="false"
             app:key="recommendation_url"
             app:summary="@string/reccomendation_url_key_summary"
             app:title="@string/reccomendation_url_title" />
 
         <EditTextPreference
-            app:dependency="is_recommendation_feature_enabled"
+            app:dependency="is_recommendation_enabled"
             app:iconSpaceReserved="false"
             app:key="rsa_key"
             app:summary="@string/rsa_key_summary"
             app:title="@string/rsa_key_title" />
 
         <EditTextPreference
-            app:dependency="is_recommendation_feature_enabled"
+            app:dependency="is_recommendation_enabled"
             app:defaultValue="30"
             app:iconSpaceReserved="false"
             app:key="recommendation_timeout"
@@ -105,10 +105,10 @@
             app:title="@string/recommendation_timeout_title" />
 
         <SwitchPreference
-            app:dependency="is_recommendation_feature_enabled"
+            app:dependency="is_recommendation_enabled"
             app:defaultValue="false"
             app:iconSpaceReserved="false"
-            app:key="halt_transaction_in_case_of_any_error_enabled"
+            app:key="is_recommendation_halt_transaction_enabled"
             app:summary="@string/recommendation_halt_transaction_in_case_of_any_error_summary"
             app:title="@string/recommendation_halt_transaction_in_case_of_any_error_title" />
 
@@ -130,7 +130,7 @@
             app:entries="@array/three_ds_two_challenge_request_indicator_entries"
             app:entryValues="@array/three_ds_two_challenge_request_indicator_values"
             app:iconSpaceReserved="false"
-            app:key="challengeRequestIndicator"
+            app:key="challenge_request_indicator"
             app:summary="@string/challenge_request_indicator_summary"
             app:title="@string/challenge_request_indicator_title"
             app:useSimpleSummaryProvider="true" />
@@ -140,7 +140,7 @@
             app:entries="@array/three_ds_two_sca_exemption_entries"
             app:entryValues="@array/three_ds_two_sca_exemption_values"
             app:iconSpaceReserved="false"
-            app:key="scaExemption"
+            app:key="sca_exemption"
             app:summary="@string/sca_exemption_summary"
             app:title="@string/sca_exemption_title"
             app:useSimpleSummaryProvider="true" />
@@ -148,7 +148,7 @@
         <EditTextPreference
             app:defaultValue="30"
             app:iconSpaceReserved="false"
-            app:key="threeDSTwoMaxTimeout"
+            app:key="three_ds_two_max_timeout"
             app:summary="@string/three_ds2_max_timeout_summary"
             app:title="@string/three_ds2_max_timeout_title"
             app:useSimpleSummaryProvider="true" />
@@ -175,7 +175,7 @@
         <EditTextPreference
             app:defaultValue=""
             app:iconSpaceReserved="false"
-            app:key="threeDSTwoMessageVersion"
+            app:key="three_ds_two_message_version"
             app:summary="@string/three_ds2_protocol_message_version_summary"
             app:title="@string/three_ds2_protocol_message_version_title" />
 
@@ -292,7 +292,7 @@
             app:defaultValue="44"
             app:dependency="is_address_enabled"
             app:iconSpaceReserved="false"
-            app:key="phone_country_code"
+            app:key="address_phone_country_code"
             app:summary="Your phone country code"
             app:title="Phone country code"
             app:useSimpleSummaryProvider="true" />
@@ -301,7 +301,7 @@
             app:defaultValue="0799999999"
             app:dependency="is_address_enabled"
             app:iconSpaceReserved="false"
-            app:key="mobile_number"
+            app:key="address_mobile_number"
             app:summary="Your mobile number"
             app:title="Mobile number"
             app:useSimpleSummaryProvider="true" />
@@ -310,7 +310,7 @@
             app:defaultValue="email@address.com"
             app:dependency="is_address_enabled"
             app:iconSpaceReserved="false"
-            app:key="email_address"
+            app:key="address_email_address"
             app:summary="Your email address"
             app:title="Email address"
             app:useSimpleSummaryProvider="true" />
@@ -504,7 +504,7 @@
         <SwitchPreference
             app:defaultValue="true"
             app:iconSpaceReserved="false"
-            app:key="should_display_amount"
+            app:key="should_payment_methods_display_amount"
             app:summary="@string/should_display_amount_summary"
             app:title="@string/should_display_amount_title" />
 
