@@ -36,6 +36,10 @@ import com.judopay.judokit.android.model.toSaveCardRequest
 import com.judopay.judokit.android.model.toTokenRequest
 import com.judopay.judokit.android.ui.common.getLocale
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import retrofit2.await
 
 /**
@@ -102,16 +106,21 @@ internal data class ChallengeData(
  * @param judoApiService The Retrofit API service.
  * @param threeDS2Service The 3DS2 SDK service instance (not yet initialized).
  * @param recommendationService Service that may short-circuit 3DS2 via Ravelin.
+ * @param dsCertificateRepository Provides dynamically fetched DS certificates from the CDN
+ *   cache. The [DsCertificateRepository.cachedEntry] lookup is cache-only — it never blocks
+ *   the transaction path on the network.
  * @param resources     Android [Resources], used for locale and error messages.
  * @param context       Application context used for 3DS2 initialization/cleanup.
  */
 @Suppress("TooManyFunctions")
 internal class CardTransactionRepository
+    @Suppress("LongParameterList")
     internal constructor(
         private val judo: Judo,
         private val judoApiService: JudoApiService,
         private val threeDS2Service: ThreeDS2Service,
         private val recommendationService: RecommendationService,
+        private val dsCertificateRepository: DsCertificateRepository,
         private val resources: Resources,
         private val context: Context,
     ) {
@@ -230,6 +239,8 @@ internal class CardTransactionRepository
 
             val network = details.cardType ?: CardNetwork.OTHER
             val directoryServerId = resolveDirectoryServerId(network)
+
+            threeDS2Service.setCertificateProvider(JudoDsCertificateProvider(dsCertificateRepository))
             val transaction = threeDS2Service.createTransaction(directoryServerId, judo.threeDSTwoMessageVersion)
 
             return try {
@@ -370,11 +381,16 @@ internal class CardTransactionRepository
                 judo: Judo,
             ): CardTransactionRepository {
                 val appContext = context.applicationContext
+                val dsCertificateRepository = DsCertificateRepository.getInstance(appContext)
+                CoroutineScope(Dispatchers.IO + SupervisorJob()).launch {
+                    dsCertificateRepository.prefetch()
+                }
                 return CardTransactionRepository(
                     judo = judo,
                     judoApiService = JudoApiServiceFactory.create(appContext, judo),
                     threeDS2Service = ThreeDS2ServiceImpl(),
                     recommendationService = RecommendationService(appContext, judo),
+                    dsCertificateRepository = dsCertificateRepository,
                     resources = appContext.resources,
                     context = appContext,
                 )

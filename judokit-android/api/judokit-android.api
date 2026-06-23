@@ -389,10 +389,14 @@ public final class com/judopay/judokit/android/api/factory/JudoApiServiceFactory
 	public synthetic fun create (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Ljava/lang/Object;
 	public fun createApiService (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Lcom/judopay/judokit/android/api/JudoApiService;
 	public synthetic fun createApiService (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Ljava/lang/Object;
-	public fun getExternalInterceptors ()Ljava/util/List;
 	public fun getGson ()Lcom/google/gson/Gson;
 	public fun getOkHttpClient (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Lokhttp3/OkHttpClient;
-	public fun setExternalInterceptors (Ljava/util/List;)V
+}
+
+public final class com/judopay/judokit/android/api/factory/JudoHttpInterceptors {
+	public static final field INSTANCE Lcom/judopay/judokit/android/api/factory/JudoHttpInterceptors;
+	public final fun getInterceptors ()Ljava/util/List;
+	public final fun setInterceptors (Ljava/util/List;)V
 }
 
 public final class com/judopay/judokit/android/api/factory/RecommendationApiServiceFactory : com/judopay/judokit/android/api/factory/ServiceFactory {
@@ -402,10 +406,8 @@ public final class com/judopay/judokit/android/api/factory/RecommendationApiServ
 	public synthetic fun create (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Ljava/lang/Object;
 	public fun createApiService (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Lcom/judopay/judokit/android/api/RecommendationApiService;
 	public synthetic fun createApiService (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Ljava/lang/Object;
-	public fun getExternalInterceptors ()Ljava/util/List;
 	public fun getGson ()Lcom/google/gson/Gson;
 	public fun getOkHttpClient (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Lokhttp3/OkHttpClient;
-	public fun setExternalInterceptors (Ljava/util/List;)V
 }
 
 public final class com/judopay/judokit/android/api/factory/ResultAdapter : retrofit2/CallAdapter {
@@ -430,10 +432,8 @@ public abstract class com/judopay/judokit/android/api/factory/ServiceFactory {
 	public abstract fun create (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Ljava/lang/Object;
 	public abstract fun createApiService (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Ljava/lang/Object;
 	protected final fun createRetrofit (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;Ljava/lang/String;)Lretrofit2/Retrofit;
-	public abstract fun getExternalInterceptors ()Ljava/util/List;
 	public abstract fun getGson ()Lcom/google/gson/Gson;
 	public abstract fun getOkHttpClient (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Lokhttp3/OkHttpClient;
-	public abstract fun setExternalInterceptors (Ljava/util/List;)V
 }
 
 public final class com/judopay/judokit/android/api/interceptor/NetworkConnectivityInterceptor : okhttp3/Interceptor {

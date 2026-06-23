@@ -6,7 +6,6 @@ import com.google.gson.GsonBuilder
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.RecommendationApiService
 import com.judopay.judokit.android.api.interceptor.RecommendationHeadersInterceptor
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
@@ -21,8 +20,6 @@ object RecommendationApiServiceFactory : ServiceFactory<RecommendationApiService
 
     override val gson: Gson
         get() = GsonBuilder().create()
-
-    override var externalInterceptors: List<Interceptor>? = null
 
     @Deprecated("Use create instead", replaceWith = ReplaceWith("create(context, judo)"))
     override fun createApiService(

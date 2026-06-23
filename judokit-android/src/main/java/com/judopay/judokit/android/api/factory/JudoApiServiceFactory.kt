@@ -19,7 +19,6 @@ import com.judopay.judokit.android.model.NetworkTimeout
 import com.judopay.judokit.android.model.ScaExemption
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.TlsVersion
 import java.math.BigDecimal
@@ -50,8 +49,6 @@ object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
                     ChallengeRequestIndicator::class.java,
                     ChallengeRequestIndicatorSerializer(),
                 ).create()
-
-    override var externalInterceptors: List<Interceptor>? = null
 
     /**
      * @param context the calling Context
