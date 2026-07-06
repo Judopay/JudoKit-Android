@@ -68,7 +68,7 @@ class RavelinIntegrationTest {
                 putString("amount", "0.15")
                 putString("currency", "GBP")
                 putBoolean("should_ask`_for_csc", false)
-                putBoolean("is_recommendation_feature_enabled", true)
+                putBoolean("is_recommendation_enabled", true)
                 putString("rsa_key", BuildConfig.RSA_KEY)
                 putStringSet("payment_methods", setOf("CARD"))
                 putBoolean("is_address_enabled", false)
@@ -233,8 +233,8 @@ class RavelinIntegrationTest {
         sharedPrefs
             .edit()
             .apply {
-                putString("challengeRequestIndicator", "DON_T_SET")
-                putString("scaExemption", "DON_T_SET")
+                putString("challenge_request_indicator", "DON_T_SET")
+                putString("sca_exemption", "DON_T_SET")
             }.commit()
 
         updateRecommendationUrlWith("71")
@@ -265,9 +265,9 @@ class RavelinIntegrationTest {
         sharedPrefs
             .edit()
             .apply {
-                putString("challengeRequestIndicator", "CHALLENGE_AS_MANDATE")
-                putString("scaExemption", "TRANSACTION_RISK_ANALYSIS")
-                putBoolean("halt_transaction_in_case_of_any_error_enabled", false)
+                putString("challenge_request_indicator", "CHALLENGE_AS_MANDATE")
+                putString("sca_exemption", "TRANSACTION_RISK_ANALYSIS")
+                putBoolean("is_recommendation_halt_transaction_enabled", false)
             }.commit()
 
         onView(withText(PAY_WITH_CARD_LABEL))
@@ -319,7 +319,7 @@ class RavelinIntegrationTest {
         sharedPrefs
             .edit()
             .apply {
-                putBoolean("halt_transaction_in_case_of_any_error_enabled", true)
+                putBoolean("is_recommendation_halt_transaction_enabled", true)
             }.commit()
 
         updateRecommendationUrlWith("5")

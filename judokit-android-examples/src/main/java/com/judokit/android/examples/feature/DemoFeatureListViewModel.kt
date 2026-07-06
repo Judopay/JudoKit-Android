@@ -212,13 +212,13 @@ class DemoFeatureListViewModel(
         val initialRecurringPayment = prefs.getBoolean("is_initial_recurring_payment", false)
         val delayedAuthorisation = prefs.getBoolean("is_delayed_authorisation_on", false)
         val allowIncrement = prefs.getBoolean("is_allow_increment_on", false)
-        val mobileNumber = prefs.getString("mobile_number", null)
-        val phoneCountryCode = prefs.getString("phone_country_code", null)
-        val emailAddress = prefs.getString("email_address", null)
-        val challengeRequestIndicator = parseEnumPref<ChallengeRequestIndicator>("challengeRequestIndicator")
-        val scaExemption = parseEnumPref<ScaExemption>("scaExemption")
-        val threeDSTwoMaxTimeout = prefs.getString("threeDSTwoMaxTimeout", null)?.toInt()
-        val messageVersion = prefs.getString("threeDSTwoMessageVersion", null)
+        val mobileNumber = prefs.getString("address_mobile_number", null)
+        val phoneCountryCode = prefs.getString("address_phone_country_code", null)
+        val emailAddress = prefs.getString("address_email_address", null)
+        val challengeRequestIndicator = parseEnumPref<ChallengeRequestIndicator>("challenge_request_indicator")
+        val scaExemption = parseEnumPref<ScaExemption>("sca_exemption")
+        val threeDSTwoMaxTimeout = prefs.getString("three_ds_two_max_timeout", null)?.toInt()
+        val messageVersion = prefs.getString("three_ds_two_message_version", null)
         val isDisableNetworkTokenisationOn = prefs.getBoolean("is_disable_network_tokenisation_on", false)
 
         val extras =
@@ -369,13 +369,13 @@ class DemoFeatureListViewModel(
 
     private val recommendationConfiguration: RecommendationConfiguration?
         get() {
-            if (!prefs.getBoolean("is_recommendation_feature_enabled", false)) return null
+            if (!prefs.getBoolean("is_recommendation_enabled", false)) return null
             return RecommendationConfiguration
                 .Builder()
                 .setRsaPublicKey(prefs.getString("rsa_key", null))
                 .setUrl(prefs.getString("recommendation_url", null))
                 .setTimeout(prefs.getString("recommendation_timeout", null)?.toInt())
-                .setShouldHaltTransactionInCaseOfAnyError(prefs.getBoolean("halt_transaction_in_case_of_any_error_enabled", false))
+                .setShouldHaltTransactionInCaseOfAnyError(prefs.getBoolean("is_recommendation_halt_transaction_enabled", false))
                 .build()
         }
 
@@ -386,7 +386,7 @@ class DemoFeatureListViewModel(
                 UiConfiguration
                     .Builder()
                     .setAvsEnabled(prefs.getBoolean("is_avs_enabled", false))
-                    .setShouldPaymentMethodsDisplayAmount(prefs.getBoolean("should_display_amount", true))
+                    .setShouldPaymentMethodsDisplayAmount(prefs.getBoolean("should_payment_methods_display_amount", true))
                     .setShouldPaymentMethodsVerifySecurityCode(prefs.getBoolean("should_payment_methods_verify_security_code", true))
                     .setShouldAskForCSC(prefs.getBoolean("should_ask_for_csc", false))
                     .setShouldAskForCardholderName(prefs.getBoolean("should_ask_for_cardholder_name", false))
