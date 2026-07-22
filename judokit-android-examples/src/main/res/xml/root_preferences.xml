@@ -481,6 +481,203 @@
             app:title="@string/google_pay_checkout_option_title"
             app:useSimpleSummaryProvider="true" />
 
+        <ListPreference
+            app:defaultValue="NONE"
+            app:entries="@array/google_pay_mit_type_entries"
+            app:entryValues="@array/google_pay_mit_type_values"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_mit_type"
+            app:summary="@string/google_pay_mit_type_summary"
+            app:title="@string/google_pay_mit_type_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue=""
+            app:iconSpaceReserved="false"
+            app:key="google_pay_mit_token_update_url"
+            app:summary="@string/google_pay_mit_token_update_url_summary"
+            app:title="@string/google_pay_mit_token_update_url_title" />
+
+        <EditTextPreference
+            app:defaultValue=""
+            app:iconSpaceReserved="false"
+            app:key="google_pay_mit_management_url"
+            app:summary="@string/google_pay_mit_management_url_summary"
+            app:title="@string/google_pay_mit_management_url_title" />
+
+        <EditTextPreference
+            app:defaultValue=""
+            app:iconSpaceReserved="false"
+            app:key="google_pay_mit_billing_agreement"
+            app:summary="@string/google_pay_mit_billing_agreement_summary"
+            app:title="@string/google_pay_mit_billing_agreement_title" />
+
+        <EditTextPreference
+            app:defaultValue="0.00"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_mit_immediate_total_price"
+            app:summary="@string/google_pay_mit_immediate_total_price_summary"
+            app:title="@string/google_pay_mit_immediate_total_price_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:key="google_pay_automatic_reload_category"
+        app:title="@string/google_pay_automatic_reload_header">
+
+        <EditTextPreference
+            app:defaultValue="20.00"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_automatic_reload_minimum_balance"
+            app:summary="@string/google_pay_automatic_reload_minimum_balance_summary"
+            app:title="@string/google_pay_automatic_reload_minimum_balance_title" />
+
+        <EditTextPreference
+            app:defaultValue="30.00"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_automatic_reload_amount"
+            app:summary="@string/google_pay_automatic_reload_amount_summary"
+            app:title="@string/google_pay_automatic_reload_amount_title" />
+
+        <EditTextPreference
+            app:defaultValue="Gift Card Reload"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_automatic_reload_label"
+            app:summary="@string/google_pay_automatic_reload_label_summary"
+            app:title="@string/google_pay_automatic_reload_label_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:key="google_pay_deferred_category"
+        app:title="@string/google_pay_deferred_header">
+
+        <EditTextPreference
+            app:defaultValue="2027-01-01T08:00:00Z"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_deferred_billing_date_time"
+            app:summary="@string/google_pay_deferred_billing_date_time_summary"
+            app:title="@string/google_pay_deferred_billing_date_time_title" />
+
+        <ListPreference
+            app:defaultValue="FINAL"
+            app:entries="@array/google_pay_total_price_status_entries"
+            app:entryValues="@array/google_pay_total_price_status_values"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_deferred_price_status"
+            app:summary="@string/google_pay_deferred_price_status_summary"
+            app:title="@string/google_pay_deferred_price_status_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="200.00"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_deferred_price"
+            app:summary="@string/google_pay_deferred_price_summary"
+            app:title="@string/google_pay_deferred_price_title" />
+
+        <EditTextPreference
+            app:defaultValue="Hotel Room Reservation"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_deferred_label"
+            app:summary="@string/google_pay_deferred_label_summary"
+            app:title="@string/google_pay_deferred_label_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:key="google_pay_recurring_category"
+        app:title="@string/google_pay_recurring_header">
+
+        <EditTextPreference
+            app:defaultValue="Premium Plan Monthly Subscription"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_recurring_item_label"
+            app:summary="@string/google_pay_recurring_item_label_summary"
+            app:title="@string/google_pay_recurring_item_label_title" />
+
+        <ListPreference
+            app:defaultValue="FINAL"
+            app:entries="@array/google_pay_total_price_status_entries"
+            app:entryValues="@array/google_pay_total_price_status_values"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_recurring_item_price_status"
+            app:summary="@string/google_pay_recurring_item_price_status_summary"
+            app:title="@string/google_pay_recurring_item_price_status_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="25.00"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_recurring_item_price"
+            app:summary="@string/google_pay_recurring_item_price_summary"
+            app:title="@string/google_pay_recurring_item_price_title" />
+
+        <ListPreference
+            app:defaultValue="MONTH"
+            app:entries="@array/google_pay_recurrence_period_entries"
+            app:entryValues="@array/google_pay_recurrence_period_values"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_recurring_item_period"
+            app:summary="@string/google_pay_recurring_item_period_summary"
+            app:title="@string/google_pay_recurring_item_period_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="1"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_recurring_item_period_count"
+            app:summary="@string/google_pay_recurring_item_period_count_summary"
+            app:title="@string/google_pay_recurring_item_period_count_title" />
+
+        <EditTextPreference
+            app:defaultValue=""
+            app:iconSpaceReserved="false"
+            app:key="google_pay_recurring_item_billing_initial_date_time"
+            app:summary="@string/google_pay_recurring_item_billing_initial_date_time_summary"
+            app:title="@string/google_pay_recurring_item_billing_initial_date_time_title" />
+
+        <EditTextPreference
+            app:defaultValue=""
+            app:iconSpaceReserved="false"
+            app:key="google_pay_recurring_item_billing_final_date_time"
+            app:summary="@string/google_pay_recurring_item_billing_final_date_time_summary"
+            app:title="@string/google_pay_recurring_item_billing_final_date_time_title" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="is_google_pay_recurring_introductory_period_enabled"
+            app:summary="@string/google_pay_recurring_introductory_period_enabled_summary"
+            app:title="@string/google_pay_recurring_introductory_period_enabled_title" />
+
+        <EditTextPreference
+            app:defaultValue="2026-08-01T08:00:00Z"
+            app:dependency="is_google_pay_recurring_introductory_period_enabled"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_recurring_introductory_period_end_date_time"
+            app:summary="@string/google_pay_recurring_introductory_period_end_date_time_summary"
+            app:title="@string/google_pay_recurring_introductory_period_end_date_time_title" />
+
+        <EditTextPreference
+            app:defaultValue="7 Day Free Trial"
+            app:dependency="is_google_pay_recurring_introductory_period_enabled"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_recurring_introductory_period_label"
+            app:summary="@string/google_pay_recurring_introductory_period_label_summary"
+            app:title="@string/google_pay_recurring_introductory_period_label_title" />
+
+        <EditTextPreference
+            app:defaultValue="0.00"
+            app:dependency="is_google_pay_recurring_introductory_period_enabled"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_recurring_introductory_period_total_price"
+            app:summary="@string/google_pay_recurring_introductory_period_total_price_summary"
+            app:title="@string/google_pay_recurring_introductory_period_total_price_title" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

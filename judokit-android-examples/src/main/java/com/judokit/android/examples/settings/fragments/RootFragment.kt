@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.content.edit
 import androidx.preference.Preference
+import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceViewHolder
@@ -56,6 +57,7 @@ class RootFragment : PreferenceFragmentCompat() {
         rootKey: String?,
     ) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
+        setupGooglePayMitTypeVisibility()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +69,36 @@ class RootFragment : PreferenceFragmentCompat() {
             View.OnClickListener {
                 createPaymentSession(it as ProgressButton)
             }
+    }
+
+    private fun setupGooglePayMitTypeVisibility() {
+        val mitTypePreference = findPreference<Preference>("google_pay_mit_type") ?: return
+        updateGooglePayMitTypeVisibility(mitTypePreference.sharedPreferences?.getString("google_pay_mit_type", "NONE"))
+        mitTypePreference.setOnPreferenceChangeListener { _, newValue ->
+            updateGooglePayMitTypeVisibility(newValue as? String)
+            true
+        }
+    }
+
+    private fun updateGooglePayMitTypeVisibility(mitType: String?) {
+        val type = mitType ?: "NONE"
+        val isMitEnabled = type != "NONE"
+
+        listOf(
+            "google_pay_mit_token_update_url",
+            "google_pay_mit_management_url",
+            "google_pay_mit_billing_agreement",
+            "google_pay_mit_immediate_total_price",
+        ).forEach { key ->
+            findPreference<Preference>(key)?.isVisible = isMitEnabled
+        }
+
+        findPreference<PreferenceCategory>("google_pay_automatic_reload_category")?.isVisible =
+            type == "AUTOMATIC_RELOAD"
+        findPreference<PreferenceCategory>("google_pay_deferred_category")?.isVisible =
+            type == "DEFERRED"
+        findPreference<PreferenceCategory>("google_pay_recurring_category")?.isVisible =
+            type == "RECURRING"
     }
 
     private fun createPaymentSession(progressButton: ProgressButton) {

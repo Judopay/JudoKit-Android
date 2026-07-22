@@ -12,7 +12,9 @@ import com.judopay.judokit.android.api.model.request.PreAuthGooglePayRequest
 import com.judopay.judokit.android.model.GooglePayConfiguration
 import com.judopay.judokit.android.model.googlepay.GPayPaymentGatewayParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayAuthMethod
+import com.judopay.judokit.android.model.googlepay.GooglePayAutomaticReloadTransactionInfo
 import com.judopay.judokit.android.model.googlepay.GooglePayCardParameters
+import com.judopay.judokit.android.model.googlepay.GooglePayDeferredTransactionInfo
 import com.judopay.judokit.android.model.googlepay.GooglePayIsReadyToPayRequest
 import com.judopay.judokit.android.model.googlepay.GooglePayMerchantInfo
 import com.judopay.judokit.android.model.googlepay.GooglePayPaymentData
@@ -20,6 +22,7 @@ import com.judopay.judokit.android.model.googlepay.GooglePayPaymentDataRequest
 import com.judopay.judokit.android.model.googlepay.GooglePayPaymentMethod
 import com.judopay.judokit.android.model.googlepay.GooglePayPaymentMethodTokenizationSpecification
 import com.judopay.judokit.android.model.googlepay.GooglePayPaymentMethodType
+import com.judopay.judokit.android.model.googlepay.GooglePayRecurringTransactionInfo
 import com.judopay.judokit.android.model.googlepay.GooglePayTokenizationSpecificationType
 import com.judopay.judokit.android.model.googlepay.GooglePayTransactionInfo
 import com.judopay.judokit.android.model.isSupportedByGooglePay
@@ -73,16 +76,74 @@ internal fun GooglePayConfiguration.toPaymentDataRequest(judo: Judo): PaymentDat
     val price = judo.amount.amount
     val currency = judo.amount.currency.name
 
+    val recurringTransactionInfo =
+        recurringParameters?.let { parameters ->
+            GooglePayRecurringTransactionInfo(
+                currencyCode = currency,
+                countryCode = transactionCountryCode,
+                transactionId = transactionId,
+                tokenUpdateUrl = parameters.tokenUpdateUrl,
+                managementUrl = parameters.managementUrl,
+                billingAgreement = parameters.billingAgreement,
+                immediateTotalPrice = parameters.immediateTotalPrice,
+                introductoryPeriodInfo = parameters.introductoryPeriodInfo,
+                recurrenceItems = parameters.recurrenceItems,
+            )
+        }
+
+    val deferredTransactionInfo =
+        deferredParameters?.let { parameters ->
+            GooglePayDeferredTransactionInfo(
+                currencyCode = currency,
+                countryCode = transactionCountryCode,
+                transactionId = transactionId,
+                tokenUpdateUrl = parameters.tokenUpdateUrl,
+                managementUrl = parameters.managementUrl,
+                billingAgreement = parameters.billingAgreement,
+                immediateTotalPrice = parameters.immediateTotalPrice,
+                billingDateTime = parameters.billingDateTime,
+                priceStatus = parameters.priceStatus,
+                price = parameters.price,
+                label = parameters.label,
+            )
+        }
+
+    val automaticReloadTransactionInfo =
+        automaticReloadParameters?.let { parameters ->
+            GooglePayAutomaticReloadTransactionInfo(
+                currencyCode = currency,
+                countryCode = transactionCountryCode,
+                transactionId = transactionId,
+                tokenUpdateUrl = parameters.tokenUpdateUrl,
+                managementUrl = parameters.managementUrl,
+                billingAgreement = parameters.billingAgreement,
+                immediateTotalPrice = parameters.immediateTotalPrice,
+                minimumBalanceAmount = parameters.minimumBalanceAmount,
+                reloadAmount = parameters.reloadAmount,
+                label = parameters.label,
+            )
+        }
+
+    // Exactly one of transactionInfo / MIT *TransactionInfo objects may be present.
+    val hasMitTransactionInfo =
+        recurringTransactionInfo != null ||
+            deferredTransactionInfo != null ||
+            automaticReloadTransactionInfo != null
+
     val transactionInfo =
-        GooglePayTransactionInfo(
-            currencyCode = currency,
-            countryCode = transactionCountryCode,
-            transactionId = transactionId,
-            totalPriceStatus = totalPriceStatus,
-            totalPrice = price,
-            totalPriceLabel = totalPriceLabel,
-            checkoutOption = checkoutOption,
-        )
+        if (hasMitTransactionInfo) {
+            null
+        } else {
+            GooglePayTransactionInfo(
+                currencyCode = currency,
+                countryCode = transactionCountryCode,
+                transactionId = transactionId,
+                totalPriceStatus = totalPriceStatus,
+                totalPrice = price,
+                totalPriceLabel = totalPriceLabel,
+                checkoutOption = checkoutOption,
+            )
+        }
 
     val cardPaymentMethod = toGooglePayPaymentMethod(judo)
 
@@ -96,6 +157,9 @@ internal fun GooglePayConfiguration.toPaymentDataRequest(judo: Judo): PaymentDat
             emailRequired = isEmailRequired,
             shippingAddressRequired = isShippingAddressRequired,
             shippingAddressParameters = shippingAddressParameters,
+            recurringTransactionInfo = recurringTransactionInfo,
+            deferredTransactionInfo = deferredTransactionInfo,
+            automaticReloadTransactionInfo = automaticReloadTransactionInfo,
         )
 
     val json = paymentRequest.toJSONString()

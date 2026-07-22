@@ -1,10 +1,13 @@
 package com.judopay.judokit.android.model
 
 import android.os.Parcelable
+import com.judopay.judokit.android.model.googlepay.GooglePayAutomaticReloadParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayBillingAddressParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayCheckoutOption
+import com.judopay.judokit.android.model.googlepay.GooglePayDeferredParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judopay.judokit.android.model.googlepay.GooglePayPriceStatus
+import com.judopay.judokit.android.model.googlepay.GooglePayRecurringParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayShippingAddressParameters
 import com.judopay.judokit.android.requireNotNull
 import kotlinx.parcelize.Parcelize
@@ -31,6 +34,9 @@ class GooglePayConfiguration internal constructor(
     val shippingAddressParameters: GooglePayShippingAddressParameters?,
     val allowPrepaidCards: Boolean?,
     val allowCreditCards: Boolean?,
+    val automaticReloadParameters: GooglePayAutomaticReloadParameters?,
+    val deferredParameters: GooglePayDeferredParameters?,
+    val recurringParameters: GooglePayRecurringParameters?,
 ) : Parcelable {
     @Suppress("TooManyFunctions")
     class Builder {
@@ -55,6 +61,10 @@ class GooglePayConfiguration internal constructor(
 
         private var allowPrepaidCards: Boolean? = null
         private var allowCreditCards: Boolean? = null
+
+        private var automaticReloadParameters: GooglePayAutomaticReloadParameters? = null
+        private var deferredParameters: GooglePayDeferredParameters? = null
+        private var recurringParameters: GooglePayRecurringParameters? = null
 
         /**
          * Sets the environment.
@@ -135,9 +145,31 @@ class GooglePayConfiguration internal constructor(
         fun setAllowCreditCards(allowCreditCards: Boolean?) = apply { this.allowCreditCards = allowCreditCards }
 
         /**
+         * Sets Automatic Reload MIT parameters.
+         * @see GooglePayAutomaticReloadParameters
+         */
+        fun setAutomaticReloadParameters(parameters: GooglePayAutomaticReloadParameters?) =
+            apply { this.automaticReloadParameters = parameters }
+
+        /**
+         * Sets Deferred MIT parameters.
+         * @see GooglePayDeferredParameters
+         */
+        fun setDeferredParameters(parameters: GooglePayDeferredParameters?) =
+            apply { this.deferredParameters = parameters }
+
+        /**
+         * Sets Recurring MIT parameters.
+         * @see GooglePayRecurringParameters
+         */
+        fun setRecurringParameters(parameters: GooglePayRecurringParameters?) =
+            apply { this.recurringParameters = parameters }
+
+        /**
          * Creates an instance of [GooglePayConfiguration] based on provided data in setters.
          * @throws IllegalArgumentException If environment or country code is null.
          * @throws IllegalArgumentException If any of the allowedCountryCodes are invalid.
+         * @throws IllegalArgumentException If more than one MIT parameter object is set.
          * @return An instance of [GooglePayConfiguration]
          */
         fun build(): GooglePayConfiguration {
@@ -150,6 +182,18 @@ class GooglePayConfiguration internal constructor(
                     require(countryCodes.contains(allowedCode)) {
                         "'$allowedCode' is not a valid country code"
                     }
+                }
+            }
+
+            val mitParameterCount =
+                listOfNotNull(automaticReloadParameters, deferredParameters, recurringParameters).size
+            require(mitParameterCount <= 1) {
+                "Only one of automaticReloadParameters, deferredParameters, or recurringParameters may be set"
+            }
+
+            recurringParameters?.let { parameters ->
+                require(parameters.recurrenceItems.isNotEmpty()) {
+                    "recurringParameters.recurrenceItems must not be empty"
                 }
             }
 
@@ -170,6 +214,9 @@ class GooglePayConfiguration internal constructor(
                 shippingAddressParameters = shippingAddressParameters,
                 allowPrepaidCards = allowPrepaidCards,
                 allowCreditCards = allowCreditCards,
+                automaticReloadParameters = automaticReloadParameters,
+                deferredParameters = deferredParameters,
+                recurringParameters = recurringParameters,
             )
         }
     }

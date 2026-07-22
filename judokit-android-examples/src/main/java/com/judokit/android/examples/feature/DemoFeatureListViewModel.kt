@@ -41,10 +41,16 @@ import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.model.USER_CANCELLED
 import com.judopay.judokit.android.model.UiConfiguration
 import com.judopay.judokit.android.model.googlepay.GooglePayAddressFormat
+import com.judopay.judokit.android.model.googlepay.GooglePayAutomaticReloadParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayBillingAddressParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayCheckoutOption
+import com.judopay.judokit.android.model.googlepay.GooglePayDeferredParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayEnvironment
+import com.judopay.judokit.android.model.googlepay.GooglePayIntroductoryPeriodInfo
 import com.judopay.judokit.android.model.googlepay.GooglePayPriceStatus
+import com.judopay.judokit.android.model.googlepay.GooglePayRecurrencePeriod
+import com.judopay.judokit.android.model.googlepay.GooglePayRecurrencePeriodItem
+import com.judopay.judokit.android.model.googlepay.GooglePayRecurringParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayShippingAddressParameters
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -433,6 +439,149 @@ class DemoFeatureListViewModel(
                 }
             val totalPriceStatus = prefs.getString("google_pay_total_price_status", "FINAL")
             val checkoutOption = prefs.getString("google_pay_checkout_option", null)
+            val mitType = prefs.getString("google_pay_mit_type", "NONE") ?: "NONE"
+            val mitTokenUpdateUrl =
+                prefs
+                    .getString("google_pay_mit_token_update_url", null)
+                    ?.trim()
+                    ?.ifBlank { null }
+            val mitManagementUrl =
+                prefs
+                    .getString("google_pay_mit_management_url", null)
+                    ?.trim()
+                    ?.ifBlank { null }
+            val mitBillingAgreement =
+                prefs
+                    .getString("google_pay_mit_billing_agreement", null)
+                    ?.trim()
+                    ?.ifBlank { null }
+            val mitImmediateTotalPrice =
+                prefs.getString("google_pay_mit_immediate_total_price", "0.00") ?: "0.00"
+
+            val automaticReloadParameters =
+                if (mitType == "AUTOMATIC_RELOAD") {
+                    GooglePayAutomaticReloadParameters(
+                        immediateTotalPrice = mitImmediateTotalPrice,
+                        minimumBalanceAmount =
+                            prefs.getString("google_pay_automatic_reload_minimum_balance", "20.00")
+                                ?: "20.00",
+                        reloadAmount =
+                            prefs.getString("google_pay_automatic_reload_amount", "30.00")
+                                ?: "30.00",
+                        label =
+                            prefs.getString("google_pay_automatic_reload_label", "Gift Card Reload")
+                                ?: "Gift Card Reload",
+                        tokenUpdateUrl = mitTokenUpdateUrl,
+                        managementUrl = mitManagementUrl,
+                        billingAgreement = mitBillingAgreement,
+                    )
+                } else {
+                    null
+                }
+
+            val deferredParameters =
+                if (mitType == "DEFERRED") {
+                    val deferredPriceStatus =
+                        GooglePayPriceStatus.valueOf(
+                            prefs.getString("google_pay_deferred_price_status", "FINAL") ?: "FINAL",
+                        )
+                    GooglePayDeferredParameters(
+                        immediateTotalPrice = mitImmediateTotalPrice,
+                        billingDateTime =
+                            prefs.getString("google_pay_deferred_billing_date_time", "2027-01-01T08:00:00Z")
+                                ?: "2027-01-01T08:00:00Z",
+                        priceStatus = deferredPriceStatus,
+                        price =
+                            if (deferredPriceStatus == GooglePayPriceStatus.NOT_CURRENTLY_KNOWN) {
+                                null
+                            } else {
+                                prefs.getString("google_pay_deferred_price", "200.00") ?: "200.00"
+                            },
+                        label =
+                            prefs.getString("google_pay_deferred_label", "Hotel Room Reservation")
+                                ?: "Hotel Room Reservation",
+                        tokenUpdateUrl = mitTokenUpdateUrl,
+                        managementUrl = mitManagementUrl,
+                        billingAgreement = mitBillingAgreement,
+                    )
+                } else {
+                    null
+                }
+
+            val recurringParameters =
+                if (mitType == "RECURRING") {
+                    val itemPriceStatus =
+                        GooglePayPriceStatus.valueOf(
+                            prefs.getString("google_pay_recurring_item_price_status", "FINAL") ?: "FINAL",
+                        )
+                    val recurrenceItem =
+                        GooglePayRecurrencePeriodItem(
+                            billingInitialDateTime =
+                                prefs
+                                    .getString("google_pay_recurring_item_billing_initial_date_time", null)
+                                    ?.trim()
+                                    ?.ifBlank { null },
+                            billingFinalDateTime =
+                                prefs
+                                    .getString("google_pay_recurring_item_billing_final_date_time", null)
+                                    ?.trim()
+                                    ?.ifBlank { null },
+                            label =
+                                prefs.getString(
+                                    "google_pay_recurring_item_label",
+                                    "Premium Plan Monthly Subscription",
+                                ) ?: "Premium Plan Monthly Subscription",
+                            price =
+                                if (itemPriceStatus == GooglePayPriceStatus.NOT_CURRENTLY_KNOWN) {
+                                    null
+                                } else {
+                                    prefs.getString("google_pay_recurring_item_price", "25.00") ?: "25.00"
+                                },
+                            priceStatus = itemPriceStatus,
+                            recurrencePeriod =
+                                GooglePayRecurrencePeriod.valueOf(
+                                    prefs.getString("google_pay_recurring_item_period", "MONTH") ?: "MONTH",
+                                ),
+                            recurrencePeriodCount =
+                                prefs
+                                    .getString("google_pay_recurring_item_period_count", "1")
+                                    ?.toIntOrNull()
+                                    ?: 1,
+                        )
+                    val introductoryPeriodInfo =
+                        if (prefs.getBoolean("is_google_pay_recurring_introductory_period_enabled", false)) {
+                            GooglePayIntroductoryPeriodInfo(
+                                introductoryPeriodEndDateTime =
+                                    prefs.getString(
+                                        "google_pay_recurring_introductory_period_end_date_time",
+                                        "2026-08-01T08:00:00Z",
+                                    ) ?: "2026-08-01T08:00:00Z",
+                                label =
+                                    prefs.getString(
+                                        "google_pay_recurring_introductory_period_label",
+                                        "7 Day Free Trial",
+                                    ) ?: "7 Day Free Trial",
+                                totalPrice =
+                                    prefs.getString(
+                                        "google_pay_recurring_introductory_period_total_price",
+                                        "0.00",
+                                    ) ?: "0.00",
+                            )
+                        } else {
+                            null
+                        }
+                    GooglePayRecurringParameters(
+                        immediateTotalPrice = mitImmediateTotalPrice,
+                        recurrenceItems = listOf(recurrenceItem),
+                        introductoryPeriodInfo = introductoryPeriodInfo,
+                        tokenUpdateUrl = mitTokenUpdateUrl,
+                        managementUrl = mitManagementUrl,
+                        billingAgreement = mitBillingAgreement,
+                    )
+                } else {
+                    null
+                }
+
             return GooglePayConfiguration
                 .Builder()
                 .setEnvironment(gPayEnv)
@@ -449,6 +598,9 @@ class DemoFeatureListViewModel(
                 .setShippingAddressParameters(shippingAddressParams)
                 .setAllowPrepaidCards(prefs.getBoolean("allow_prepaid_cards", true))
                 .setAllowCreditCards(prefs.getBoolean("allow_credit_cards", true))
+                .setAutomaticReloadParameters(automaticReloadParameters)
+                .setDeferredParameters(deferredParameters)
+                .setRecurringParameters(recurringParameters)
                 .build()
         }
 

@@ -2059,10 +2059,13 @@ public final class com/judopay/judokit/android/model/GooglePayConfiguration : an
 	public final fun describeContents ()I
 	public final fun getAllowCreditCards ()Ljava/lang/Boolean;
 	public final fun getAllowPrepaidCards ()Ljava/lang/Boolean;
+	public final fun getAutomaticReloadParameters ()Lcom/judopay/judokit/android/model/googlepay/GooglePayAutomaticReloadParameters;
 	public final fun getBillingAddressParameters ()Lcom/judopay/judokit/android/model/googlepay/GooglePayBillingAddressParameters;
 	public final fun getCheckoutOption ()Lcom/judopay/judokit/android/model/googlepay/GooglePayCheckoutOption;
+	public final fun getDeferredParameters ()Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredParameters;
 	public final fun getEnvironment ()Lcom/judopay/judokit/android/model/googlepay/GooglePayEnvironment;
 	public final fun getMerchantName ()Ljava/lang/String;
+	public final fun getRecurringParameters ()Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringParameters;
 	public final fun getShippingAddressParameters ()Lcom/judopay/judokit/android/model/googlepay/GooglePayShippingAddressParameters;
 	public final fun getTotalPriceLabel ()Ljava/lang/String;
 	public final fun getTotalPriceStatus ()Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;
@@ -2079,13 +2082,16 @@ public final class com/judopay/judokit/android/model/GooglePayConfiguration$Buil
 	public final fun build ()Lcom/judopay/judokit/android/model/GooglePayConfiguration;
 	public final fun setAllowCreditCards (Ljava/lang/Boolean;)Lcom/judopay/judokit/android/model/GooglePayConfiguration$Builder;
 	public final fun setAllowPrepaidCards (Ljava/lang/Boolean;)Lcom/judopay/judokit/android/model/GooglePayConfiguration$Builder;
+	public final fun setAutomaticReloadParameters (Lcom/judopay/judokit/android/model/googlepay/GooglePayAutomaticReloadParameters;)Lcom/judopay/judokit/android/model/GooglePayConfiguration$Builder;
 	public final fun setBillingAddressParameters (Lcom/judopay/judokit/android/model/googlepay/GooglePayBillingAddressParameters;)Lcom/judopay/judokit/android/model/GooglePayConfiguration$Builder;
 	public final fun setCheckoutOption (Lcom/judopay/judokit/android/model/googlepay/GooglePayCheckoutOption;)Lcom/judopay/judokit/android/model/GooglePayConfiguration$Builder;
+	public final fun setDeferredParameters (Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredParameters;)Lcom/judopay/judokit/android/model/GooglePayConfiguration$Builder;
 	public final fun setEnvironment (Lcom/judopay/judokit/android/model/googlepay/GooglePayEnvironment;)Lcom/judopay/judokit/android/model/GooglePayConfiguration$Builder;
 	public final fun setIsBillingAddressRequired (Ljava/lang/Boolean;)Lcom/judopay/judokit/android/model/GooglePayConfiguration$Builder;
 	public final fun setIsEmailRequired (Ljava/lang/Boolean;)Lcom/judopay/judokit/android/model/GooglePayConfiguration$Builder;
 	public final fun setIsShippingAddressRequired (Ljava/lang/Boolean;)Lcom/judopay/judokit/android/model/GooglePayConfiguration$Builder;
 	public final fun setMerchantName (Ljava/lang/String;)Lcom/judopay/judokit/android/model/GooglePayConfiguration$Builder;
+	public final fun setRecurringParameters (Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringParameters;)Lcom/judopay/judokit/android/model/GooglePayConfiguration$Builder;
 	public final fun setShippingAddressParameters (Lcom/judopay/judokit/android/model/googlepay/GooglePayShippingAddressParameters;)Lcom/judopay/judokit/android/model/GooglePayConfiguration$Builder;
 	public final fun setTotalPriceLabel (Ljava/lang/String;)Lcom/judopay/judokit/android/model/GooglePayConfiguration$Builder;
 	public final fun setTotalPriceStatus (Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;)Lcom/judopay/judokit/android/model/GooglePayConfiguration$Builder;
@@ -2565,6 +2571,65 @@ public final class com/judopay/judokit/android/model/googlepay/GooglePayAuthMeth
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
+public final class com/judopay/judokit/android/model/googlepay/GooglePayAutomaticReloadParameters : android/os/Parcelable {
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/model/googlepay/GooglePayAutomaticReloadParameters;
+	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/googlepay/GooglePayAutomaticReloadParameters;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/model/googlepay/GooglePayAutomaticReloadParameters;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBillingAgreement ()Ljava/lang/String;
+	public final fun getImmediateTotalPrice ()Ljava/lang/String;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getManagementUrl ()Ljava/lang/String;
+	public final fun getMinimumBalanceAmount ()Ljava/lang/String;
+	public final fun getReloadAmount ()Ljava/lang/String;
+	public final fun getTokenUpdateUrl ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/judopay/judokit/android/model/googlepay/GooglePayAutomaticReloadTransactionInfo : android/os/Parcelable {
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/model/googlepay/GooglePayAutomaticReloadTransactionInfo;
+	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/googlepay/GooglePayAutomaticReloadTransactionInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/model/googlepay/GooglePayAutomaticReloadTransactionInfo;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBillingAgreement ()Ljava/lang/String;
+	public final fun getCountryCode ()Ljava/lang/String;
+	public final fun getCurrencyCode ()Ljava/lang/String;
+	public final fun getImmediateTotalPrice ()Ljava/lang/String;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getManagementUrl ()Ljava/lang/String;
+	public final fun getMinimumBalanceAmount ()Ljava/lang/String;
+	public final fun getReloadAmount ()Ljava/lang/String;
+	public final fun getTokenUpdateUrl ()Ljava/lang/String;
+	public final fun getTransactionId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
 public final class com/judopay/judokit/android/model/googlepay/GooglePayBillingAddressParameters : android/os/Parcelable {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public fun <init> (Lcom/judopay/judokit/android/model/googlepay/GooglePayAddressFormat;Ljava/lang/Boolean;)V
@@ -2634,6 +2699,69 @@ public final class com/judopay/judokit/android/model/googlepay/GooglePayCheckout
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
+public final class com/judopay/judokit/android/model/googlepay/GooglePayDeferredParameters : android/os/Parcelable {
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredParameters;
+	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredParameters;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredParameters;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBillingAgreement ()Ljava/lang/String;
+	public final fun getBillingDateTime ()Ljava/lang/String;
+	public final fun getImmediateTotalPrice ()Ljava/lang/String;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getManagementUrl ()Ljava/lang/String;
+	public final fun getPrice ()Ljava/lang/String;
+	public final fun getPriceStatus ()Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;
+	public final fun getTokenUpdateUrl ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/judopay/judokit/android/model/googlepay/GooglePayDeferredTransactionInfo : android/os/Parcelable {
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component11 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredTransactionInfo;
+	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredTransactionInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredTransactionInfo;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBillingAgreement ()Ljava/lang/String;
+	public final fun getBillingDateTime ()Ljava/lang/String;
+	public final fun getCountryCode ()Ljava/lang/String;
+	public final fun getCurrencyCode ()Ljava/lang/String;
+	public final fun getImmediateTotalPrice ()Ljava/lang/String;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getManagementUrl ()Ljava/lang/String;
+	public final fun getPrice ()Ljava/lang/String;
+	public final fun getPriceStatus ()Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;
+	public final fun getTokenUpdateUrl ()Ljava/lang/String;
+	public final fun getTransactionId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
 public final class com/judopay/judokit/android/model/googlepay/GooglePayEnvironment : java/lang/Enum, android/os/Parcelable {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field PRODUCTION Lcom/judopay/judokit/android/model/googlepay/GooglePayEnvironment;
@@ -2642,6 +2770,27 @@ public final class com/judopay/judokit/android/model/googlepay/GooglePayEnvironm
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/judopay/judokit/android/model/googlepay/GooglePayEnvironment;
 	public static fun values ()[Lcom/judopay/judokit/android/model/googlepay/GooglePayEnvironment;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo : android/os/Parcelable {
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;
+	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getIntroductoryPeriodEndDateTime ()Ljava/lang/String;
+	public final fun getIntroductoryPeriodStartDateTime ()Ljava/lang/String;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getTotalPrice ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
@@ -2704,8 +2853,11 @@ public final class com/judopay/judokit/android/model/googlepay/GooglePayPaymentD
 
 public final class com/judopay/judokit/android/model/googlepay/GooglePayPaymentDataRequest : android/os/Parcelable {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
-	public fun <init> (Ljava/lang/Number;Ljava/lang/Number;Lcom/judopay/judokit/android/model/googlepay/GooglePayMerchantInfo;[Lcom/judopay/judokit/android/model/googlepay/GooglePayPaymentMethod;Lcom/judopay/judokit/android/model/googlepay/GooglePayTransactionInfo;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/judopay/judokit/android/model/googlepay/GooglePayShippingAddressParameters;)V
+	public fun <init> (Ljava/lang/Number;Ljava/lang/Number;Lcom/judopay/judokit/android/model/googlepay/GooglePayMerchantInfo;[Lcom/judopay/judokit/android/model/googlepay/GooglePayPaymentMethod;Lcom/judopay/judokit/android/model/googlepay/GooglePayTransactionInfo;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/judopay/judokit/android/model/googlepay/GooglePayShippingAddressParameters;Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringTransactionInfo;Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredTransactionInfo;Lcom/judopay/judokit/android/model/googlepay/GooglePayAutomaticReloadTransactionInfo;)V
+	public synthetic fun <init> (Ljava/lang/Number;Ljava/lang/Number;Lcom/judopay/judokit/android/model/googlepay/GooglePayMerchantInfo;[Lcom/judopay/judokit/android/model/googlepay/GooglePayPaymentMethod;Lcom/judopay/judokit/android/model/googlepay/GooglePayTransactionInfo;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/judopay/judokit/android/model/googlepay/GooglePayShippingAddressParameters;Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringTransactionInfo;Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredTransactionInfo;Lcom/judopay/judokit/android/model/googlepay/GooglePayAutomaticReloadTransactionInfo;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/Number;
+	public final fun component10 ()Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredTransactionInfo;
+	public final fun component11 ()Lcom/judopay/judokit/android/model/googlepay/GooglePayAutomaticReloadTransactionInfo;
 	public final fun component2 ()Ljava/lang/Number;
 	public final fun component3 ()Lcom/judopay/judokit/android/model/googlepay/GooglePayMerchantInfo;
 	public final fun component4 ()[Lcom/judopay/judokit/android/model/googlepay/GooglePayPaymentMethod;
@@ -2713,15 +2865,19 @@ public final class com/judopay/judokit/android/model/googlepay/GooglePayPaymentD
 	public final fun component6 ()Ljava/lang/Boolean;
 	public final fun component7 ()Ljava/lang/Boolean;
 	public final fun component8 ()Lcom/judopay/judokit/android/model/googlepay/GooglePayShippingAddressParameters;
-	public final fun copy (Ljava/lang/Number;Ljava/lang/Number;Lcom/judopay/judokit/android/model/googlepay/GooglePayMerchantInfo;[Lcom/judopay/judokit/android/model/googlepay/GooglePayPaymentMethod;Lcom/judopay/judokit/android/model/googlepay/GooglePayTransactionInfo;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/judopay/judokit/android/model/googlepay/GooglePayShippingAddressParameters;)Lcom/judopay/judokit/android/model/googlepay/GooglePayPaymentDataRequest;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/googlepay/GooglePayPaymentDataRequest;Ljava/lang/Number;Ljava/lang/Number;Lcom/judopay/judokit/android/model/googlepay/GooglePayMerchantInfo;[Lcom/judopay/judokit/android/model/googlepay/GooglePayPaymentMethod;Lcom/judopay/judokit/android/model/googlepay/GooglePayTransactionInfo;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/judopay/judokit/android/model/googlepay/GooglePayShippingAddressParameters;ILjava/lang/Object;)Lcom/judopay/judokit/android/model/googlepay/GooglePayPaymentDataRequest;
+	public final fun component9 ()Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringTransactionInfo;
+	public final fun copy (Ljava/lang/Number;Ljava/lang/Number;Lcom/judopay/judokit/android/model/googlepay/GooglePayMerchantInfo;[Lcom/judopay/judokit/android/model/googlepay/GooglePayPaymentMethod;Lcom/judopay/judokit/android/model/googlepay/GooglePayTransactionInfo;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/judopay/judokit/android/model/googlepay/GooglePayShippingAddressParameters;Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringTransactionInfo;Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredTransactionInfo;Lcom/judopay/judokit/android/model/googlepay/GooglePayAutomaticReloadTransactionInfo;)Lcom/judopay/judokit/android/model/googlepay/GooglePayPaymentDataRequest;
+	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/googlepay/GooglePayPaymentDataRequest;Ljava/lang/Number;Ljava/lang/Number;Lcom/judopay/judokit/android/model/googlepay/GooglePayMerchantInfo;[Lcom/judopay/judokit/android/model/googlepay/GooglePayPaymentMethod;Lcom/judopay/judokit/android/model/googlepay/GooglePayTransactionInfo;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/judopay/judokit/android/model/googlepay/GooglePayShippingAddressParameters;Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringTransactionInfo;Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredTransactionInfo;Lcom/judopay/judokit/android/model/googlepay/GooglePayAutomaticReloadTransactionInfo;ILjava/lang/Object;)Lcom/judopay/judokit/android/model/googlepay/GooglePayPaymentDataRequest;
 	public final fun describeContents ()I
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAllowedPaymentMethods ()[Lcom/judopay/judokit/android/model/googlepay/GooglePayPaymentMethod;
 	public final fun getApiVersion ()Ljava/lang/Number;
 	public final fun getApiVersionMinor ()Ljava/lang/Number;
+	public final fun getAutomaticReloadTransactionInfo ()Lcom/judopay/judokit/android/model/googlepay/GooglePayAutomaticReloadTransactionInfo;
+	public final fun getDeferredTransactionInfo ()Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredTransactionInfo;
 	public final fun getEmailRequired ()Ljava/lang/Boolean;
 	public final fun getMerchantInfo ()Lcom/judopay/judokit/android/model/googlepay/GooglePayMerchantInfo;
+	public final fun getRecurringTransactionInfo ()Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringTransactionInfo;
 	public final fun getShippingAddressParameters ()Lcom/judopay/judokit/android/model/googlepay/GooglePayShippingAddressParameters;
 	public final fun getShippingAddressRequired ()Ljava/lang/Boolean;
 	public final fun getTransactionInfo ()Lcom/judopay/judokit/android/model/googlepay/GooglePayTransactionInfo;
@@ -2819,6 +2975,101 @@ public final class com/judopay/judokit/android/model/googlepay/GooglePayPriceSta
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;
 	public static fun values ()[Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/judopay/judokit/android/model/googlepay/GooglePayRecurrencePeriod : java/lang/Enum, android/os/Parcelable {
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field DAY Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurrencePeriod;
+	public static final field MONTH Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurrencePeriod;
+	public static final field WEEK Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurrencePeriod;
+	public static final field YEAR Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurrencePeriod;
+	public final fun describeContents ()I
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurrencePeriod;
+	public static fun values ()[Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurrencePeriod;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/judopay/judokit/android/model/googlepay/GooglePayRecurrencePeriodItem : android/os/Parcelable {
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurrencePeriod;I)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurrencePeriod;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;
+	public final fun component6 ()Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurrencePeriod;
+	public final fun component7 ()I
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurrencePeriod;I)Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurrencePeriodItem;
+	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurrencePeriodItem;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurrencePeriod;IILjava/lang/Object;)Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurrencePeriodItem;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBillingFinalDateTime ()Ljava/lang/String;
+	public final fun getBillingInitialDateTime ()Ljava/lang/String;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getPrice ()Ljava/lang/String;
+	public final fun getPriceStatus ()Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;
+	public final fun getRecurrencePeriod ()Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurrencePeriod;
+	public final fun getRecurrencePeriodCount ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/judopay/judokit/android/model/googlepay/GooglePayRecurringParameters : android/os/Parcelable {
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public fun <init> (Ljava/lang/String;Ljava/util/List;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringParameters;
+	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringParameters;Ljava/lang/String;Ljava/util/List;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringParameters;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBillingAgreement ()Ljava/lang/String;
+	public final fun getImmediateTotalPrice ()Ljava/lang/String;
+	public final fun getIntroductoryPeriodInfo ()Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;
+	public final fun getManagementUrl ()Ljava/lang/String;
+	public final fun getRecurrenceItems ()Ljava/util/List;
+	public final fun getTokenUpdateUrl ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/judopay/judokit/android/model/googlepay/GooglePayRecurringTransactionInfo : android/os/Parcelable {
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/util/List;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;
+	public final fun component9 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/util/List;)Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringTransactionInfo;
+	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringTransactionInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/util/List;ILjava/lang/Object;)Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringTransactionInfo;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBillingAgreement ()Ljava/lang/String;
+	public final fun getCountryCode ()Ljava/lang/String;
+	public final fun getCurrencyCode ()Ljava/lang/String;
+	public final fun getImmediateTotalPrice ()Ljava/lang/String;
+	public final fun getIntroductoryPeriodInfo ()Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;
+	public final fun getManagementUrl ()Ljava/lang/String;
+	public final fun getRecurrenceItems ()Ljava/util/List;
+	public final fun getTokenUpdateUrl ()Ljava/lang/String;
+	public final fun getTransactionId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
