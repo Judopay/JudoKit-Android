@@ -179,14 +179,12 @@
 
     <string-array name="google_pay_mit_type_values">
         <item>NONE</item>
-        <item>AUTOMATIC_RELOAD</item>
         <item>DEFERRED</item>
         <item>RECURRING</item>
     </string-array>
 
     <string-array name="google_pay_mit_type_entries">
         <item>None (standard TransactionInfo)</item>
-        <item>Automatic reload</item>
         <item>Deferred</item>
         <item>Recurring</item>
     </string-array>

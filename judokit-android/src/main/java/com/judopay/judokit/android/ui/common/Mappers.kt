@@ -12,7 +12,6 @@ import com.judopay.judokit.android.api.model.request.PreAuthGooglePayRequest
 import com.judopay.judokit.android.model.GooglePayConfiguration
 import com.judopay.judokit.android.model.googlepay.GPayPaymentGatewayParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayAuthMethod
-import com.judopay.judokit.android.model.googlepay.GooglePayAutomaticReloadTransactionInfo
 import com.judopay.judokit.android.model.googlepay.GooglePayCardParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayDeferredTransactionInfo
 import com.judopay.judokit.android.model.googlepay.GooglePayIsReadyToPayRequest
@@ -108,27 +107,9 @@ internal fun GooglePayConfiguration.toPaymentDataRequest(judo: Judo): PaymentDat
             )
         }
 
-    val automaticReloadTransactionInfo =
-        automaticReloadParameters?.let { parameters ->
-            GooglePayAutomaticReloadTransactionInfo(
-                currencyCode = currency,
-                countryCode = transactionCountryCode,
-                transactionId = transactionId,
-                tokenUpdateUrl = parameters.tokenUpdateUrl,
-                managementUrl = parameters.managementUrl,
-                billingAgreement = parameters.billingAgreement,
-                immediateTotalPrice = parameters.immediateTotalPrice,
-                minimumBalanceAmount = parameters.minimumBalanceAmount,
-                reloadAmount = parameters.reloadAmount,
-                label = parameters.label,
-            )
-        }
-
     // Exactly one of transactionInfo / MIT *TransactionInfo objects may be present.
     val hasMitTransactionInfo =
-        recurringTransactionInfo != null ||
-            deferredTransactionInfo != null ||
-            automaticReloadTransactionInfo != null
+        recurringTransactionInfo != null || deferredTransactionInfo != null
 
     val transactionInfo =
         if (hasMitTransactionInfo) {
@@ -159,7 +140,6 @@ internal fun GooglePayConfiguration.toPaymentDataRequest(judo: Judo): PaymentDat
             shippingAddressParameters = shippingAddressParameters,
             recurringTransactionInfo = recurringTransactionInfo,
             deferredTransactionInfo = deferredTransactionInfo,
-            automaticReloadTransactionInfo = automaticReloadTransactionInfo,
         )
 
     val json = paymentRequest.toJSONString()

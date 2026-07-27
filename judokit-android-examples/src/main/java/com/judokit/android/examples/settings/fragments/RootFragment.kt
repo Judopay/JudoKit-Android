@@ -93,8 +93,6 @@ class RootFragment : PreferenceFragmentCompat() {
             findPreference<Preference>(key)?.isVisible = isMitEnabled
         }
 
-        findPreference<PreferenceCategory>("google_pay_automatic_reload_category")?.isVisible =
-            type == "AUTOMATIC_RELOAD"
         findPreference<PreferenceCategory>("google_pay_deferred_category")?.isVisible =
             type == "DEFERRED"
         findPreference<PreferenceCategory>("google_pay_recurring_category")?.isVisible =

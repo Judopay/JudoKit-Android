@@ -1,7 +1,6 @@
 package com.judopay.judokit.android.model
 
 import android.os.Parcelable
-import com.judopay.judokit.android.model.googlepay.GooglePayAutomaticReloadParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayBillingAddressParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayCheckoutOption
 import com.judopay.judokit.android.model.googlepay.GooglePayDeferredParameters
@@ -34,7 +33,6 @@ class GooglePayConfiguration internal constructor(
     val shippingAddressParameters: GooglePayShippingAddressParameters?,
     val allowPrepaidCards: Boolean?,
     val allowCreditCards: Boolean?,
-    val automaticReloadParameters: GooglePayAutomaticReloadParameters?,
     val deferredParameters: GooglePayDeferredParameters?,
     val recurringParameters: GooglePayRecurringParameters?,
 ) : Parcelable {
@@ -62,7 +60,6 @@ class GooglePayConfiguration internal constructor(
         private var allowPrepaidCards: Boolean? = null
         private var allowCreditCards: Boolean? = null
 
-        private var automaticReloadParameters: GooglePayAutomaticReloadParameters? = null
         private var deferredParameters: GooglePayDeferredParameters? = null
         private var recurringParameters: GooglePayRecurringParameters? = null
 
@@ -145,13 +142,6 @@ class GooglePayConfiguration internal constructor(
         fun setAllowCreditCards(allowCreditCards: Boolean?) = apply { this.allowCreditCards = allowCreditCards }
 
         /**
-         * Sets Automatic Reload MIT parameters.
-         * @see GooglePayAutomaticReloadParameters
-         */
-        fun setAutomaticReloadParameters(parameters: GooglePayAutomaticReloadParameters?) =
-            apply { this.automaticReloadParameters = parameters }
-
-        /**
          * Sets Deferred MIT parameters.
          * @see GooglePayDeferredParameters
          */
@@ -185,10 +175,9 @@ class GooglePayConfiguration internal constructor(
                 }
             }
 
-            val mitParameterCount =
-                listOfNotNull(automaticReloadParameters, deferredParameters, recurringParameters).size
+            val mitParameterCount = listOfNotNull(deferredParameters, recurringParameters).size
             require(mitParameterCount <= 1) {
-                "Only one of automaticReloadParameters, deferredParameters, or recurringParameters may be set"
+                "Only one of deferredParameters or recurringParameters may be set"
             }
 
             recurringParameters?.let { parameters ->
@@ -214,7 +203,6 @@ class GooglePayConfiguration internal constructor(
                 shippingAddressParameters = shippingAddressParameters,
                 allowPrepaidCards = allowPrepaidCards,
                 allowCreditCards = allowCreditCards,
-                automaticReloadParameters = automaticReloadParameters,
                 deferredParameters = deferredParameters,
                 recurringParameters = recurringParameters,
             )

@@ -15,5 +15,4 @@ data class GooglePayPaymentDataRequest(
     val shippingAddressParameters: GooglePayShippingAddressParameters?,
     val recurringTransactionInfo: GooglePayRecurringTransactionInfo? = null,
     val deferredTransactionInfo: GooglePayDeferredTransactionInfo? = null,
-    val automaticReloadTransactionInfo: GooglePayAutomaticReloadTransactionInfo? = null,
 ) : Parcelable

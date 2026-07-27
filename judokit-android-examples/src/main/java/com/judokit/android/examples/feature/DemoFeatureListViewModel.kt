@@ -41,7 +41,6 @@ import com.judopay.judokit.android.model.ScaExemption
 import com.judopay.judokit.android.model.USER_CANCELLED
 import com.judopay.judokit.android.model.UiConfiguration
 import com.judopay.judokit.android.model.googlepay.GooglePayAddressFormat
-import com.judopay.judokit.android.model.googlepay.GooglePayAutomaticReloadParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayBillingAddressParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayCheckoutOption
 import com.judopay.judokit.android.model.googlepay.GooglePayDeferredParameters
@@ -458,27 +457,6 @@ class DemoFeatureListViewModel(
             val mitImmediateTotalPrice =
                 prefs.getString("google_pay_mit_immediate_total_price", "0.00") ?: "0.00"
 
-            val automaticReloadParameters =
-                if (mitType == "AUTOMATIC_RELOAD") {
-                    GooglePayAutomaticReloadParameters(
-                        immediateTotalPrice = mitImmediateTotalPrice,
-                        minimumBalanceAmount =
-                            prefs.getString("google_pay_automatic_reload_minimum_balance", "20.00")
-                                ?: "20.00",
-                        reloadAmount =
-                            prefs.getString("google_pay_automatic_reload_amount", "30.00")
-                                ?: "30.00",
-                        label =
-                            prefs.getString("google_pay_automatic_reload_label", "Gift Card Reload")
-                                ?: "Gift Card Reload",
-                        tokenUpdateUrl = mitTokenUpdateUrl,
-                        managementUrl = mitManagementUrl,
-                        billingAgreement = mitBillingAgreement,
-                    )
-                } else {
-                    null
-                }
-
             val deferredParameters =
                 if (mitType == "DEFERRED") {
                     val deferredPriceStatus =
@@ -598,7 +576,6 @@ class DemoFeatureListViewModel(
                 .setShippingAddressParameters(shippingAddressParams)
                 .setAllowPrepaidCards(prefs.getBoolean("allow_prepaid_cards", true))
                 .setAllowCreditCards(prefs.getBoolean("allow_credit_cards", true))
-                .setAutomaticReloadParameters(automaticReloadParameters)
                 .setDeferredParameters(deferredParameters)
                 .setRecurringParameters(recurringParameters)
                 .build()

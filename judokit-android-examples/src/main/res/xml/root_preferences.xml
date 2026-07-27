@@ -523,34 +523,6 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:key="google_pay_automatic_reload_category"
-        app:title="@string/google_pay_automatic_reload_header">
-
-        <EditTextPreference
-            app:defaultValue="20.00"
-            app:iconSpaceReserved="false"
-            app:key="google_pay_automatic_reload_minimum_balance"
-            app:summary="@string/google_pay_automatic_reload_minimum_balance_summary"
-            app:title="@string/google_pay_automatic_reload_minimum_balance_title" />
-
-        <EditTextPreference
-            app:defaultValue="30.00"
-            app:iconSpaceReserved="false"
-            app:key="google_pay_automatic_reload_amount"
-            app:summary="@string/google_pay_automatic_reload_amount_summary"
-            app:title="@string/google_pay_automatic_reload_amount_title" />
-
-        <EditTextPreference
-            app:defaultValue="Gift Card Reload"
-            app:iconSpaceReserved="false"
-            app:key="google_pay_automatic_reload_label"
-            app:summary="@string/google_pay_automatic_reload_label_summary"
-            app:title="@string/google_pay_automatic_reload_label_title" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        app:iconSpaceReserved="false"
         app:key="google_pay_deferred_category"
         app:title="@string/google_pay_deferred_header">
 

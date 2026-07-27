@@ -196,14 +196,6 @@
     <string name="google_pay_mit_immediate_total_price_title">Immediate total price</string>
     <string name="google_pay_mit_immediate_total_price_summary">Amount charged today (use 0.00 if nothing is charged immediately).</string>
 
-    <string name="google_pay_automatic_reload_header">Google Pay Automatic Reload</string>
-    <string name="google_pay_automatic_reload_minimum_balance_title">Minimum balance amount</string>
-    <string name="google_pay_automatic_reload_minimum_balance_summary">Balance threshold that triggers a reload.</string>
-    <string name="google_pay_automatic_reload_amount_title">Reload amount</string>
-    <string name="google_pay_automatic_reload_amount_summary">Amount charged when the reload is triggered.</string>
-    <string name="google_pay_automatic_reload_label_title">Label</string>
-    <string name="google_pay_automatic_reload_label_summary">Short label shown for the automatic reload (max 100 characters).</string>
-
     <string name="google_pay_deferred_header">Google Pay Deferred</string>
     <string name="google_pay_deferred_billing_date_time_title">Billing date time</string>
     <string name="google_pay_deferred_billing_date_time_summary">Future charge time in RFC 3339 format (must be after now).</string>
