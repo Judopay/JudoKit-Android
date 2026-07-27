@@ -10,7 +10,6 @@ data class GooglePayDeferredParameters(
     val priceStatus: GooglePayPriceStatus,
     val price: String? = null,
     val label: String,
-    val tokenUpdateUrl: String? = null,
     val managementUrl: String? = null,
     val billingAgreement: String? = null,
 ) : Parcelable

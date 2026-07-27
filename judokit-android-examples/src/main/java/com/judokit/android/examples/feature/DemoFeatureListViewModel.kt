@@ -439,11 +439,6 @@ class DemoFeatureListViewModel(
             val totalPriceStatus = prefs.getString("google_pay_total_price_status", "FINAL")
             val checkoutOption = prefs.getString("google_pay_checkout_option", null)
             val mitType = prefs.getString("google_pay_mit_type", "NONE") ?: "NONE"
-            val mitTokenUpdateUrl =
-                prefs
-                    .getString("google_pay_mit_token_update_url", null)
-                    ?.trim()
-                    ?.ifBlank { null }
             val mitManagementUrl =
                 prefs
                     .getString("google_pay_mit_management_url", null)
@@ -478,7 +473,6 @@ class DemoFeatureListViewModel(
                         label =
                             prefs.getString("google_pay_deferred_label", "Hotel Room Reservation")
                                 ?: "Hotel Room Reservation",
-                        tokenUpdateUrl = mitTokenUpdateUrl,
                         managementUrl = mitManagementUrl,
                         billingAgreement = mitBillingAgreement,
                     )
@@ -552,7 +546,6 @@ class DemoFeatureListViewModel(
                         immediateTotalPrice = mitImmediateTotalPrice,
                         recurrenceItems = listOf(recurrenceItem),
                         introductoryPeriodInfo = introductoryPeriodInfo,
-                        tokenUpdateUrl = mitTokenUpdateUrl,
                         managementUrl = mitManagementUrl,
                         billingAgreement = mitBillingAgreement,
                     )

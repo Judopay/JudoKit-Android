@@ -184,9 +184,6 @@
     <string name="google_pay_mit_type_title">MIT type</string>
     <string name="google_pay_mit_type_summary">Replace TransactionInfo with a Merchant Initiated Transaction object.</string>
 
-    <string name="google_pay_mit_token_update_url_title">Token update URL</string>
-    <string name="google_pay_mit_token_update_url_summary">Optional HTTPS endpoint for token lifecycle updates.</string>
-
     <string name="google_pay_mit_management_url_title">Management URL</string>
     <string name="google_pay_mit_management_url_summary">Optional HTTPS URL where the user can manage the MIT.</string>
 

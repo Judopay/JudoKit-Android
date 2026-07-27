@@ -494,13 +494,6 @@
         <EditTextPreference
             app:defaultValue=""
             app:iconSpaceReserved="false"
-            app:key="google_pay_mit_token_update_url"
-            app:summary="@string/google_pay_mit_token_update_url_summary"
-            app:title="@string/google_pay_mit_token_update_url_title" />
-
-        <EditTextPreference
-            app:defaultValue=""
-            app:iconSpaceReserved="false"
             app:key="google_pay_mit_management_url"
             app:summary="@string/google_pay_mit_management_url_summary"
             app:title="@string/google_pay_mit_management_url_title" />

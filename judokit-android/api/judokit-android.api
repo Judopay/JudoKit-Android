@@ -2640,8 +2640,8 @@ public final class com/judopay/judokit/android/model/googlepay/GooglePayCheckout
 
 public final class com/judopay/judokit/android/model/googlepay/GooglePayDeferredParameters : android/os/Parcelable {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;
@@ -2649,9 +2649,8 @@ public final class com/judopay/judokit/android/model/googlepay/GooglePayDeferred
 	public final fun component5 ()Ljava/lang/String;
 	public final fun component6 ()Ljava/lang/String;
 	public final fun component7 ()Ljava/lang/String;
-	public final fun component8 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredParameters;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredParameters;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredParameters;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredParameters;
+	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredParameters;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredParameters;
 	public final fun describeContents ()I
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBillingAgreement ()Ljava/lang/String;
@@ -2661,7 +2660,6 @@ public final class com/judopay/judokit/android/model/googlepay/GooglePayDeferred
 	public final fun getManagementUrl ()Ljava/lang/String;
 	public final fun getPrice ()Ljava/lang/String;
 	public final fun getPriceStatus ()Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;
-	public final fun getTokenUpdateUrl ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
@@ -2669,20 +2667,19 @@ public final class com/judopay/judokit/android/model/googlepay/GooglePayDeferred
 
 public final class com/judopay/judokit/android/model/googlepay/GooglePayDeferredTransactionInfo : android/os/Parcelable {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component10 ()Ljava/lang/String;
-	public final fun component11 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()Ljava/lang/String;
 	public final fun component5 ()Ljava/lang/String;
 	public final fun component6 ()Ljava/lang/String;
 	public final fun component7 ()Ljava/lang/String;
-	public final fun component8 ()Ljava/lang/String;
-	public final fun component9 ()Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredTransactionInfo;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredTransactionInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredTransactionInfo;
+	public final fun component8 ()Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;
+	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredTransactionInfo;
+	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredTransactionInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/model/googlepay/GooglePayDeferredTransactionInfo;
 	public final fun describeContents ()I
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBillingAgreement ()Ljava/lang/String;
@@ -2694,7 +2691,6 @@ public final class com/judopay/judokit/android/model/googlepay/GooglePayDeferred
 	public final fun getManagementUrl ()Ljava/lang/String;
 	public final fun getPrice ()Ljava/lang/String;
 	public final fun getPriceStatus ()Lcom/judopay/judokit/android/model/googlepay/GooglePayPriceStatus;
-	public final fun getTokenUpdateUrl ()Ljava/lang/String;
 	public final fun getTransactionId ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -2957,16 +2953,15 @@ public final class com/judopay/judokit/android/model/googlepay/GooglePayRecurren
 
 public final class com/judopay/judokit/android/model/googlepay/GooglePayRecurringParameters : android/os/Parcelable {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
-	public fun <init> (Ljava/lang/String;Ljava/util/List;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/util/List;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/util/List;
 	public final fun component3 ()Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;
 	public final fun component4 ()Ljava/lang/String;
 	public final fun component5 ()Ljava/lang/String;
-	public final fun component6 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/util/List;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringParameters;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringParameters;Ljava/lang/String;Ljava/util/List;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringParameters;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/lang/String;Ljava/lang/String;)Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringParameters;
+	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringParameters;Ljava/lang/String;Ljava/util/List;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringParameters;
 	public final fun describeContents ()I
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBillingAgreement ()Ljava/lang/String;
@@ -2974,7 +2969,6 @@ public final class com/judopay/judokit/android/model/googlepay/GooglePayRecurrin
 	public final fun getIntroductoryPeriodInfo ()Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;
 	public final fun getManagementUrl ()Ljava/lang/String;
 	public final fun getRecurrenceItems ()Ljava/util/List;
-	public final fun getTokenUpdateUrl ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
@@ -2982,18 +2976,17 @@ public final class com/judopay/judokit/android/model/googlepay/GooglePayRecurrin
 
 public final class com/judopay/judokit/android/model/googlepay/GooglePayRecurringTransactionInfo : android/os/Parcelable {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/util/List;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/util/List;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()Ljava/lang/String;
 	public final fun component5 ()Ljava/lang/String;
 	public final fun component6 ()Ljava/lang/String;
-	public final fun component7 ()Ljava/lang/String;
-	public final fun component8 ()Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;
-	public final fun component9 ()Ljava/util/List;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/util/List;)Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringTransactionInfo;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringTransactionInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/util/List;ILjava/lang/Object;)Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringTransactionInfo;
+	public final fun component7 ()Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;
+	public final fun component8 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/util/List;)Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringTransactionInfo;
+	public static synthetic fun copy$default (Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringTransactionInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;Ljava/util/List;ILjava/lang/Object;)Lcom/judopay/judokit/android/model/googlepay/GooglePayRecurringTransactionInfo;
 	public final fun describeContents ()I
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBillingAgreement ()Ljava/lang/String;
@@ -3003,7 +2996,6 @@ public final class com/judopay/judokit/android/model/googlepay/GooglePayRecurrin
 	public final fun getIntroductoryPeriodInfo ()Lcom/judopay/judokit/android/model/googlepay/GooglePayIntroductoryPeriodInfo;
 	public final fun getManagementUrl ()Ljava/lang/String;
 	public final fun getRecurrenceItems ()Ljava/util/List;
-	public final fun getTokenUpdateUrl ()Ljava/lang/String;
 	public final fun getTransactionId ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;

@@ -135,7 +135,6 @@ object SettingsImporter {
                     "google_pay_total_price_label",
                     "google_pay_checkout_option",
                     "google_pay_mit_type",
-                    "google_pay_mit_token_update_url",
                     "google_pay_mit_management_url",
                     "google_pay_mit_billing_agreement",
                     "google_pay_mit_immediate_total_price",

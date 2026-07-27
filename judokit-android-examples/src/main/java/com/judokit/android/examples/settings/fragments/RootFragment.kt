@@ -85,7 +85,6 @@ class RootFragment : PreferenceFragmentCompat() {
         val isMitEnabled = type != "NONE"
 
         listOf(
-            "google_pay_mit_token_update_url",
             "google_pay_mit_management_url",
             "google_pay_mit_billing_agreement",
             "google_pay_mit_immediate_total_price",

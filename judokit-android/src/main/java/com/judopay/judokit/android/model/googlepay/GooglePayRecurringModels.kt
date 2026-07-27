@@ -35,7 +35,6 @@ data class GooglePayRecurringParameters(
     val immediateTotalPrice: String,
     val recurrenceItems: List<GooglePayRecurrencePeriodItem>,
     val introductoryPeriodInfo: GooglePayIntroductoryPeriodInfo? = null,
-    val tokenUpdateUrl: String? = null,
     val managementUrl: String? = null,
     val billingAgreement: String? = null,
 ) : Parcelable
@@ -45,7 +44,6 @@ data class GooglePayRecurringTransactionInfo(
     val currencyCode: String,
     val countryCode: String,
     val transactionId: String?,
-    val tokenUpdateUrl: String?,
     val managementUrl: String?,
     val billingAgreement: String?,
     val immediateTotalPrice: String,

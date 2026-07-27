@@ -8,7 +8,6 @@ data class GooglePayDeferredTransactionInfo(
     val currencyCode: String,
     val countryCode: String,
     val transactionId: String?,
-    val tokenUpdateUrl: String?,
     val managementUrl: String?,
     val billingAgreement: String?,
     val immediateTotalPrice: String,
