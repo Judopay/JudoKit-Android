@@ -3318,6 +3318,7 @@ public final class com/judopay/judokit/android/ui/cardentry/validation/Validatio
 public abstract interface class com/judopay/judokit/android/ui/cardentry/validation/Validator {
 	public abstract fun getFieldType ()Ljava/lang/String;
 	public abstract fun validate (Ljava/lang/String;Lcom/judopay/judokit/android/ui/cardentry/model/FormFieldEvent;)Lcom/judopay/judokit/android/ui/cardentry/validation/ValidationResult;
+	public static synthetic fun validate$default (Lcom/judopay/judokit/android/ui/cardentry/validation/Validator;Ljava/lang/String;Lcom/judopay/judokit/android/ui/cardentry/model/FormFieldEvent;ILjava/lang/Object;)Lcom/judopay/judokit/android/ui/cardentry/validation/ValidationResult;
 }
 
 public final class com/judopay/judokit/android/ui/cardentry/validation/Validator$DefaultImpls {
