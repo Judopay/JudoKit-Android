@@ -77,56 +77,15 @@ internal fun GooglePayConfiguration.toPaymentDataRequest(judo: Judo): PaymentDat
 }
 
 internal fun GooglePayConfiguration.toGooglePayPaymentDataRequest(judo: Judo): GooglePayPaymentDataRequest {
-    val price = judo.amount.amount
     val currency = judo.amount.currency.name
-
-    val recurringTransactionInfo =
-        recurringParameters?.let { parameters ->
-            GooglePayRecurringTransactionInfo(
-                currencyCode = currency,
-                countryCode = transactionCountryCode,
-                transactionId = transactionId,
-                managementUrl = parameters.managementUrl,
-                billingAgreement = parameters.billingAgreement,
-                immediateTotalPrice = parameters.immediateTotalPrice,
-                introductoryPeriodInfo = parameters.introductoryPeriodInfo,
-                recurrenceItems = parameters.recurrenceItems,
-            )
-        }
-
-    val deferredTransactionInfo =
-        deferredParameters?.let { parameters ->
-            GooglePayDeferredTransactionInfo(
-                currencyCode = currency,
-                countryCode = transactionCountryCode,
-                transactionId = transactionId,
-                managementUrl = parameters.managementUrl,
-                billingAgreement = parameters.billingAgreement,
-                immediateTotalPrice = parameters.immediateTotalPrice,
-                billingDateTime = parameters.billingDateTime,
-                priceStatus = parameters.priceStatus,
-                price = parameters.price,
-                label = parameters.label,
-            )
-        }
-
+    val recurringTransactionInfo = toRecurringTransactionInfo(currency)
+    val deferredTransactionInfo = toDeferredTransactionInfo(currency)
     // Exactly one of transactionInfo / MIT *TransactionInfo objects may be present.
-    val hasMitTransactionInfo =
-        recurringTransactionInfo != null || deferredTransactionInfo != null
-
     val transactionInfo =
-        if (hasMitTransactionInfo) {
+        if (recurringTransactionInfo != null || deferredTransactionInfo != null) {
             null
         } else {
-            GooglePayTransactionInfo(
-                currencyCode = currency,
-                countryCode = transactionCountryCode,
-                transactionId = transactionId,
-                totalPriceStatus = totalPriceStatus,
-                totalPrice = price,
-                totalPriceLabel = totalPriceLabel,
-                checkoutOption = checkoutOption,
-            )
+            toStandardTransactionInfo(judo.amount.amount, currency)
         }
 
     return GooglePayPaymentDataRequest(
@@ -142,6 +101,49 @@ internal fun GooglePayConfiguration.toGooglePayPaymentDataRequest(judo: Judo): G
         deferredTransactionInfo = deferredTransactionInfo,
     )
 }
+
+private fun GooglePayConfiguration.toRecurringTransactionInfo(currency: String) =
+    recurringParameters?.let { parameters ->
+        GooglePayRecurringTransactionInfo(
+            currencyCode = currency,
+            countryCode = transactionCountryCode,
+            transactionId = transactionId,
+            managementUrl = parameters.managementUrl,
+            billingAgreement = parameters.billingAgreement,
+            immediateTotalPrice = parameters.immediateTotalPrice,
+            introductoryPeriodInfo = parameters.introductoryPeriodInfo,
+            recurrenceItems = parameters.recurrenceItems,
+        )
+    }
+
+private fun GooglePayConfiguration.toDeferredTransactionInfo(currency: String) =
+    deferredParameters?.let { parameters ->
+        GooglePayDeferredTransactionInfo(
+            currencyCode = currency,
+            countryCode = transactionCountryCode,
+            transactionId = transactionId,
+            managementUrl = parameters.managementUrl,
+            billingAgreement = parameters.billingAgreement,
+            immediateTotalPrice = parameters.immediateTotalPrice,
+            billingDateTime = parameters.billingDateTime,
+            priceStatus = parameters.priceStatus,
+            price = parameters.price,
+            label = parameters.label,
+        )
+    }
+
+private fun GooglePayConfiguration.toStandardTransactionInfo(
+    price: String,
+    currency: String,
+) = GooglePayTransactionInfo(
+    currencyCode = currency,
+    countryCode = transactionCountryCode,
+    transactionId = transactionId,
+    totalPriceStatus = totalPriceStatus,
+    totalPrice = price,
+    totalPriceLabel = totalPriceLabel,
+    checkoutOption = checkoutOption,
+)
 
 @Throws(IllegalArgumentException::class, JsonSyntaxException::class)
 internal fun PaymentData.toGooglePayRequest(judo: Judo): GooglePayRequest {
