@@ -4,8 +4,12 @@ import com.google.common.truth.Truth.assertThat
 import com.judopay.judokit.android.model.googlepay.GooglePayAddressFormat
 import com.judopay.judokit.android.model.googlepay.GooglePayBillingAddressParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayCheckoutOption
+import com.judopay.judokit.android.model.googlepay.GooglePayDeferredParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judopay.judokit.android.model.googlepay.GooglePayPriceStatus
+import com.judopay.judokit.android.model.googlepay.GooglePayRecurrencePeriod
+import com.judopay.judokit.android.model.googlepay.GooglePayRecurrencePeriodItem
+import com.judopay.judokit.android.model.googlepay.GooglePayRecurringParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayShippingAddressParameters
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -122,5 +126,102 @@ internal class GooglePayConfigurationTest {
         assertThat(sut.setAllowCreditCards(true).build().allowCreditCards).isTrue()
         assertThat(sut.setAllowCreditCards(false).build().allowCreditCards).isFalse()
         assertThat(sut.setAllowCreditCards(null).build().allowCreditCards).isNull()
+    }
+
+    @Test
+    fun `Given deferredParameters are set, then build() keeps them`() {
+        val parameters =
+            GooglePayDeferredParameters(
+                immediateTotalPrice = "0.00",
+                billingDateTime = "2027-01-01T08:00:00Z",
+                priceStatus = GooglePayPriceStatus.FINAL,
+                price = "200.00",
+                label = "Hotel Room Reservation",
+            )
+
+        val configuration =
+            googlePayConfigurationBuilder
+                .setEnvironment(GooglePayEnvironment.TEST)
+                .setTransactionCountryCode("US")
+                .setDeferredParameters(parameters)
+                .build()
+
+        assertEquals(parameters, configuration.deferredParameters)
+        assertThat(configuration.recurringParameters).isNull()
+    }
+
+    @Test
+    fun `Given recurringParameters are set, then build() keeps them`() {
+        val parameters =
+            GooglePayRecurringParameters(
+                immediateTotalPrice = "25.00",
+                recurrenceItems =
+                    listOf(
+                        GooglePayRecurrencePeriodItem(
+                            label = "Premium Plan Monthly Subscription",
+                            price = "25.00",
+                            priceStatus = GooglePayPriceStatus.FINAL,
+                            recurrencePeriod = GooglePayRecurrencePeriod.MONTH,
+                            recurrencePeriodCount = 1,
+                        ),
+                    ),
+            )
+
+        val configuration =
+            googlePayConfigurationBuilder
+                .setEnvironment(GooglePayEnvironment.TEST)
+                .setTransactionCountryCode("US")
+                .setRecurringParameters(parameters)
+                .build()
+
+        assertEquals(parameters, configuration.recurringParameters)
+        assertThat(configuration.deferredParameters).isNull()
+    }
+
+    @Test
+    fun `Given both deferred and recurring parameters are set, then build() throws`() {
+        assertThrows<IllegalArgumentException> {
+            googlePayConfigurationBuilder
+                .setEnvironment(GooglePayEnvironment.TEST)
+                .setTransactionCountryCode("US")
+                .setDeferredParameters(
+                    GooglePayDeferredParameters(
+                        immediateTotalPrice = "0.00",
+                        billingDateTime = "2027-01-01T08:00:00Z",
+                        priceStatus = GooglePayPriceStatus.FINAL,
+                        price = "200.00",
+                        label = "Hotel Room Reservation",
+                    ),
+                ).setRecurringParameters(
+                    GooglePayRecurringParameters(
+                        immediateTotalPrice = "25.00",
+                        recurrenceItems =
+                            listOf(
+                                GooglePayRecurrencePeriodItem(
+                                    label = "Premium Plan Monthly Subscription",
+                                    price = "25.00",
+                                    priceStatus = GooglePayPriceStatus.FINAL,
+                                    recurrencePeriod = GooglePayRecurrencePeriod.MONTH,
+                                    recurrencePeriodCount = 1,
+                                ),
+                            ),
+                    ),
+                ).build()
+        }
+    }
+
+    @Test
+    fun `Given recurringParameters have no recurrence items, then build() throws`() {
+        assertThrows<IllegalArgumentException> {
+            googlePayConfigurationBuilder
+                .setEnvironment(GooglePayEnvironment.TEST)
+                .setTransactionCountryCode("US")
+                .setRecurringParameters(
+                    GooglePayRecurringParameters(
+                        immediateTotalPrice = "25.00",
+                        recurrenceItems = emptyList(),
+                    ),
+                ).build()
+        }
     }
 }

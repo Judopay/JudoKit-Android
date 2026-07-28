@@ -72,6 +72,11 @@ internal fun GooglePayConfiguration.toIsReadyToPayRequest(judo: Judo): IsReadyTo
 }
 
 internal fun GooglePayConfiguration.toPaymentDataRequest(judo: Judo): PaymentDataRequest {
+    val json = toGooglePayPaymentDataRequest(judo).toJSONString()
+    return PaymentDataRequest.fromJson(json)
+}
+
+internal fun GooglePayConfiguration.toGooglePayPaymentDataRequest(judo: Judo): GooglePayPaymentDataRequest {
     val price = judo.amount.amount
     val currency = judo.amount.currency.name
 
@@ -124,24 +129,18 @@ internal fun GooglePayConfiguration.toPaymentDataRequest(judo: Judo): PaymentDat
             )
         }
 
-    val cardPaymentMethod = toGooglePayPaymentMethod(judo)
-
-    val paymentRequest =
-        GooglePayPaymentDataRequest(
-            apiVersion = GOOGLE_PAY_API_VERSION,
-            apiVersionMinor = GOOGLE_PAY_API_VERSION_MINOR,
-            merchantInfo = GooglePayMerchantInfo(merchantName),
-            allowedPaymentMethods = arrayOf(cardPaymentMethod),
-            transactionInfo = transactionInfo,
-            emailRequired = isEmailRequired,
-            shippingAddressRequired = isShippingAddressRequired,
-            shippingAddressParameters = shippingAddressParameters,
-            recurringTransactionInfo = recurringTransactionInfo,
-            deferredTransactionInfo = deferredTransactionInfo,
-        )
-
-    val json = paymentRequest.toJSONString()
-    return PaymentDataRequest.fromJson(json)
+    return GooglePayPaymentDataRequest(
+        apiVersion = GOOGLE_PAY_API_VERSION,
+        apiVersionMinor = GOOGLE_PAY_API_VERSION_MINOR,
+        merchantInfo = GooglePayMerchantInfo(merchantName),
+        allowedPaymentMethods = arrayOf(toGooglePayPaymentMethod(judo)),
+        transactionInfo = transactionInfo,
+        emailRequired = isEmailRequired,
+        shippingAddressRequired = isShippingAddressRequired,
+        shippingAddressParameters = shippingAddressParameters,
+        recurringTransactionInfo = recurringTransactionInfo,
+        deferredTransactionInfo = deferredTransactionInfo,
+    )
 }
 
 @Throws(IllegalArgumentException::class, JsonSyntaxException::class)
