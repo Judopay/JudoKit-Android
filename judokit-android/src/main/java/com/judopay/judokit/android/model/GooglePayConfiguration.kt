@@ -145,15 +145,13 @@ class GooglePayConfiguration internal constructor(
          * Sets Deferred MIT parameters.
          * @see GooglePayDeferredParameters
          */
-        fun setDeferredParameters(parameters: GooglePayDeferredParameters?) =
-            apply { this.deferredParameters = parameters }
+        fun setDeferredParameters(parameters: GooglePayDeferredParameters?) = apply { this.deferredParameters = parameters }
 
         /**
          * Sets Recurring MIT parameters.
          * @see GooglePayRecurringParameters
          */
-        fun setRecurringParameters(parameters: GooglePayRecurringParameters?) =
-            apply { this.recurringParameters = parameters }
+        fun setRecurringParameters(parameters: GooglePayRecurringParameters?) = apply { this.recurringParameters = parameters }
 
         /**
          * Creates an instance of [GooglePayConfiguration] based on provided data in setters.

@@ -93,8 +93,12 @@ internal class GooglePayMitMappersTest {
         assertThat(request.recurringTransactionInfo).isNotNull()
         assertThat(request.recurringTransactionInfo?.immediateTotalPrice).isEqualTo("25.00")
         assertThat(request.recurringTransactionInfo?.recurrenceItems).hasSize(1)
-        assertThat(request.recurringTransactionInfo?.recurrenceItems?.first()?.recurrencePeriod)
-            .isEqualTo(GooglePayRecurrencePeriod.MONTH)
+        val recurrencePeriod =
+            request.recurringTransactionInfo
+                ?.recurrenceItems
+                ?.first()
+                ?.recurrencePeriod
+        assertThat(recurrencePeriod).isEqualTo(GooglePayRecurrencePeriod.MONTH)
     }
 
     @Test
