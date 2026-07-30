@@ -523,6 +523,13 @@ class DemoFeatureListViewModel(
                     val introductoryPeriodInfo =
                         if (prefs.getBoolean("is_google_pay_recurring_introductory_period_enabled", false)) {
                             GooglePayIntroductoryPeriodInfo(
+                                introductoryPeriodStartDateTime =
+                                    prefs
+                                        .getString(
+                                            "google_pay_recurring_introductory_period_start_date_time",
+                                            null,
+                                        )?.trim()
+                                        ?.ifBlank { null },
                                 introductoryPeriodEndDateTime =
                                     prefs.getString(
                                         "google_pay_recurring_introductory_period_end_date_time",

@@ -150,6 +150,7 @@ object SettingsImporter {
                     "google_pay_recurring_item_billing_initial_date_time",
                     "google_pay_recurring_item_billing_final_date_time",
                     "is_google_pay_recurring_introductory_period_enabled",
+                    "google_pay_recurring_introductory_period_start_date_time",
                     "google_pay_recurring_introductory_period_end_date_time",
                     "google_pay_recurring_introductory_period_label",
                     "google_pay_recurring_introductory_period_total_price",

@@ -220,6 +220,8 @@
     <string name="google_pay_recurring_item_billing_final_date_time_summary">Optional final billing time in RFC 3339 format (empty = perpetual).</string>
     <string name="google_pay_recurring_introductory_period_enabled_title">Introductory period</string>
     <string name="google_pay_recurring_introductory_period_enabled_summary">Include an introductory period before recurring billing starts.</string>
+    <string name="google_pay_recurring_introductory_period_start_date_time_title">Introductory period start</string>
+    <string name="google_pay_recurring_introductory_period_start_date_time_summary">Optional start of the introductory service period in RFC 3339 format. Leave empty if the introductory period starts immediately.</string>
     <string name="google_pay_recurring_introductory_period_end_date_time_title">Introductory period end</string>
     <string name="google_pay_recurring_introductory_period_end_date_time_summary">End of the introductory service period in RFC 3339 format.</string>
     <string name="google_pay_recurring_introductory_period_label_title">Introductory period label</string>

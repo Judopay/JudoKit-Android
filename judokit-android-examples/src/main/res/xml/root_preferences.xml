@@ -620,6 +620,14 @@
             app:title="@string/google_pay_recurring_introductory_period_enabled_title" />
 
         <EditTextPreference
+            app:defaultValue=""
+            app:dependency="is_google_pay_recurring_introductory_period_enabled"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_recurring_introductory_period_start_date_time"
+            app:summary="@string/google_pay_recurring_introductory_period_start_date_time_summary"
+            app:title="@string/google_pay_recurring_introductory_period_start_date_time_title" />
+
+        <EditTextPreference
             app:defaultValue="2026-08-01T08:00:00Z"
             app:dependency="is_google_pay_recurring_introductory_period_enabled"
             app:iconSpaceReserved="false"
