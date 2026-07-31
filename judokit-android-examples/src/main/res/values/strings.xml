@@ -136,6 +136,8 @@
     <string name="primary_account_post_code_summary">Sets postal code</string>
 
     <string name="google_pay_header">Google Pay</string>
+    <string name="google_pay_settings_summary">Environment, transaction info, and MIT configuration</string>
+    <string name="google_pay_general_header">General</string>
     <string name="google_pay_is_production_title">Production environment</string>
     <string name="google_pay_is_production_summary">Use Google Pay production environment.</string>
 

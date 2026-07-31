@@ -117,6 +117,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
         setupRecyclerView()
 
         PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false)
+        PreferenceManager.setDefaultValues(this, R.xml.google_pay_preferences, false)
         notificationPermissionLauncher.requestPermissionIfNeeded()
 
         lifecycleScope.launch {
