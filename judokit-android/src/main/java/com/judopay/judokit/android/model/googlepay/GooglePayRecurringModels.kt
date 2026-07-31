@@ -17,6 +17,7 @@ data class GooglePayIntroductoryPeriodInfo(
     val introductoryPeriodEndDateTime: String,
     val label: String,
     val totalPrice: String,
+    val displayItems: List<GooglePayDisplayItem>? = null,
 ) : Parcelable
 
 @Parcelize
@@ -26,6 +27,7 @@ data class GooglePayRecurrencePeriodItem(
     val label: String,
     val price: String? = null,
     val priceStatus: GooglePayPriceStatus,
+    val displayItems: List<GooglePayDisplayItem>? = null,
     val recurrencePeriod: GooglePayRecurrencePeriod,
     val recurrencePeriodCount: Int,
 ) : Parcelable
@@ -35,6 +37,7 @@ data class GooglePayRecurringParameters(
     val immediateTotalPrice: String,
     val recurrenceItems: List<GooglePayRecurrencePeriodItem>,
     val introductoryPeriodInfo: GooglePayIntroductoryPeriodInfo? = null,
+    val immediateDisplayItems: List<GooglePayDisplayItem>? = null,
     val managementUrl: String? = null,
     val billingAgreement: String? = null,
 ) : Parcelable
@@ -47,6 +50,7 @@ data class GooglePayRecurringTransactionInfo(
     val managementUrl: String?,
     val billingAgreement: String?,
     val immediateTotalPrice: String,
+    val immediateDisplayItems: List<GooglePayDisplayItem>? = null,
     val introductoryPeriodInfo: GooglePayIntroductoryPeriodInfo?,
     val recurrenceItems: List<GooglePayRecurrencePeriodItem>,
 ) : Parcelable

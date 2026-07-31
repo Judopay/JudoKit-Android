@@ -512,6 +512,13 @@
             app:summary="@string/google_pay_mit_immediate_total_price_summary"
             app:title="@string/google_pay_mit_immediate_total_price_title" />
 
+        <EditTextPreference
+            app:defaultValue=""
+            app:iconSpaceReserved="false"
+            app:key="google_pay_mit_immediate_display_items"
+            app:summary="@string/google_pay_mit_immediate_display_items_summary"
+            app:title="@string/google_pay_mit_immediate_display_items_title" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -549,6 +556,13 @@
             app:key="google_pay_deferred_label"
             app:summary="@string/google_pay_deferred_label_summary"
             app:title="@string/google_pay_deferred_label_title" />
+
+        <EditTextPreference
+            app:defaultValue=""
+            app:iconSpaceReserved="false"
+            app:key="google_pay_deferred_display_items"
+            app:summary="@string/google_pay_deferred_display_items_summary"
+            app:title="@string/google_pay_deferred_display_items_title" />
 
     </PreferenceCategory>
 
@@ -612,6 +626,13 @@
             app:summary="@string/google_pay_recurring_item_billing_final_date_time_summary"
             app:title="@string/google_pay_recurring_item_billing_final_date_time_title" />
 
+        <EditTextPreference
+            app:defaultValue=""
+            app:iconSpaceReserved="false"
+            app:key="google_pay_recurring_item_display_items"
+            app:summary="@string/google_pay_recurring_item_display_items_summary"
+            app:title="@string/google_pay_recurring_item_display_items_title" />
+
         <SwitchPreference
             app:defaultValue="false"
             app:iconSpaceReserved="false"
@@ -650,6 +671,14 @@
             app:key="google_pay_recurring_introductory_period_total_price"
             app:summary="@string/google_pay_recurring_introductory_period_total_price_summary"
             app:title="@string/google_pay_recurring_introductory_period_total_price_title" />
+
+        <EditTextPreference
+            app:defaultValue=""
+            app:dependency="is_google_pay_recurring_introductory_period_enabled"
+            app:iconSpaceReserved="false"
+            app:key="google_pay_recurring_introductory_period_display_items"
+            app:summary="@string/google_pay_recurring_introductory_period_display_items_summary"
+            app:title="@string/google_pay_recurring_introductory_period_display_items_title" />
 
     </PreferenceCategory>
 

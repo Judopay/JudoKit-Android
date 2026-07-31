@@ -11,8 +11,10 @@ data class GooglePayDeferredTransactionInfo(
     val managementUrl: String?,
     val billingAgreement: String?,
     val immediateTotalPrice: String,
+    val immediateDisplayItems: List<GooglePayDisplayItem>? = null,
     val billingDateTime: String,
     val priceStatus: GooglePayPriceStatus,
     val price: String?,
     val label: String,
+    val displayItems: List<GooglePayDisplayItem>? = null,
 ) : Parcelable

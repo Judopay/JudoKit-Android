@@ -111,6 +111,7 @@ private fun GooglePayConfiguration.toRecurringTransactionInfo(currency: String) 
             managementUrl = parameters.managementUrl,
             billingAgreement = parameters.billingAgreement,
             immediateTotalPrice = parameters.immediateTotalPrice,
+            immediateDisplayItems = parameters.immediateDisplayItems,
             introductoryPeriodInfo = parameters.introductoryPeriodInfo,
             recurrenceItems = parameters.recurrenceItems,
         )
@@ -125,10 +126,12 @@ private fun GooglePayConfiguration.toDeferredTransactionInfo(currency: String) =
             managementUrl = parameters.managementUrl,
             billingAgreement = parameters.billingAgreement,
             immediateTotalPrice = parameters.immediateTotalPrice,
+            immediateDisplayItems = parameters.immediateDisplayItems,
             billingDateTime = parameters.billingDateTime,
             priceStatus = parameters.priceStatus,
             price = parameters.price,
             label = parameters.label,
+            displayItems = parameters.displayItems,
         )
     }
 

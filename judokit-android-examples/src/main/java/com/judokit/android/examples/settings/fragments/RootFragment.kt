@@ -88,6 +88,7 @@ class RootFragment : PreferenceFragmentCompat() {
             "google_pay_mit_management_url",
             "google_pay_mit_billing_agreement",
             "google_pay_mit_immediate_total_price",
+            "google_pay_mit_immediate_display_items",
         ).forEach { key ->
             findPreference<Preference>(key)?.isVisible = isMitEnabled
         }

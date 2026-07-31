@@ -451,6 +451,10 @@ class DemoFeatureListViewModel(
                     ?.ifBlank { null }
             val mitImmediateTotalPrice =
                 prefs.getString("google_pay_mit_immediate_total_price", "0.00") ?: "0.00"
+            val mitImmediateDisplayItems =
+                GooglePayDisplayItemsParser.parse(
+                    prefs.getString("google_pay_mit_immediate_display_items", null),
+                )
 
             val deferredParameters =
                 if (mitType == "DEFERRED") {
@@ -473,6 +477,11 @@ class DemoFeatureListViewModel(
                         label =
                             prefs.getString("google_pay_deferred_label", "Hotel Room Reservation")
                                 ?: "Hotel Room Reservation",
+                        immediateDisplayItems = mitImmediateDisplayItems,
+                        displayItems =
+                            GooglePayDisplayItemsParser.parse(
+                                prefs.getString("google_pay_deferred_display_items", null),
+                            ),
                         managementUrl = mitManagementUrl,
                         billingAgreement = mitBillingAgreement,
                     )
@@ -510,6 +519,10 @@ class DemoFeatureListViewModel(
                                     prefs.getString("google_pay_recurring_item_price", "25.00") ?: "25.00"
                                 },
                             priceStatus = itemPriceStatus,
+                            displayItems =
+                                GooglePayDisplayItemsParser.parse(
+                                    prefs.getString("google_pay_recurring_item_display_items", null),
+                                ),
                             recurrencePeriod =
                                 GooglePayRecurrencePeriod.valueOf(
                                     prefs.getString("google_pay_recurring_item_period", "MONTH") ?: "MONTH",
@@ -545,6 +558,13 @@ class DemoFeatureListViewModel(
                                         "google_pay_recurring_introductory_period_total_price",
                                         "0.00",
                                     ) ?: "0.00",
+                                displayItems =
+                                    GooglePayDisplayItemsParser.parse(
+                                        prefs.getString(
+                                            "google_pay_recurring_introductory_period_display_items",
+                                            null,
+                                        ),
+                                    ),
                             )
                         } else {
                             null
@@ -553,6 +573,7 @@ class DemoFeatureListViewModel(
                         immediateTotalPrice = mitImmediateTotalPrice,
                         recurrenceItems = listOf(recurrenceItem),
                         introductoryPeriodInfo = introductoryPeriodInfo,
+                        immediateDisplayItems = mitImmediateDisplayItems,
                         managementUrl = mitManagementUrl,
                         billingAgreement = mitBillingAgreement,
                     )
