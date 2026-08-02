@@ -363,11 +363,17 @@
 
     </PreferenceCategory>
 
-    <Preference
-        app:fragment="com.judokit.android.examples.settings.fragments.GooglePaySettingsFragment"
+    <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:summary="@string/google_pay_settings_summary"
-        app:title="@string/google_pay_header" />
+        app:title="@string/google_pay_header">
+
+        <Preference
+            app:fragment="com.judokit.android.examples.settings.fragments.GooglePaySettingsFragment"
+            app:iconSpaceReserved="false"
+            app:summary="@string/google_pay_settings_summary"
+            app:title="@string/google_pay_configuration_title" />
+
+    </PreferenceCategory>
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
