@@ -139,6 +139,9 @@
     <string name="google_pay_configuration_title">Google Pay</string>
     <string name="google_pay_settings_summary">Environment, transaction info, and MIT configuration</string>
     <string name="google_pay_general_header">General</string>
+
+    <string name="google_pay_mit_header">Merchant initiated transactions</string>
+
     <string name="google_pay_is_production_title">Production environment</string>
     <string name="google_pay_is_production_summary">Use Google Pay production environment.</string>
 
@@ -199,7 +202,6 @@
     <string name="google_pay_mit_immediate_display_items_title">Immediate display items</string>
     <string name="google_pay_mit_immediate_display_items_summary">Optional JSON array of one-time charges due today. Example: [{\"label\":\"Setup fee\",\"type\":\"LINE_ITEM\",\"price\":\"5.00\"}]</string>
 
-    <string name="google_pay_deferred_header">Google Pay Deferred</string>
     <string name="google_pay_deferred_billing_date_time_title">Billing date time</string>
     <string name="google_pay_deferred_billing_date_time_summary">Future charge time in RFC 3339 format (must be after now).</string>
     <string name="google_pay_deferred_price_status_title">Price status</string>
@@ -211,7 +213,6 @@
     <string name="google_pay_deferred_display_items_title">Deferred display items</string>
     <string name="google_pay_deferred_display_items_summary">Optional JSON array of line items for the future deferred charge.</string>
 
-    <string name="google_pay_recurring_header">Google Pay Recurring</string>
     <string name="google_pay_recurring_item_label_title">Recurrence item label</string>
     <string name="google_pay_recurring_item_label_summary">Short label for the recurring period (max 100 characters).</string>
     <string name="google_pay_recurring_item_price_status_title">Recurrence item price status</string>

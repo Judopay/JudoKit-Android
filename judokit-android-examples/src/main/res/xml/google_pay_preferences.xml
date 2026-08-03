@@ -122,6 +122,12 @@
             app:title="@string/google_pay_checkout_option_title"
             app:useSimpleSummaryProvider="true" />
 
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/google_pay_mit_header">
+
         <ListPreference
             app:defaultValue="NONE"
             app:entries="@array/google_pay_mit_type_entries"
@@ -131,6 +137,12 @@
             app:summary="@string/google_pay_mit_type_summary"
             app:title="@string/google_pay_mit_type_title"
             app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:key="google_pay_mit_shared_category">
 
         <EditTextPreference
             app:defaultValue=""
@@ -164,8 +176,7 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:key="google_pay_deferred_category"
-        app:title="@string/google_pay_deferred_header">
+        app:key="google_pay_deferred_category">
 
         <EditTextPreference
             app:defaultValue="2027-01-01T08:00:00Z"
@@ -209,8 +220,7 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:key="google_pay_recurring_category"
-        app:title="@string/google_pay_recurring_header">
+        app:key="google_pay_recurring_recurrence_category">
 
         <EditTextPreference
             app:defaultValue="Premium Plan Monthly Subscription"
@@ -273,6 +283,12 @@
             app:key="google_pay_recurring_item_display_items"
             app:summary="@string/google_pay_recurring_item_display_items_summary"
             app:title="@string/google_pay_recurring_item_display_items_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:key="google_pay_recurring_introductory_period_category">
 
         <SwitchPreference
             app:defaultValue="false"
