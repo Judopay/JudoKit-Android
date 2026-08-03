@@ -80,7 +80,6 @@ internal fun GooglePayConfiguration.toGooglePayPaymentDataRequest(judo: Judo): G
     val currency = judo.amount.currency.name
     val recurringTransactionInfo = toRecurringTransactionInfo(currency)
     val deferredTransactionInfo = toDeferredTransactionInfo(currency)
-    // Exactly one of transactionInfo / MIT *TransactionInfo objects may be present.
     val transactionInfo =
         if (recurringTransactionInfo != null || deferredTransactionInfo != null) {
             null
