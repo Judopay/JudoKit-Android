@@ -26,7 +26,6 @@ class GooglePaySettingsFragment : PreferenceFragmentCompat() {
 
     private fun updateGooglePayMitTypeVisibility(mitType: String?) {
         val type = mitType ?: "NONE"
-        val isMitEnabled = type != "NONE"
         val isStandardTransaction = type == "NONE"
 
         listOf(
@@ -39,14 +38,10 @@ class GooglePaySettingsFragment : PreferenceFragmentCompat() {
         }
 
         findPreference<PreferenceCategory>("google_pay_mit_shared_category")?.isVisible =
-            isMitEnabled
-
+            !isStandardTransaction
         findPreference<PreferenceCategory>("google_pay_deferred_category")?.isVisible =
             type == "DEFERRED"
-
-        findPreference<PreferenceCategory>("google_pay_recurring_recurrence_category")?.isVisible =
-            type == "RECURRING"
-        findPreference<PreferenceCategory>("google_pay_recurring_introductory_period_category")?.isVisible =
+        findPreference<PreferenceCategory>("google_pay_recurring_category")?.isVisible =
             type == "RECURRING"
     }
 }

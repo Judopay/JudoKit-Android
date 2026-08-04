@@ -220,7 +220,7 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:key="google_pay_recurring_recurrence_category">
+        app:key="google_pay_recurring_category">
 
         <EditTextPreference
             app:defaultValue="Premium Plan Monthly Subscription"
@@ -283,12 +283,6 @@
             app:key="google_pay_recurring_item_display_items"
             app:summary="@string/google_pay_recurring_item_display_items_summary"
             app:title="@string/google_pay_recurring_item_display_items_title" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        app:iconSpaceReserved="false"
-        app:key="google_pay_recurring_introductory_period_category">
 
         <SwitchPreference
             app:defaultValue="false"
