@@ -407,6 +407,11 @@ class DemoFeatureListViewModel(
 
     private val googlePayConfiguration: GooglePayConfiguration
         get() {
+            fun stringPref(
+                key: String,
+                default: String,
+            ): String = prefs.getString(key, default) ?: default
+
             val isProductionEnv = prefs.getBoolean("is_google_pay_production_environment", false)
             val gPayEnv = if (isProductionEnv) GooglePayEnvironment.PRODUCTION else GooglePayEnvironment.TEST
             val billingAddress = prefs.getString("billing_address", "NONE")
@@ -438,7 +443,7 @@ class DemoFeatureListViewModel(
                 }
             val totalPriceStatus = prefs.getString("google_pay_total_price_status", "FINAL")
             val checkoutOption = prefs.getString("google_pay_checkout_option", null)
-            val mitType = prefs.getString("google_pay_mit_type", "NONE") ?: "NONE"
+            val mitType = stringPref("google_pay_mit_type", "NONE")
             val mitManagementUrl =
                 prefs
                     .getString("google_pay_mit_management_url", null)
@@ -449,8 +454,7 @@ class DemoFeatureListViewModel(
                     .getString("google_pay_mit_billing_agreement", null)
                     ?.trim()
                     ?.ifBlank { null }
-            val mitImmediateTotalPrice =
-                prefs.getString("google_pay_mit_immediate_total_price", "0.00") ?: "0.00"
+            val mitImmediateTotalPrice = stringPref("google_pay_mit_immediate_total_price", "0.00")
             val mitImmediateDisplayItems =
                 GooglePayDisplayItemsParser.parse(
                     prefs.getString("google_pay_mit_immediate_display_items", null),
@@ -460,23 +464,19 @@ class DemoFeatureListViewModel(
                 if (mitType == "DEFERRED") {
                     val deferredPriceStatus =
                         GooglePayPriceStatus.valueOf(
-                            prefs.getString("google_pay_deferred_price_status", "FINAL") ?: "FINAL",
+                            stringPref("google_pay_deferred_price_status", "FINAL"),
                         )
                     GooglePayDeferredParameters(
                         immediateTotalPrice = mitImmediateTotalPrice,
-                        billingDateTime =
-                            prefs.getString("google_pay_deferred_billing_date_time", "2027-01-01T08:00:00Z")
-                                ?: "2027-01-01T08:00:00Z",
+                        billingDateTime = stringPref("google_pay_deferred_billing_date_time", "2027-01-01T08:00:00Z"),
                         priceStatus = deferredPriceStatus,
                         price =
                             if (deferredPriceStatus == GooglePayPriceStatus.NOT_CURRENTLY_KNOWN) {
                                 null
                             } else {
-                                prefs.getString("google_pay_deferred_price", "200.00") ?: "200.00"
+                                stringPref("google_pay_deferred_price", "200.00")
                             },
-                        label =
-                            prefs.getString("google_pay_deferred_label", "Hotel Room Reservation")
-                                ?: "Hotel Room Reservation",
+                        label = stringPref("google_pay_deferred_label", "Hotel Room Reservation"),
                         immediateDisplayItems = mitImmediateDisplayItems,
                         displayItems =
                             GooglePayDisplayItemsParser.parse(
@@ -493,7 +493,7 @@ class DemoFeatureListViewModel(
                 if (mitType == "RECURRING") {
                     val itemPriceStatus =
                         GooglePayPriceStatus.valueOf(
-                            prefs.getString("google_pay_recurring_item_price_status", "FINAL") ?: "FINAL",
+                            stringPref("google_pay_recurring_item_price_status", "FINAL"),
                         )
                     val recurrenceItem =
                         GooglePayRecurrencePeriodItem(
@@ -508,15 +508,15 @@ class DemoFeatureListViewModel(
                                     ?.trim()
                                     ?.ifBlank { null },
                             label =
-                                prefs.getString(
+                                stringPref(
                                     "google_pay_recurring_item_label",
                                     "Premium Plan Monthly Subscription",
-                                ) ?: "Premium Plan Monthly Subscription",
+                                ),
                             price =
                                 if (itemPriceStatus == GooglePayPriceStatus.NOT_CURRENTLY_KNOWN) {
                                     null
                                 } else {
-                                    prefs.getString("google_pay_recurring_item_price", "25.00") ?: "25.00"
+                                    stringPref("google_pay_recurring_item_price", "25.00")
                                 },
                             priceStatus = itemPriceStatus,
                             displayItems =
@@ -525,7 +525,7 @@ class DemoFeatureListViewModel(
                                 ),
                             recurrencePeriod =
                                 GooglePayRecurrencePeriod.valueOf(
-                                    prefs.getString("google_pay_recurring_item_period", "MONTH") ?: "MONTH",
+                                    stringPref("google_pay_recurring_item_period", "MONTH"),
                                 ),
                             recurrencePeriodCount =
                                 prefs
@@ -544,20 +544,20 @@ class DemoFeatureListViewModel(
                                         )?.trim()
                                         ?.ifBlank { null },
                                 introductoryPeriodEndDateTime =
-                                    prefs.getString(
+                                    stringPref(
                                         "google_pay_recurring_introductory_period_end_date_time",
                                         "2026-08-01T08:00:00Z",
-                                    ) ?: "2026-08-01T08:00:00Z",
+                                    ),
                                 label =
-                                    prefs.getString(
+                                    stringPref(
                                         "google_pay_recurring_introductory_period_label",
                                         "7 Day Free Trial",
-                                    ) ?: "7 Day Free Trial",
+                                    ),
                                 totalPrice =
-                                    prefs.getString(
+                                    stringPref(
                                         "google_pay_recurring_introductory_period_total_price",
                                         "0.00",
-                                    ) ?: "0.00",
+                                    ),
                                 displayItems =
                                     GooglePayDisplayItemsParser.parse(
                                         prefs.getString(
