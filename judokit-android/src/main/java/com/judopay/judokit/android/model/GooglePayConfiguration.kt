@@ -157,7 +157,6 @@ class GooglePayConfiguration internal constructor(
          * Creates an instance of [GooglePayConfiguration] based on provided data in setters.
          * @throws IllegalArgumentException If environment or country code is null.
          * @throws IllegalArgumentException If any of the allowedCountryCodes are invalid.
-         * @throws IllegalArgumentException If more than one MIT parameter object is set.
          * @return An instance of [GooglePayConfiguration]
          */
         fun build(): GooglePayConfiguration {
@@ -173,25 +172,12 @@ class GooglePayConfiguration internal constructor(
                 }
             }
 
-            val mitParameterCount = listOfNotNull(deferredParameters, recurringParameters).size
-            require(mitParameterCount <= 1) {
-                "Only one of deferredParameters or recurringParameters may be set"
-            }
-
-            recurringParameters?.let { parameters ->
-                require(parameters.recurrenceItems.isNotEmpty()) {
-                    "recurringParameters.recurrenceItems must not be empty"
-                }
-            }
-
             return GooglePayConfiguration(
                 environment = env,
                 merchantName = merchantName,
                 transactionCountryCode = countryCode,
                 transactionId = transactionId,
-                totalPriceStatus =
-                    totalPriceStatus
-                        ?: GooglePayPriceStatus.FINAL,
+                totalPriceStatus = totalPriceStatus ?: GooglePayPriceStatus.FINAL,
                 totalPriceLabel = totalPriceLabel,
                 checkoutOption = checkoutOption,
                 isEmailRequired = isEmailRequired,
