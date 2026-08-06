@@ -184,7 +184,7 @@
     </string-array>
 
     <string-array name="google_pay_mit_type_entries">
-        <item>None (standard TransactionInfo)</item>
+        <item>None</item>
         <item>Deferred</item>
         <item>Recurring</item>
     </string-array>
