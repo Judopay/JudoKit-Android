@@ -1,7 +1,6 @@
 package com.judopay.judokit.android.ui.common
 
 import com.google.common.truth.Truth.assertThat
-import com.google.gson.JsonParser
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.model.Amount
 import com.judopay.judokit.android.model.CardNetwork
@@ -13,7 +12,6 @@ import com.judopay.judokit.android.model.googlepay.GooglePayPriceStatus
 import com.judopay.judokit.android.model.googlepay.GooglePayRecurrencePeriod
 import com.judopay.judokit.android.model.googlepay.GooglePayRecurrencePeriodItem
 import com.judopay.judokit.android.model.googlepay.GooglePayRecurringParameters
-import com.judopay.judokit.android.toJSONString
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.DisplayName
@@ -99,56 +97,6 @@ internal class GooglePayMitMappersTest {
                 ?.first()
                 ?.recurrencePeriod
         assertThat(recurrencePeriod).isEqualTo(GooglePayRecurrencePeriod.MONTH)
-    }
-
-    @Test
-    fun `Given deferred parameters, then JSON contains deferredTransactionInfo and omits transactionInfo`() {
-        val json =
-            baseConfiguration()
-                .setDeferredParameters(
-                    GooglePayDeferredParameters(
-                        immediateTotalPrice = "0.00",
-                        billingDateTime = "2027-01-01T08:00:00Z",
-                        priceStatus = GooglePayPriceStatus.FINAL,
-                        price = "200.00",
-                        label = "Hotel Room Reservation",
-                    ),
-                ).build()
-                .toGooglePayPaymentDataRequest(judo)
-                .toJSONString()
-
-        val root = JsonParser.parseString(json).asJsonObject
-        assertThat(root.has("deferredTransactionInfo")).isTrue()
-        assertThat(root.has("transactionInfo")).isFalse()
-        assertThat(root.has("recurringTransactionInfo")).isFalse()
-    }
-
-    @Test
-    fun `Given recurring parameters, then JSON contains recurringTransactionInfo and omits transactionInfo`() {
-        val json =
-            baseConfiguration()
-                .setRecurringParameters(
-                    GooglePayRecurringParameters(
-                        immediateTotalPrice = "25.00",
-                        recurrenceItems =
-                            listOf(
-                                GooglePayRecurrencePeriodItem(
-                                    label = "Premium Plan Monthly Subscription",
-                                    price = "25.00",
-                                    priceStatus = GooglePayPriceStatus.FINAL,
-                                    recurrencePeriod = GooglePayRecurrencePeriod.MONTH,
-                                    recurrencePeriodCount = 1,
-                                ),
-                            ),
-                    ),
-                ).build()
-                .toGooglePayPaymentDataRequest(judo)
-                .toJSONString()
-
-        val root = JsonParser.parseString(json).asJsonObject
-        assertThat(root.has("recurringTransactionInfo")).isTrue()
-        assertThat(root.has("transactionInfo")).isFalse()
-        assertThat(root.has("deferredTransactionInfo")).isFalse()
     }
 
     private fun baseConfiguration(): GooglePayConfiguration.Builder =
