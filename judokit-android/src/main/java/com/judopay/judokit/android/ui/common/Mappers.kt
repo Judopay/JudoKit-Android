@@ -84,7 +84,7 @@ internal fun GooglePayConfiguration.toGooglePayPaymentDataRequest(judo: Judo): G
         if (recurringTransactionInfo != null || deferredTransactionInfo != null) {
             null
         } else {
-            toStandardTransactionInfo(judo.amount.amount, currency)
+            toTransactionInfo(judo.amount.amount, currency)
         }
 
     return GooglePayPaymentDataRequest(
@@ -134,7 +134,7 @@ private fun GooglePayConfiguration.toDeferredTransactionInfo(currency: String) =
         )
     }
 
-private fun GooglePayConfiguration.toStandardTransactionInfo(
+private fun GooglePayConfiguration.toTransactionInfo(
     price: String,
     currency: String,
 ) = GooglePayTransactionInfo(
