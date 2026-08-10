@@ -14,7 +14,6 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import com.judokit.android.examples.R
 import com.judokit.android.examples.settings.fragments.RootFragment
-import com.judokit.android.examples.settings.fragments.ThreeDSSDKUICustomisationFragment
 
 class SettingsActivity :
     AppCompatActivity(),
@@ -41,7 +40,25 @@ class SettingsActivity :
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
+            title = getString(R.string.title_settings)
         }
+
+        supportFragmentManager.addOnBackStackChangedListener {
+            updateToolbarTitle()
+        }
+    }
+
+    private fun updateToolbarTitle() {
+        val title =
+            if (supportFragmentManager.backStackEntryCount > 0) {
+                (supportFragmentManager.findFragmentById(R.id.settings) as? PreferenceFragmentCompat)
+                    ?.preferenceScreen
+                    ?.title
+                    ?.toString()
+            } else {
+                getString(R.string.title_settings)
+            }
+        supportActionBar?.title = title ?: getString(R.string.title_settings)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -77,10 +94,11 @@ class SettingsActivity :
         caller: PreferenceFragmentCompat,
         pref: Preference,
     ): Boolean {
-        val args = pref.extras
-        val fragment = ThreeDSSDKUICustomisationFragment()
-        fragment.arguments = args
-        fragment.setTargetFragment(caller, 0)
+        val fragmentClassName = pref.fragment ?: return false
+        val fragment =
+            supportFragmentManager.fragmentFactory
+                .instantiate(classLoader, fragmentClassName)
+        fragment.arguments = pref.extras
 
         supportFragmentManager
             .beginTransaction()
@@ -88,14 +106,18 @@ class SettingsActivity :
             .addToBackStack(null)
             .commit()
 
+        supportActionBar?.title = pref.title
+
         return true
     }
 
     private fun reloadRootFragment() {
+        supportFragmentManager.popBackStackImmediate(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.settings, RootFragment())
             .commit()
+        updateToolbarTitle()
     }
 
     private fun exportSettings() {

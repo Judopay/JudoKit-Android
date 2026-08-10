@@ -13,6 +13,7 @@ import com.judopay.judokit.android.model.GooglePayConfiguration
 import com.judopay.judokit.android.model.googlepay.GPayPaymentGatewayParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayAuthMethod
 import com.judopay.judokit.android.model.googlepay.GooglePayCardParameters
+import com.judopay.judokit.android.model.googlepay.GooglePayDeferredTransactionInfo
 import com.judopay.judokit.android.model.googlepay.GooglePayIsReadyToPayRequest
 import com.judopay.judokit.android.model.googlepay.GooglePayMerchantInfo
 import com.judopay.judokit.android.model.googlepay.GooglePayPaymentData
@@ -20,6 +21,7 @@ import com.judopay.judokit.android.model.googlepay.GooglePayPaymentDataRequest
 import com.judopay.judokit.android.model.googlepay.GooglePayPaymentMethod
 import com.judopay.judokit.android.model.googlepay.GooglePayPaymentMethodTokenizationSpecification
 import com.judopay.judokit.android.model.googlepay.GooglePayPaymentMethodType
+import com.judopay.judokit.android.model.googlepay.GooglePayRecurringTransactionInfo
 import com.judopay.judokit.android.model.googlepay.GooglePayTokenizationSpecificationType
 import com.judopay.judokit.android.model.googlepay.GooglePayTransactionInfo
 import com.judopay.judokit.android.model.isSupportedByGooglePay
@@ -70,37 +72,80 @@ internal fun GooglePayConfiguration.toIsReadyToPayRequest(judo: Judo): IsReadyTo
 }
 
 internal fun GooglePayConfiguration.toPaymentDataRequest(judo: Judo): PaymentDataRequest {
-    val price = judo.amount.amount
-    val currency = judo.amount.currency.name
+    val json = toGooglePayPaymentDataRequest(judo).toJSONString()
+    return PaymentDataRequest.fromJson(json)
+}
 
+internal fun GooglePayConfiguration.toGooglePayPaymentDataRequest(judo: Judo): GooglePayPaymentDataRequest {
+    val currency = judo.amount.currency.name
+    val recurringTransactionInfo = toRecurringTransactionInfo(currency)
+    val deferredTransactionInfo = toDeferredTransactionInfo(currency)
     val transactionInfo =
-        GooglePayTransactionInfo(
+        if (recurringTransactionInfo != null || deferredTransactionInfo != null) {
+            null
+        } else {
+            toTransactionInfo(judo.amount.amount, currency)
+        }
+
+    return GooglePayPaymentDataRequest(
+        apiVersion = GOOGLE_PAY_API_VERSION,
+        apiVersionMinor = GOOGLE_PAY_API_VERSION_MINOR,
+        merchantInfo = GooglePayMerchantInfo(merchantName),
+        allowedPaymentMethods = arrayOf(toGooglePayPaymentMethod(judo)),
+        transactionInfo = transactionInfo,
+        emailRequired = isEmailRequired,
+        shippingAddressRequired = isShippingAddressRequired,
+        shippingAddressParameters = shippingAddressParameters,
+        recurringTransactionInfo = recurringTransactionInfo,
+        deferredTransactionInfo = deferredTransactionInfo,
+    )
+}
+
+private fun GooglePayConfiguration.toRecurringTransactionInfo(currency: String) =
+    recurringParameters?.let { parameters ->
+        GooglePayRecurringTransactionInfo(
             currencyCode = currency,
             countryCode = transactionCountryCode,
             transactionId = transactionId,
-            totalPriceStatus = totalPriceStatus,
-            totalPrice = price,
-            totalPriceLabel = totalPriceLabel,
-            checkoutOption = checkoutOption,
+            managementUrl = parameters.managementUrl,
+            billingAgreement = parameters.billingAgreement,
+            immediateTotalPrice = parameters.immediateTotalPrice,
+            immediateDisplayItems = parameters.immediateDisplayItems,
+            introductoryPeriodInfo = parameters.introductoryPeriodInfo,
+            recurrenceItems = parameters.recurrenceItems,
         )
+    }
 
-    val cardPaymentMethod = toGooglePayPaymentMethod(judo)
-
-    val paymentRequest =
-        GooglePayPaymentDataRequest(
-            apiVersion = GOOGLE_PAY_API_VERSION,
-            apiVersionMinor = GOOGLE_PAY_API_VERSION_MINOR,
-            merchantInfo = GooglePayMerchantInfo(merchantName),
-            allowedPaymentMethods = arrayOf(cardPaymentMethod),
-            transactionInfo = transactionInfo,
-            emailRequired = isEmailRequired,
-            shippingAddressRequired = isShippingAddressRequired,
-            shippingAddressParameters = shippingAddressParameters,
+private fun GooglePayConfiguration.toDeferredTransactionInfo(currency: String) =
+    deferredParameters?.let { parameters ->
+        GooglePayDeferredTransactionInfo(
+            currencyCode = currency,
+            countryCode = transactionCountryCode,
+            transactionId = transactionId,
+            managementUrl = parameters.managementUrl,
+            billingAgreement = parameters.billingAgreement,
+            immediateTotalPrice = parameters.immediateTotalPrice,
+            immediateDisplayItems = parameters.immediateDisplayItems,
+            billingDateTime = parameters.billingDateTime,
+            priceStatus = parameters.priceStatus,
+            price = parameters.price,
+            label = parameters.label,
+            displayItems = parameters.displayItems,
         )
+    }
 
-    val json = paymentRequest.toJSONString()
-    return PaymentDataRequest.fromJson(json)
-}
+private fun GooglePayConfiguration.toTransactionInfo(
+    price: String,
+    currency: String,
+) = GooglePayTransactionInfo(
+    currencyCode = currency,
+    countryCode = transactionCountryCode,
+    transactionId = transactionId,
+    totalPriceStatus = totalPriceStatus,
+    totalPrice = price,
+    totalPriceLabel = totalPriceLabel,
+    checkoutOption = checkoutOption,
+)
 
 @Throws(IllegalArgumentException::class, JsonSyntaxException::class)
 internal fun PaymentData.toGooglePayRequest(judo: Judo): GooglePayRequest {

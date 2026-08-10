@@ -135,7 +135,13 @@
     <string name="primary_account_post_code_title">Post code</string>
     <string name="primary_account_post_code_summary">Sets postal code</string>
 
-    <string name="google_pay_header">Google Pay</string>
+    <string name="google_pay_header">Google Pay Settings</string>
+    <string name="google_pay_configuration_title">Google Pay</string>
+    <string name="google_pay_settings_summary">Environment, transaction info, and MIT configuration</string>
+    <string name="google_pay_general_header">General</string>
+
+    <string name="google_pay_mit_header">Merchant initiated transactions</string>
+
     <string name="google_pay_is_production_title">Production environment</string>
     <string name="google_pay_is_production_summary">Use Google Pay production environment.</string>
 
@@ -180,6 +186,61 @@
 
     <string name="google_pay_checkout_option_title">Checkout option</string>
     <string name="google_pay_checkout_option_summary">Affects the submit button text displayed in the Google Pay payment sheet.</string>
+
+    <string name="google_pay_mit_type_title">MIT type</string>
+    <string name="google_pay_mit_type_summary">Replace TransactionInfo with a Merchant Initiated Transaction object.</string>
+
+    <string name="google_pay_mit_management_url_title">Management URL</string>
+    <string name="google_pay_mit_management_url_summary">Optional HTTPS URL where the user can manage the MIT.</string>
+
+    <string name="google_pay_mit_billing_agreement_title">Billing agreement</string>
+    <string name="google_pay_mit_billing_agreement_summary">Optional localized billing agreement (max 300 characters).</string>
+
+    <string name="google_pay_mit_immediate_total_price_title">Immediate total price</string>
+    <string name="google_pay_mit_immediate_total_price_summary">Amount charged today (use 0.00 if nothing is charged immediately).</string>
+
+    <string name="google_pay_mit_immediate_display_items_title">Immediate display items</string>
+    <string name="google_pay_mit_immediate_display_items_summary">Optional JSON array of one-time charges due today. Example: [{\"label\":\"Setup fee\",\"type\":\"LINE_ITEM\",\"price\":\"5.00\"}]</string>
+
+    <string name="google_pay_deferred_billing_date_time_title">Billing date time</string>
+    <string name="google_pay_deferred_billing_date_time_summary">Future charge time in RFC 3339 format (must be after now).</string>
+    <string name="google_pay_deferred_price_status_title">Price status</string>
+    <string name="google_pay_deferred_price_status_summary">Status of the deferred price.</string>
+    <string name="google_pay_deferred_price_title">Price</string>
+    <string name="google_pay_deferred_price_summary">Future charge amount (required for FINAL or ESTIMATED).</string>
+    <string name="google_pay_deferred_label_title">Label</string>
+    <string name="google_pay_deferred_label_summary">Short label for the deferred transaction (max 100 characters).</string>
+    <string name="google_pay_deferred_display_items_title">Deferred display items</string>
+    <string name="google_pay_deferred_display_items_summary">Optional JSON array of line items for the future deferred charge.</string>
+
+    <string name="google_pay_recurring_item_label_title">Recurrence item label</string>
+    <string name="google_pay_recurring_item_label_summary">Short label for the recurring period (max 100 characters).</string>
+    <string name="google_pay_recurring_item_price_status_title">Recurrence item price status</string>
+    <string name="google_pay_recurring_item_price_status_summary">Status of the recurring price.</string>
+    <string name="google_pay_recurring_item_price_title">Recurrence item price</string>
+    <string name="google_pay_recurring_item_price_summary">Recurring charge amount (required for FINAL or ESTIMATED).</string>
+    <string name="google_pay_recurring_item_period_title">Recurrence period</string>
+    <string name="google_pay_recurring_item_period_summary">Unit used with period count (YEAR, MONTH, WEEK, DAY).</string>
+    <string name="google_pay_recurring_item_period_count_title">Recurrence period count</string>
+    <string name="google_pay_recurring_item_period_count_summary">Number of periods between billing cycles (e.g. 1 with MONTH = monthly).</string>
+    <string name="google_pay_recurring_item_billing_initial_date_time_title">Billing initial date time</string>
+    <string name="google_pay_recurring_item_billing_initial_date_time_summary">Optional first billing time in RFC 3339 format.</string>
+    <string name="google_pay_recurring_item_billing_final_date_time_title">Billing final date time</string>
+    <string name="google_pay_recurring_item_billing_final_date_time_summary">Optional final billing time in RFC 3339 format (empty = perpetual).</string>
+    <string name="google_pay_recurring_item_display_items_title">Recurrence display items</string>
+    <string name="google_pay_recurring_item_display_items_summary">Optional JSON array of line items for the recurring period (e.g. plan fee and tax).</string>
+    <string name="google_pay_recurring_introductory_period_enabled_title">Introductory period</string>
+    <string name="google_pay_recurring_introductory_period_enabled_summary">Include an introductory period before recurring billing starts.</string>
+    <string name="google_pay_recurring_introductory_period_start_date_time_title">Introductory period start</string>
+    <string name="google_pay_recurring_introductory_period_start_date_time_summary">Optional start of the introductory service period in RFC 3339 format. Leave empty if the introductory period starts immediately.</string>
+    <string name="google_pay_recurring_introductory_period_end_date_time_title">Introductory period end</string>
+    <string name="google_pay_recurring_introductory_period_end_date_time_summary">End of the introductory service period in RFC 3339 format.</string>
+    <string name="google_pay_recurring_introductory_period_label_title">Introductory period label</string>
+    <string name="google_pay_recurring_introductory_period_label_summary">Short label such as 7 Day Free Trial.</string>
+    <string name="google_pay_recurring_introductory_period_total_price_title">Introductory period price</string>
+    <string name="google_pay_recurring_introductory_period_total_price_summary">Price for the introductory period (0.00 for free).</string>
+    <string name="google_pay_recurring_introductory_period_display_items_title">Introductory display items</string>
+    <string name="google_pay_recurring_introductory_period_display_items_summary">Optional JSON array of line items for the introductory period.</string>
 
     <string name="avs_title">Address Verification Service</string>
     <string name="avs_summary">Turn on to enable Address Verification Service.</string>
