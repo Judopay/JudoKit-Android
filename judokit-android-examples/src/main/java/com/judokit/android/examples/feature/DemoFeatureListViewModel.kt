@@ -444,8 +444,8 @@ class DemoFeatureListViewModel(
             val totalPriceStatus = prefs.getString("google_pay_total_price_status", "FINAL")
             val checkoutOption = prefs.getString("google_pay_checkout_option", null)
             val mitType = stringPref("google_pay_mit_type", "NONE")
-            val mitManagementUrl = prefs.getString("google_pay_mit_management_url", null)
-            val mitBillingAgreement = prefs.getString("google_pay_mit_billing_agreement", null)
+            val mitManagementUrl = prefs.getString("google_pay_mit_management_url", null)?.ifBlank { null }
+            val mitBillingAgreement = prefs.getString("google_pay_mit_billing_agreement", null)?.ifBlank { null }
             val mitImmediateTotalPrice = stringPref("google_pay_mit_immediate_total_price", "0.00")
             val mitImmediateDisplayItems =
                 GooglePayDisplayItemsParser.parse(
@@ -490,9 +490,13 @@ class DemoFeatureListViewModel(
                     val recurrenceItem =
                         GooglePayRecurrencePeriodItem(
                             billingInitialDateTime =
-                                prefs.getString("google_pay_recurring_item_billing_initial_date_time", null),
+                                prefs
+                                    .getString("google_pay_recurring_item_billing_initial_date_time", null)
+                                    ?.ifBlank { null },
                             billingFinalDateTime =
-                                prefs.getString("google_pay_recurring_item_billing_final_date_time", null),
+                                prefs
+                                    .getString("google_pay_recurring_item_billing_final_date_time", null)
+                                    ?.ifBlank { null },
                             label =
                                 stringPref(
                                     "google_pay_recurring_item_label",
@@ -523,10 +527,11 @@ class DemoFeatureListViewModel(
                         if (prefs.getBoolean("is_google_pay_recurring_introductory_period_enabled", false)) {
                             GooglePayIntroductoryPeriodInfo(
                                 introductoryPeriodStartDateTime =
-                                    prefs.getString(
-                                        "google_pay_recurring_introductory_period_start_date_time",
-                                        null,
-                                    ),
+                                    prefs
+                                        .getString(
+                                            "google_pay_recurring_introductory_period_start_date_time",
+                                            null,
+                                        )?.ifBlank { null },
                                 introductoryPeriodEndDateTime =
                                     stringPref(
                                         "google_pay_recurring_introductory_period_end_date_time",
@@ -570,7 +575,7 @@ class DemoFeatureListViewModel(
                 .setEnvironment(gPayEnv)
                 .setMerchantName(prefs.getString("google_pay_merchant_name", null)?.trim()?.ifBlank { null })
                 .setTransactionCountryCode(prefs.getString("google_pay_country_code", "GB"))
-                .setTransactionId(prefs.getString("google_pay_transaction_id", null))
+                .setTransactionId(prefs.getString("google_pay_transaction_id", null)?.ifBlank { null })
                 .setTotalPriceStatus(totalPriceStatus?.let { GooglePayPriceStatus.valueOf(it) })
                 .setTotalPriceLabel(prefs.getString("google_pay_total_price_label", null)?.ifEmpty { null })
                 .setCheckoutOption(checkoutOption?.let { GooglePayCheckoutOption.valueOf(it) })
