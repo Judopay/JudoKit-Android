@@ -26,3 +26,9 @@
 # Keep the Retrofit interface and all model classes in the apiclient package
 # with their original names.
 -keep class com.judokit.android.examples.apiclient.** { *; }
+
+# Settings sub-screens are opened via app:fragment class names in preferences XML;
+# R8 cannot see those references and would strip the fragments in release builds.
+-keep class com.judokit.android.examples.settings.fragments.** extends androidx.preference.PreferenceFragmentCompat {
+    public <init>();
+}
