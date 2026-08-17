@@ -145,14 +145,12 @@
         app:key="google_pay_mit_shared_category">
 
         <EditTextPreference
-            app:defaultValue=""
             app:iconSpaceReserved="false"
             app:key="google_pay_mit_management_url"
             app:summary="@string/google_pay_mit_management_url_summary"
             app:title="@string/google_pay_mit_management_url_title" />
 
         <EditTextPreference
-            app:defaultValue=""
             app:iconSpaceReserved="false"
             app:key="google_pay_mit_billing_agreement"
             app:summary="@string/google_pay_mit_billing_agreement_summary"
@@ -166,7 +164,6 @@
             app:title="@string/google_pay_mit_immediate_total_price_title" />
 
         <EditTextPreference
-            app:defaultValue=""
             app:iconSpaceReserved="false"
             app:key="google_pay_mit_immediate_display_items"
             app:summary="@string/google_pay_mit_immediate_display_items_summary"
@@ -210,7 +207,6 @@
             app:title="@string/google_pay_deferred_label_title" />
 
         <EditTextPreference
-            app:defaultValue=""
             app:iconSpaceReserved="false"
             app:key="google_pay_deferred_display_items"
             app:summary="@string/google_pay_deferred_display_items_summary"
@@ -264,21 +260,18 @@
             app:title="@string/google_pay_recurring_item_period_count_title" />
 
         <EditTextPreference
-            app:defaultValue=""
             app:iconSpaceReserved="false"
             app:key="google_pay_recurring_item_billing_initial_date_time"
             app:summary="@string/google_pay_recurring_item_billing_initial_date_time_summary"
             app:title="@string/google_pay_recurring_item_billing_initial_date_time_title" />
 
         <EditTextPreference
-            app:defaultValue=""
             app:iconSpaceReserved="false"
             app:key="google_pay_recurring_item_billing_final_date_time"
             app:summary="@string/google_pay_recurring_item_billing_final_date_time_summary"
             app:title="@string/google_pay_recurring_item_billing_final_date_time_title" />
 
         <EditTextPreference
-            app:defaultValue=""
             app:iconSpaceReserved="false"
             app:key="google_pay_recurring_item_display_items"
             app:summary="@string/google_pay_recurring_item_display_items_summary"
@@ -292,7 +285,6 @@
             app:title="@string/google_pay_recurring_introductory_period_enabled_title" />
 
         <EditTextPreference
-            app:defaultValue=""
             app:dependency="is_google_pay_recurring_introductory_period_enabled"
             app:iconSpaceReserved="false"
             app:key="google_pay_recurring_introductory_period_start_date_time"
@@ -324,7 +316,6 @@
             app:title="@string/google_pay_recurring_introductory_period_total_price_title" />
 
         <EditTextPreference
-            app:defaultValue=""
             app:dependency="is_google_pay_recurring_introductory_period_enabled"
             app:iconSpaceReserved="false"
             app:key="google_pay_recurring_introductory_period_display_items"
