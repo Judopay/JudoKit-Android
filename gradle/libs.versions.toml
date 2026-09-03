@@ -5,8 +5,7 @@ kotlin = "2.1.21"
 ksp = "2.1.21-2.0.1"
 
 # judokit-android
-judo3ds2 = "2.0.1"
-deviceDna = "1.3.0"
+judo3ds2 = "2.1.0"
 kotlinxCoroutines = "1.9.0"
 retrofit2 = "2.11.0"
 coreKtx = "1.16.0"
@@ -59,7 +58,6 @@ material3Android = "1.3.2"
 [libraries]
 # judokit-android
 judopay-judo3ds2 = { group = "com.judopay", name = "judo3ds2", version.ref = "judo3ds2" }
-judopay-device-dna = { group = "com.judopay", name = "device-dna", version.ref = "deviceDna" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }

@@ -78,26 +78,26 @@
         <SwitchPreference
             app:defaultValue="false"
             app:iconSpaceReserved="false"
-            app:key="is_recommendation_feature_enabled"
+            app:key="is_recommendation_enabled"
             app:summary="@string/is_recommendation_feature_enabled_summary"
             app:title="@string/is_recommendation_feature_encryption_enabled_title" />
 
         <EditTextPreference
-            app:dependency="is_recommendation_feature_enabled"
+            app:dependency="is_recommendation_enabled"
             app:iconSpaceReserved="false"
             app:key="recommendation_url"
             app:summary="@string/reccomendation_url_key_summary"
             app:title="@string/reccomendation_url_title" />
 
         <EditTextPreference
-            app:dependency="is_recommendation_feature_enabled"
+            app:dependency="is_recommendation_enabled"
             app:iconSpaceReserved="false"
             app:key="rsa_key"
             app:summary="@string/rsa_key_summary"
             app:title="@string/rsa_key_title" />
 
         <EditTextPreference
-            app:dependency="is_recommendation_feature_enabled"
+            app:dependency="is_recommendation_enabled"
             app:defaultValue="30"
             app:iconSpaceReserved="false"
             app:key="recommendation_timeout"
@@ -105,10 +105,10 @@
             app:title="@string/recommendation_timeout_title" />
 
         <SwitchPreference
-            app:dependency="is_recommendation_feature_enabled"
+            app:dependency="is_recommendation_enabled"
             app:defaultValue="false"
             app:iconSpaceReserved="false"
-            app:key="halt_transaction_in_case_of_any_error_enabled"
+            app:key="is_recommendation_halt_transaction_enabled"
             app:summary="@string/recommendation_halt_transaction_in_case_of_any_error_summary"
             app:title="@string/recommendation_halt_transaction_in_case_of_any_error_title" />
 
@@ -130,7 +130,7 @@
             app:entries="@array/three_ds_two_challenge_request_indicator_entries"
             app:entryValues="@array/three_ds_two_challenge_request_indicator_values"
             app:iconSpaceReserved="false"
-            app:key="challengeRequestIndicator"
+            app:key="challenge_request_indicator"
             app:summary="@string/challenge_request_indicator_summary"
             app:title="@string/challenge_request_indicator_title"
             app:useSimpleSummaryProvider="true" />
@@ -140,7 +140,7 @@
             app:entries="@array/three_ds_two_sca_exemption_entries"
             app:entryValues="@array/three_ds_two_sca_exemption_values"
             app:iconSpaceReserved="false"
-            app:key="scaExemption"
+            app:key="sca_exemption"
             app:summary="@string/sca_exemption_summary"
             app:title="@string/sca_exemption_title"
             app:useSimpleSummaryProvider="true" />
@@ -148,7 +148,7 @@
         <EditTextPreference
             app:defaultValue="30"
             app:iconSpaceReserved="false"
-            app:key="threeDSTwoMaxTimeout"
+            app:key="three_ds_two_max_timeout"
             app:summary="@string/three_ds2_max_timeout_summary"
             app:title="@string/three_ds2_max_timeout_title"
             app:useSimpleSummaryProvider="true" />
@@ -175,7 +175,7 @@
         <EditTextPreference
             app:defaultValue=""
             app:iconSpaceReserved="false"
-            app:key="threeDSTwoMessageVersion"
+            app:key="three_ds_two_message_version"
             app:summary="@string/three_ds2_protocol_message_version_summary"
             app:title="@string/three_ds2_protocol_message_version_title" />
 
@@ -292,7 +292,7 @@
             app:defaultValue="44"
             app:dependency="is_address_enabled"
             app:iconSpaceReserved="false"
-            app:key="phone_country_code"
+            app:key="address_phone_country_code"
             app:summary="Your phone country code"
             app:title="Phone country code"
             app:useSimpleSummaryProvider="true" />
@@ -301,7 +301,7 @@
             app:defaultValue="0799999999"
             app:dependency="is_address_enabled"
             app:iconSpaceReserved="false"
-            app:key="mobile_number"
+            app:key="address_mobile_number"
             app:summary="Your mobile number"
             app:title="Mobile number"
             app:useSimpleSummaryProvider="true" />
@@ -310,7 +310,7 @@
             app:defaultValue="email@address.com"
             app:dependency="is_address_enabled"
             app:iconSpaceReserved="false"
-            app:key="email_address"
+            app:key="address_email_address"
             app:summary="Your email address"
             app:title="Email address"
             app:useSimpleSummaryProvider="true" />
@@ -367,119 +367,11 @@
         app:iconSpaceReserved="false"
         app:title="@string/google_pay_header">
 
-        <SwitchPreference
-            app:defaultValue="false"
+        <Preference
+            app:fragment="com.judokit.android.examples.settings.fragments.GooglePaySettingsFragment"
             app:iconSpaceReserved="false"
-            app:key="is_google_pay_production_environment"
-            app:summary="@string/google_pay_is_production_summary"
-            app:title="@string/google_pay_is_production_title" />
-
-        <EditTextPreference
-            app:defaultValue=""
-            app:iconSpaceReserved="false"
-            app:key="google_pay_merchant_name"
-            app:summary="@string/google_pay_merchant_name_summary"
-            app:title="@string/google_pay_merchant_name_title" />
-
-        <EditTextPreference
-            app:defaultValue="GB"
-            app:iconSpaceReserved="false"
-            app:key="google_pay_country_code"
-            app:summary="@string/google_pay_country_code_summary"
-            app:title="@string/google_pay_country_code_title" />
-
-        <ListPreference
-            app:defaultValue="NONE"
-            app:entries="@array/google_pay_address_entries"
-            app:entryValues="@array/google_pay_address_values"
-            app:iconSpaceReserved="false"
-            app:key="billing_address"
-            app:summary="@string/billing_address_summary"
-            app:title="@string/billing_address_title"
-            app:useSimpleSummaryProvider="true" />
-
-        <SwitchPreference
-            app:defaultValue="false"
-            app:iconSpaceReserved="false"
-            app:key="is_billing_address_phone_number_required"
-            app:summary="@string/billing_address_phone_number_summary"
-            app:title="@string/billing_address_phone_number_title" />
-
-        <SwitchPreference
-            app:defaultValue="false"
-            app:iconSpaceReserved="false"
-            app:key="is_shipping_address_required"
-            app:summary="@string/shipping_address_summary"
-            app:title="@string/shipping_address_title" />
-
-        <EditTextPreference
-            app:defaultValue=""
-            app:iconSpaceReserved="false"
-            app:key="google_pay_shipping_address_allowed_countries"
-            app:summary="@string/google_pay_shipping_address_allowed_countries_summary"
-            app:title="@string/google_pay_shipping_address_allowed_countries_title" />
-
-        <SwitchPreference
-            app:defaultValue="false"
-            app:iconSpaceReserved="false"
-            app:key="is_shipping_address_phone_number_required"
-            app:summary="@string/shipping_address_phone_number_summary"
-            app:title="@string/shipping_address_phone_number_title" />
-
-        <SwitchPreference
-            app:defaultValue="false"
-            app:iconSpaceReserved="false"
-            app:key="is_email_address_required"
-            app:summary="@string/email_address_summary"
-            app:title="@string/email_address_title" />
-
-        <SwitchPreference
-            app:defaultValue="true"
-            app:iconSpaceReserved="false"
-            app:key="allow_prepaid_cards"
-            app:summary="@string/google_pay_allow_prepaid_cards_summary"
-            app:title="@string/google_pay_allow_prepaid_cards_title" />
-
-        <SwitchPreference
-            app:defaultValue="true"
-            app:iconSpaceReserved="false"
-            app:key="allow_credit_cards"
-            app:summary="@string/google_pay_allow_credit_cards_summary"
-            app:title="@string/google_pay_allow_credit_cards_title" />
-
-        <EditTextPreference
-            app:defaultValue=""
-            app:iconSpaceReserved="false"
-            app:key="google_pay_transaction_id"
-            app:summary="@string/google_pay_transaction_id_summary"
-            app:title="@string/google_pay_transaction_id_title" />
-
-        <ListPreference
-            app:defaultValue="FINAL"
-            app:entries="@array/google_pay_total_price_status_entries"
-            app:entryValues="@array/google_pay_total_price_status_values"
-            app:iconSpaceReserved="false"
-            app:key="google_pay_total_price_status"
-            app:summary="@string/google_pay_total_price_status_summary"
-            app:title="@string/google_pay_total_price_status_title"
-            app:useSimpleSummaryProvider="true" />
-
-        <EditTextPreference
-            app:defaultValue=""
-            app:iconSpaceReserved="false"
-            app:key="google_pay_total_price_label"
-            app:summary="@string/google_pay_total_price_label_summary"
-            app:title="@string/google_pay_total_price_label_title" />
-
-        <ListPreference
-            app:defaultValue="DEFAULT"
-            app:entries="@array/google_pay_checkout_option_entries"
-            app:entryValues="@array/google_pay_checkout_option_values"
-            app:iconSpaceReserved="false"
-            app:key="google_pay_checkout_option"
-            app:summary="@string/google_pay_checkout_option_summary"
-            app:title="@string/google_pay_checkout_option_title"
-            app:useSimpleSummaryProvider="true" />
+            app:summary="@string/google_pay_settings_summary"
+            app:title="@string/google_pay_configuration_title" />
 
     </PreferenceCategory>
 
@@ -504,7 +396,7 @@
         <SwitchPreference
             app:defaultValue="true"
             app:iconSpaceReserved="false"
-            app:key="should_display_amount"
+            app:key="should_payment_methods_display_amount"
             app:summary="@string/should_display_amount_summary"
             app:title="@string/should_display_amount_title" />
 

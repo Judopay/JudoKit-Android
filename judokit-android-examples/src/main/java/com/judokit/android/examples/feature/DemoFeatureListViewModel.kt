@@ -43,8 +43,13 @@ import com.judopay.judokit.android.model.UiConfiguration
 import com.judopay.judokit.android.model.googlepay.GooglePayAddressFormat
 import com.judopay.judokit.android.model.googlepay.GooglePayBillingAddressParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayCheckoutOption
+import com.judopay.judokit.android.model.googlepay.GooglePayDeferredParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayEnvironment
+import com.judopay.judokit.android.model.googlepay.GooglePayIntroductoryPeriodInfo
 import com.judopay.judokit.android.model.googlepay.GooglePayPriceStatus
+import com.judopay.judokit.android.model.googlepay.GooglePayRecurrencePeriod
+import com.judopay.judokit.android.model.googlepay.GooglePayRecurrencePeriodItem
+import com.judopay.judokit.android.model.googlepay.GooglePayRecurringParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayShippingAddressParameters
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -212,13 +217,13 @@ class DemoFeatureListViewModel(
         val initialRecurringPayment = prefs.getBoolean("is_initial_recurring_payment", false)
         val delayedAuthorisation = prefs.getBoolean("is_delayed_authorisation_on", false)
         val allowIncrement = prefs.getBoolean("is_allow_increment_on", false)
-        val mobileNumber = prefs.getString("mobile_number", null)
-        val phoneCountryCode = prefs.getString("phone_country_code", null)
-        val emailAddress = prefs.getString("email_address", null)
-        val challengeRequestIndicator = parseEnumPref<ChallengeRequestIndicator>("challengeRequestIndicator")
-        val scaExemption = parseEnumPref<ScaExemption>("scaExemption")
-        val threeDSTwoMaxTimeout = prefs.getString("threeDSTwoMaxTimeout", null)?.toInt()
-        val messageVersion = prefs.getString("threeDSTwoMessageVersion", null)
+        val mobileNumber = prefs.getString("address_mobile_number", null)
+        val phoneCountryCode = prefs.getString("address_phone_country_code", null)
+        val emailAddress = prefs.getString("address_email_address", null)
+        val challengeRequestIndicator = parseEnumPref<ChallengeRequestIndicator>("challenge_request_indicator")
+        val scaExemption = parseEnumPref<ScaExemption>("sca_exemption")
+        val threeDSTwoMaxTimeout = prefs.getString("three_ds_two_max_timeout", null)?.toInt()
+        val messageVersion = prefs.getString("three_ds_two_message_version", null)
         val isDisableNetworkTokenisationOn = prefs.getBoolean("is_disable_network_tokenisation_on", false)
 
         val extras =
@@ -369,13 +374,13 @@ class DemoFeatureListViewModel(
 
     private val recommendationConfiguration: RecommendationConfiguration?
         get() {
-            if (!prefs.getBoolean("is_recommendation_feature_enabled", false)) return null
+            if (!prefs.getBoolean("is_recommendation_enabled", false)) return null
             return RecommendationConfiguration
                 .Builder()
                 .setRsaPublicKey(prefs.getString("rsa_key", null))
                 .setUrl(prefs.getString("recommendation_url", null))
                 .setTimeout(prefs.getString("recommendation_timeout", null)?.toInt())
-                .setShouldHaltTransactionInCaseOfAnyError(prefs.getBoolean("halt_transaction_in_case_of_any_error_enabled", false))
+                .setShouldHaltTransactionInCaseOfAnyError(prefs.getBoolean("is_recommendation_halt_transaction_enabled", false))
                 .build()
         }
 
@@ -386,7 +391,7 @@ class DemoFeatureListViewModel(
                 UiConfiguration
                     .Builder()
                     .setAvsEnabled(prefs.getBoolean("is_avs_enabled", false))
-                    .setShouldPaymentMethodsDisplayAmount(prefs.getBoolean("should_display_amount", true))
+                    .setShouldPaymentMethodsDisplayAmount(prefs.getBoolean("should_payment_methods_display_amount", true))
                     .setShouldPaymentMethodsVerifySecurityCode(prefs.getBoolean("should_payment_methods_verify_security_code", true))
                     .setShouldAskForCSC(prefs.getBoolean("should_ask_for_csc", false))
                     .setShouldAskForCardholderName(prefs.getBoolean("should_ask_for_cardholder_name", false))
@@ -402,6 +407,11 @@ class DemoFeatureListViewModel(
 
     private val googlePayConfiguration: GooglePayConfiguration
         get() {
+            fun stringPref(
+                key: String,
+                default: String,
+            ): String = prefs.getString(key, default) ?: default
+
             val isProductionEnv = prefs.getBoolean("is_google_pay_production_environment", false)
             val gPayEnv = if (isProductionEnv) GooglePayEnvironment.PRODUCTION else GooglePayEnvironment.TEST
             val billingAddress = prefs.getString("billing_address", "NONE")
@@ -433,12 +443,139 @@ class DemoFeatureListViewModel(
                 }
             val totalPriceStatus = prefs.getString("google_pay_total_price_status", "FINAL")
             val checkoutOption = prefs.getString("google_pay_checkout_option", null)
+            val mitType = stringPref("google_pay_mit_type", "NONE")
+            val mitManagementUrl = prefs.getString("google_pay_mit_management_url", null)?.ifBlank { null }
+            val mitBillingAgreement = prefs.getString("google_pay_mit_billing_agreement", null)?.ifBlank { null }
+            val mitImmediateTotalPrice = stringPref("google_pay_mit_immediate_total_price", "0.00")
+            val mitImmediateDisplayItems =
+                GooglePayDisplayItemsParser.parse(
+                    prefs.getString("google_pay_mit_immediate_display_items", null),
+                )
+
+            val deferredParameters =
+                if (mitType == "DEFERRED") {
+                    val deferredPriceStatus =
+                        GooglePayPriceStatus.valueOf(
+                            stringPref("google_pay_deferred_price_status", "FINAL"),
+                        )
+                    GooglePayDeferredParameters(
+                        immediateTotalPrice = mitImmediateTotalPrice,
+                        billingDateTime = stringPref("google_pay_deferred_billing_date_time", "2027-01-01T08:00:00Z"),
+                        priceStatus = deferredPriceStatus,
+                        price =
+                            if (deferredPriceStatus == GooglePayPriceStatus.NOT_CURRENTLY_KNOWN) {
+                                null
+                            } else {
+                                stringPref("google_pay_deferred_price", "200.00")
+                            },
+                        label = stringPref("google_pay_deferred_label", "Hotel Room Reservation"),
+                        immediateDisplayItems = mitImmediateDisplayItems,
+                        displayItems =
+                            GooglePayDisplayItemsParser.parse(
+                                prefs.getString("google_pay_deferred_display_items", null),
+                            ),
+                        managementUrl = mitManagementUrl,
+                        billingAgreement = mitBillingAgreement,
+                    )
+                } else {
+                    null
+                }
+
+            val recurringParameters =
+                if (mitType == "RECURRING") {
+                    val itemPriceStatus =
+                        GooglePayPriceStatus.valueOf(
+                            stringPref("google_pay_recurring_item_price_status", "FINAL"),
+                        )
+                    val recurrenceItem =
+                        GooglePayRecurrencePeriodItem(
+                            billingInitialDateTime =
+                                prefs
+                                    .getString("google_pay_recurring_item_billing_initial_date_time", null)
+                                    ?.ifBlank { null },
+                            billingFinalDateTime =
+                                prefs
+                                    .getString("google_pay_recurring_item_billing_final_date_time", null)
+                                    ?.ifBlank { null },
+                            label =
+                                stringPref(
+                                    "google_pay_recurring_item_label",
+                                    "Premium Plan Monthly Subscription",
+                                ),
+                            price =
+                                if (itemPriceStatus == GooglePayPriceStatus.NOT_CURRENTLY_KNOWN) {
+                                    null
+                                } else {
+                                    stringPref("google_pay_recurring_item_price", "25.00")
+                                },
+                            priceStatus = itemPriceStatus,
+                            displayItems =
+                                GooglePayDisplayItemsParser.parse(
+                                    prefs.getString("google_pay_recurring_item_display_items", null),
+                                ),
+                            recurrencePeriod =
+                                GooglePayRecurrencePeriod.valueOf(
+                                    stringPref("google_pay_recurring_item_period", "MONTH"),
+                                ),
+                            recurrencePeriodCount =
+                                prefs
+                                    .getString("google_pay_recurring_item_period_count", "1")
+                                    ?.toIntOrNull()
+                                    ?: 1,
+                        )
+                    val introductoryPeriodInfo =
+                        if (prefs.getBoolean("is_google_pay_recurring_introductory_period_enabled", false)) {
+                            GooglePayIntroductoryPeriodInfo(
+                                introductoryPeriodStartDateTime =
+                                    prefs
+                                        .getString(
+                                            "google_pay_recurring_introductory_period_start_date_time",
+                                            null,
+                                        )?.ifBlank { null },
+                                introductoryPeriodEndDateTime =
+                                    stringPref(
+                                        "google_pay_recurring_introductory_period_end_date_time",
+                                        "2026-08-01T08:00:00Z",
+                                    ),
+                                label =
+                                    stringPref(
+                                        "google_pay_recurring_introductory_period_label",
+                                        "7 Day Free Trial",
+                                    ),
+                                totalPrice =
+                                    stringPref(
+                                        "google_pay_recurring_introductory_period_total_price",
+                                        "0.00",
+                                    ),
+                                displayItems =
+                                    GooglePayDisplayItemsParser.parse(
+                                        prefs.getString(
+                                            "google_pay_recurring_introductory_period_display_items",
+                                            null,
+                                        ),
+                                    ),
+                            )
+                        } else {
+                            null
+                        }
+                    GooglePayRecurringParameters(
+                        immediateTotalPrice = mitImmediateTotalPrice,
+                        recurrenceItems = listOf(recurrenceItem),
+                        introductoryPeriodInfo = introductoryPeriodInfo,
+                        immediateDisplayItems = mitImmediateDisplayItems,
+                        managementUrl = mitManagementUrl,
+                        billingAgreement = mitBillingAgreement,
+                    )
+                } else {
+                    null
+                }
+
             return GooglePayConfiguration
                 .Builder()
                 .setEnvironment(gPayEnv)
                 .setMerchantName(prefs.getString("google_pay_merchant_name", null)?.trim()?.ifBlank { null })
                 .setTransactionCountryCode(prefs.getString("google_pay_country_code", "GB"))
-                .setTransactionId(prefs.getString("google_pay_transaction_id", null))
+                .setTransactionId(prefs.getString("google_pay_transaction_id", null)?.ifBlank { null })
                 .setTotalPriceStatus(totalPriceStatus?.let { GooglePayPriceStatus.valueOf(it) })
                 .setTotalPriceLabel(prefs.getString("google_pay_total_price_label", null)?.ifEmpty { null })
                 .setCheckoutOption(checkoutOption?.let { GooglePayCheckoutOption.valueOf(it) })
@@ -449,6 +586,8 @@ class DemoFeatureListViewModel(
                 .setShippingAddressParameters(shippingAddressParams)
                 .setAllowPrepaidCards(prefs.getBoolean("allow_prepaid_cards", true))
                 .setAllowCreditCards(prefs.getBoolean("allow_credit_cards", true))
+                .setDeferredParameters(deferredParameters)
+                .setRecurringParameters(recurringParameters)
                 .build()
         }
 
