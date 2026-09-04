@@ -31,7 +31,8 @@ internal class DsCertificateRepository(
 
     /**
      * Best-effort background refresh. Call at payment-screen creation, off the critical path.
-     * Never throws — all errors are swallowed and logged.
+     * All errors are swallowed and logged, except [CancellationException], which is rethrown
+     * so coroutine cancellation propagates as normal.
      */
     suspend fun prefetch() {
         runCatching { refresh() }.onFailure {

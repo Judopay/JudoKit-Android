@@ -126,7 +126,7 @@ internal class DsCertificateRepositoryTest {
                 sut.prefetch()
 
                 verify {
-                    cache.write(match { it.fetchedAt == 9_999_999_999L && it.entries == stale.entries })
+                    cache.write(match { it.fetchedAt == 9_999_999_999L && it.entries === stale.entries })
                 }
             }
 
@@ -149,7 +149,7 @@ internal class DsCertificateRepositoryTest {
             runTest {
                 every { cache.read() } returns aStaleCache()
                 coEvery { api.fetchDsCerts(any(), any(), any()) } returns
-                    successResponse(body = aResponse(schemaVersion = "2.0"))
+                    successResponse(body = aResponse(schemaVersion = "10.0"))
 
                 sut.prefetch()
 
@@ -185,7 +185,7 @@ internal class DsCertificateRepositoryTest {
             runTest {
                 // Entry expired in 2020 — well within the 7-day pre-expiry window
                 val nearExpiry = visaEntry(validUntil = "2020-01-01T00:00:00Z")
-                // fetchedAt = now → cache TTL is fresh, but entry is past expiry
+                // fetchedAt = now → cache TTL is fresh, but entry is near expiry
                 every { cache.read() } returns
                     aCache(fetchedAt = now, maxAgeMs = 86_400_000L, entries = listOf(nearExpiry))
                 coEvery { api.fetchDsCerts(any(), any(), any()) } returns
