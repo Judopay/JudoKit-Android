@@ -381,7 +381,7 @@ internal class CardTransactionRepository
                 judo: Judo,
             ): CardTransactionRepository {
                 val appContext = context.applicationContext
-                val dsCertificateRepository = DsCertificateRepository.getInstance(appContext)
+                val dsCertificateRepository = DsCertificateRepository.getInstance(appContext, judo)
                 CoroutineScope(Dispatchers.IO + SupervisorJob()).launch {
                     dsCertificateRepository.prefetch()
                 }

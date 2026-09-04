@@ -2,6 +2,7 @@ package com.judopay.judokit.android.service
 
 import android.content.Context
 import android.util.Log
+import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.DsCdnApiService
 import com.judopay.judokit.android.api.factory.DsCdnApiServiceFactory
 import com.judopay.judokit.android.api.model.response.cdn.DsCertEntry
@@ -14,7 +15,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-private const val CDN_URL = "judokit/ds-certs.json"
+private const val CDN_URL = "judokit/ds-certs"
 private const val DEFAULT_MAX_AGE_MS = 24 * 60 * 60 * 1000L
 private const val PRE_EXPIRY_THRESHOLD_MS = 7 * 24 * 60 * 60 * 1000L
 private const val HTTP_NOT_MODIFIED = 304
@@ -108,10 +109,13 @@ internal class DsCertificateRepository(
         @Volatile
         private var instance: DsCertificateRepository? = null
 
-        fun getInstance(context: Context): DsCertificateRepository =
+        fun getInstance(
+            context: Context,
+            judo: Judo,
+        ): DsCertificateRepository =
             instance ?: synchronized(this) {
                 instance ?: DsCertificateRepository(
-                    api = DsCdnApiServiceFactory.create(context.applicationContext),
+                    api = DsCdnApiServiceFactory.create(context.applicationContext, judo),
                     cache = DsCertsCacheStore(context.applicationContext),
                 ).also { instance = it }
             }

@@ -17,28 +17,19 @@ import com.judopay.judokit.android.apiBaseUrl
 import com.judopay.judokit.android.model.ChallengeRequestIndicator
 import com.judopay.judokit.android.model.NetworkTimeout
 import com.judopay.judokit.android.model.ScaExemption
-import okhttp3.CertificatePinner
-import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
-import okhttp3.TlsVersion
 import java.math.BigDecimal
-import java.security.KeyStore
 import java.util.Date
 import java.util.concurrent.TimeUnit
-import javax.net.ssl.SSLContext
-import javax.net.ssl.TrustManagerFactory
-import javax.net.ssl.X509TrustManager
 
 /**
  * Factory that provides the [JudoApiService] used for performing all HTTP requests to the
- * judoPay APIs. As implementation of the ApiService requires some configuration, it is better
+ * JudoPay APIs. As implementation of the ApiService requires some configuration, it is better
  * to use a shared instance than create a new instance per request, so this class ensures that only
  * one instance is used in the application.
  */
 @Suppress("TooGenericExceptionCaught", "TooGenericExceptionCaught", "TooGenericExceptionThrown")
 object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
-    private const val HOSTNAME_WILDCARD_PATTERN = "*.judopay.com"
-
     override val gson: Gson
         get() =
             GsonBuilder()
@@ -54,7 +45,7 @@ object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
      * @param context the calling Context
      * @param judo the judo instance
      * @return the Retrofit API service implementation containing the methods used
-     * for interacting with the judoPay REST API.
+     * for interacting with the JudoPay REST API.
      */
 
     @Deprecated("Use create instead", replaceWith = ReplaceWith("create(context, judo)"))
@@ -75,43 +66,7 @@ object JudoApiServiceFactory : ServiceFactory<JudoApiService>() {
         judo: Judo,
     ): OkHttpClient =
         try {
-            val sslContext = SSLContext.getInstance("TLSv1.2")
-            sslContext.init(null, null, null)
-
-            val trustManagerFactory =
-                TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
-            trustManagerFactory.init(null as KeyStore?)
-
-            val trustManagers = trustManagerFactory.trustManagers
-            check(!(trustManagers.size != 1 || trustManagers.first() !is X509TrustManager)) {
-                "Unexpected default trust managers: ${trustManagers.contentToString()}"
-            }
-
-            val trustManager = trustManagers.first() as X509TrustManager
-            val specs = mutableListOf<ConnectionSpec>()
-
-            specs.add(
-                ConnectionSpec
-                    .Builder(ConnectionSpec.MODERN_TLS)
-                    .tlsVersions(TlsVersion.TLS_1_2)
-                    .build(),
-            )
-
-            val builder =
-                OkHttpClient
-                    .Builder()
-                    .sslSocketFactory(Tls12SslSocketFactory(sslContext.socketFactory), trustManager)
-                    .connectionSpecs(specs)
-
-            builder.certificatePinner(
-                CertificatePinner
-                    .Builder()
-                    .add(
-                        HOSTNAME_WILDCARD_PATTERN,
-                        "sha256/SuY75QgkSNBlMtHNPeW9AayE7KNDAypMBHlJH9GEhXs=",
-                        "sha256/c4zbAoMygSbepJKqU3322FvFv5unm+TWZROW3FHU1o8=",
-                    ).build(),
-            )
+            val builder = JudoTlsConfigurator.applyTls12WithPinning(OkHttpClient.Builder())
 
             setTimeouts(builder, judo.networkTimeout)
             addInterceptors(builder, context, judo)
