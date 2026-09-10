@@ -23,4 +23,8 @@ internal class DsCertsCacheStore(
     fun write(cache: DsCertsCache) {
         prefs.edit { putString(KEY_CACHE, gson.toJson(cache)) }
     }
+
+    fun clear() {
+        prefs.edit { remove(KEY_CACHE) }
+    }
 }

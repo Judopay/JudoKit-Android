@@ -83,6 +83,17 @@ internal class DsCertsCacheStoreTest {
         assertEquals(original, restored)
     }
 
+    @Test
+    @DisplayName("clear removes the cached value from SharedPreferences")
+    fun clearRemovesCachedValue() {
+        every { editor.remove("cache_v1") } returns editor
+
+        sut.clear()
+
+        verify { editor.remove("cache_v1") }
+        verify { editor.apply() }
+    }
+
     private fun aCache() =
         DsCertsCache(
             etag = "v2025-03-01-abc123",

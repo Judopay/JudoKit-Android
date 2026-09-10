@@ -41,6 +41,18 @@ internal class DsCertificateRepositoryTest {
     }
 
     @Nested
+    @DisplayName("clearCache")
+    inner class ClearCacheTests {
+        @Test
+        @DisplayName("delegates to the cache store")
+        fun delegatesToCacheStore() {
+            sut.clearCache()
+
+            verify { cache.clear() }
+        }
+    }
+
+    @Nested
     @DisplayName("cachedEntry")
     inner class CachedEntryTests {
         @Test
@@ -157,6 +169,32 @@ internal class DsCertificateRepositoryTest {
             }
 
         @Test
+        @DisplayName("keeps existing cache when 200 response contains no entries")
+        fun keepsCacheWhenResponseHasNoEntries() =
+            runTest {
+                every { cache.read() } returns aStaleCache()
+                coEvery { api.fetchDsCerts(any(), any(), any()) } returns
+                    successResponse(body = aResponse(entries = emptyList()))
+
+                sut.prefetch()
+
+                verify(exactly = 0) { cache.write(any()) }
+            }
+
+        @Test
+        @DisplayName("omits conditional headers when cached etag and lastModified are blank")
+        fun omitsConditionalHeadersWhenBlank() =
+            runTest {
+                every { cache.read() } returns aCache(etag = "", lastModified = "", fetchedAt = 0L)
+                coEvery { api.fetchDsCerts(any(), isNull(), isNull()) } returns
+                    successResponse(body = aResponse())
+
+                sut.prefetch()
+
+                coVerify(exactly = 1) { api.fetchDsCerts(any(), isNull(), isNull()) }
+            }
+
+        @Test
         @DisplayName("does not update cache on non-200 / non-304 response")
         fun doesNotUpdateCacheOnErrorResponse() =
             runTest {
@@ -265,12 +303,13 @@ internal class DsCertificateRepositoryTest {
 
     private fun aCache(
         etag: String = "v2025-03-01-abc123",
+        lastModified: String = "Tue, 01 Mar 2025 00:00:00 GMT",
         fetchedAt: Long = now,
         maxAgeMs: Long = 86_400_000L,
         entries: List<DsCertEntry> = listOf(visaEntry()),
     ) = DsCertsCache(
         etag = etag,
-        lastModified = "Tue, 01 Mar 2025 00:00:00 GMT",
+        lastModified = lastModified,
         fetchedAt = fetchedAt,
         maxAgeMs = maxAgeMs,
         entries = entries,
@@ -282,13 +321,15 @@ internal class DsCertificateRepositoryTest {
     // fetchedAt = 0 → (now - 0) >> maxAgeMs → stale
     private fun aStaleCache() = aCache(fetchedAt = 0L, maxAgeMs = 86_400_000L)
 
-    private fun aResponse(schemaVersion: String = "1.0") =
-        DsCertsResponse(
-            schemaVersion = schemaVersion,
-            publishedAt = "2025-03-01T00:00:00Z",
-            etag = "v2025-03-01-abc123",
-            entries = listOf(visaEntry()),
-        )
+    private fun aResponse(
+        schemaVersion: String = "1.0",
+        entries: List<DsCertEntry> = listOf(visaEntry()),
+    ) = DsCertsResponse(
+        schemaVersion = schemaVersion,
+        publishedAt = "2025-03-01T00:00:00Z",
+        etag = "v2025-03-01-abc123",
+        entries = entries,
+    )
 
     private fun successResponse(
         headers: Headers = Headers.headersOf("ETag", "v2025-03-01-abc123"),

@@ -3,8 +3,10 @@ package com.judopay.judokit.android.api.factory
 import android.content.Context
 import com.google.gson.GsonBuilder
 import com.judopay.judokit.android.Judo
+import com.judopay.judokit.android.api.AppMetaDataProvider
 import com.judopay.judokit.android.api.DsCdnApiService
 import com.judopay.judokit.android.api.interceptor.NetworkConnectivityInterceptor
+import com.judopay.judokit.android.api.interceptor.UserAgentInterceptor
 import com.judopay.judokit.android.apiBaseUrl
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -26,6 +28,7 @@ internal object DsCdnApiServiceFactory {
                     .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
                     .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
                     .addInterceptor(NetworkConnectivityInterceptor(context))
+                    .addInterceptor(UserAgentInterceptor(AppMetaDataProvider(context, judo.subProductInfo)))
 
             // Host-supplied debug interceptors shared across all judo SDK HTTP clients.
             builder.interceptors().addAll(JudoHttpInterceptors.interceptors)

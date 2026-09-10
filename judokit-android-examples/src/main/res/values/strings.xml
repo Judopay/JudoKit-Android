@@ -309,6 +309,10 @@
     <string name="three_ds2_protocol_message_version_summary">Override 3DS 2.0 protocol message version</string>
     <string name="three_ds2_protocol_message_version_title">Message version</string>
 
+    <string name="clear_ds_certificate_cache_title">Clear DS Certificate Cache</string>
+    <string name="clear_ds_certificate_cache_summary">Removes cached 3DS 2.0 directory-server certificates so they are re-fetched from the CDN</string>
+    <string name="clear_ds_certificate_cache_done">DS certificate cache cleared</string>
+
     <string name="label_card_details">Card details</string>
     <string name="label_card_number">Card number</string>
     <string name="label_expiration_date">Expiration date (MM/YY)</string>

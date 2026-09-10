@@ -20,6 +20,9 @@ private const val DEFAULT_MAX_AGE_MS = 24 * 60 * 60 * 1000L
 private const val PRE_EXPIRY_THRESHOLD_MS = 7 * 24 * 60 * 60 * 1000L
 private const val HTTP_NOT_MODIFIED = 304
 private const val MILLIS_PER_SECOND = 1000L
+private const val HEADER_ETAG = "ETag"
+private const val HEADER_LAST_MODIFIED = "Last-Modified"
+private const val HEADER_CACHE_CONTROL = "Cache-Control"
 private val TAG = DsCertificateRepository::class.java.simpleName
 
 internal class DsCertificateRepository(
@@ -37,7 +40,6 @@ internal class DsCertificateRepository(
     suspend fun prefetch() {
         runCatching { refresh() }.onFailure {
             if (it is CancellationException) throw it
-            Log.w(TAG, "DS cert prefetch failed", it)
         }
     }
 
@@ -50,6 +52,13 @@ internal class DsCertificateRepository(
         val now = clock()
         return cache.read()?.entries?.firstOrNull { it.dsId == dsId && it.isNotExpired(now) }
     }
+
+    /**
+     * Drops all locally cached DS certificates. The next [prefetch] re-populates the cache from
+     * the CDN; until then [cachedEntry] returns null and callers fall back to the 3DS SDK's
+     * built-in certificates. Intended for QA/support scenarios that need a forced re-fetch.
+     */
+    fun clearCache() = cache.clear()
 
     private suspend fun refresh() =
         mutex.withLock {
@@ -66,8 +75,8 @@ internal class DsCertificateRepository(
             val response =
                 api.fetchDsCerts(
                     url = CDN_URL,
-                    ifNoneMatch = current?.etag,
-                    ifModifiedSince = current?.lastModified,
+                    ifNoneMatch = current?.etag?.ifBlank { null },
+                    ifModifiedSince = current?.lastModified?.ifBlank { null },
                 )
 
             when {
@@ -77,22 +86,26 @@ internal class DsCertificateRepository(
                 response.isSuccessful -> {
                     val body = response.body() ?: return@withLock
                     if (!body.schemaVersion.isSupportedSchemaMajor()) {
-                        Log.w(TAG, "Unsupported ds-certs.json schemaVersion '${body.schemaVersion}' — ignoring payload")
+                        return@withLock
+                    }
+                    if (body.entries.isEmpty()) {
                         return@withLock
                     }
                     cache.write(
                         DsCertsCache(
-                            etag = response.headers()["ETag"] ?: body.etag,
-                            lastModified = response.headers()["Last-Modified"].orEmpty(),
+                            etag = response.headers()[HEADER_ETAG] ?: body.etag,
+                            lastModified = response.headers()[HEADER_LAST_MODIFIED].orEmpty(),
                             fetchedAt = now,
-                            maxAgeMs = parseMaxAgeMs(response.headers()["Cache-Control"]),
+                            maxAgeMs = parseMaxAgeMs(response.headers()[HEADER_CACHE_CONTROL]),
                             entries = body.entries,
                         ),
                     )
                 }
 
-                else ->
-                    Log.w(TAG, "DS cert CDN fetch returned ${response.code()} — keeping existing cache")
+                else -> {
+                    // noop
+                    // DS cert CDN fetch returned ${response.code()} — keeping existing cache
+                }
             }
         }
 

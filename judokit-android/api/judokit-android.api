@@ -3120,6 +3120,11 @@ public final class com/judopay/judokit/android/model/googlepay/GooglePayTransact
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
+public final class com/judopay/judokit/android/service/DsCertificateCache {
+	public static final field INSTANCE Lcom/judopay/judokit/android/service/DsCertificateCache;
+	public static final fun clear (Landroid/content/Context;)V
+}
+
 public final class com/judopay/judokit/android/service/JudoGooglePayService {
 	public fun <init> (Lcom/google/android/gms/wallet/PaymentsClient;Lcom/judopay/judokit/android/Judo;Landroidx/activity/result/ActivityResultLauncher;)V
 	public final fun checkIfGooglePayIsAvailable (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
