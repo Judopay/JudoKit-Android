@@ -18,14 +18,22 @@ internal data class DsCertEntry(
  * Parses [DsCertEntry.validUntil] (ISO-8601 UTC) into epoch millis, or `null` when it is absent
  * or unparseable. Callers decide how to treat `null` (see [isNotExpired] / [isNearExpiry]).
  */
+private val ISO_8601_PATTERNS =
+    listOf(
+        "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        "yyyy-MM-dd'T'HH:mm:ss'Z'",
+    )
+
 private fun DsCertEntry.validUntilEpochMillis(): Long? {
     val until = validUntil ?: return null
-    return runCatching {
-        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
-            .apply { timeZone = TimeZone.getTimeZone("UTC") }
-            .parse(until)
-            ?.time
-    }.getOrNull()
+    return ISO_8601_PATTERNS.firstNotNullOfOrNull { pattern ->
+        runCatching {
+            SimpleDateFormat(pattern, Locale.US)
+                .apply { timeZone = TimeZone.getTimeZone("UTC") }
+                .parse(until)
+                ?.time
+        }.getOrNull()
+    }
 }
 
 internal fun DsCertEntry.isNotExpired(now: Long): Boolean {

@@ -1,7 +1,6 @@
 package com.judopay.judokit.android.service
 
 import android.content.Context
-import android.util.Log
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.DsCdnApiService
 import com.judopay.judokit.android.api.factory.DsCdnApiServiceFactory

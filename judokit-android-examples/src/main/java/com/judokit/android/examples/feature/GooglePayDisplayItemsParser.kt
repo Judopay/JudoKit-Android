@@ -16,7 +16,8 @@ internal object GooglePayDisplayItemsParser {
         }
 
         return try {
-            gson.fromJson<List<GooglePayDisplayItem>>(trimmed, listType)
+            gson
+                .fromJson<List<GooglePayDisplayItem>>(trimmed, listType)
                 .takeIf { it.isNotEmpty() }
         } catch (_: JsonSyntaxException) {
             null

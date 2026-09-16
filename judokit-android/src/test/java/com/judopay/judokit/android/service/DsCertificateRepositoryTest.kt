@@ -91,6 +91,14 @@ internal class DsCertificateRepositoryTest {
         }
 
         @Test
+        @DisplayName(value = "returns entry when validUntil has fractional seconds")
+        fun returnsEntryForFractionalSecondsValidUntil() {
+            val entry = visaEntry(validUntil = "2099-01-01T00:00:00.000Z")
+            every { cache.read() } returns aCache(entries = listOf(entry))
+            assertNotNull(sut.cachedEntry("A000000003"))
+        }
+
+        @Test
         @DisplayName("returns entry when validUntil is absent (no expiry)")
         fun returnsEntryWhenValidUntilAbsent() {
             val entry = visaEntry(validUntil = null)
