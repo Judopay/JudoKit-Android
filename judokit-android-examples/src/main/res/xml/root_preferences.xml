@@ -184,6 +184,12 @@
             app:iconSpaceReserved="false"
             app:summary="Customise UI elements of the challenge screen"
             app:title="UI customization" />
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="clear_ds_certificate_cache"
+            app:summary="@string/clear_ds_certificate_cache_summary"
+            app:title="@string/clear_ds_certificate_cache_title" />
     </PreferenceCategory>
 
     <PreferenceCategory
