@@ -17,7 +17,6 @@ android {
 dependencies {
     // For the UI configuration classes
     api(libs.judopay.judo3ds2)
-    implementation(libs.judopay.device.dna)
 
     implementation(libs.bundles.kotlinx.coroutines)
     implementation(libs.bundles.androidx.lifecycle)

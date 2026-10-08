@@ -9,8 +9,10 @@ data class GooglePayPaymentDataRequest(
     val apiVersionMinor: Number,
     val merchantInfo: GooglePayMerchantInfo?,
     val allowedPaymentMethods: Array<GooglePayPaymentMethod>,
-    val transactionInfo: GooglePayTransactionInfo,
+    val transactionInfo: GooglePayTransactionInfo? = null,
     val emailRequired: Boolean?,
     val shippingAddressRequired: Boolean?,
     val shippingAddressParameters: GooglePayShippingAddressParameters?,
+    val recurringTransactionInfo: GooglePayRecurringTransactionInfo? = null,
+    val deferredTransactionInfo: GooglePayDeferredTransactionInfo? = null,
 ) : Parcelable

@@ -3,8 +3,10 @@ package com.judopay.judokit.android.model
 import android.os.Parcelable
 import com.judopay.judokit.android.model.googlepay.GooglePayBillingAddressParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayCheckoutOption
+import com.judopay.judokit.android.model.googlepay.GooglePayDeferredParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayEnvironment
 import com.judopay.judokit.android.model.googlepay.GooglePayPriceStatus
+import com.judopay.judokit.android.model.googlepay.GooglePayRecurringParameters
 import com.judopay.judokit.android.model.googlepay.GooglePayShippingAddressParameters
 import com.judopay.judokit.android.requireNotNull
 import kotlinx.parcelize.Parcelize
@@ -31,6 +33,8 @@ class GooglePayConfiguration internal constructor(
     val shippingAddressParameters: GooglePayShippingAddressParameters?,
     val allowPrepaidCards: Boolean?,
     val allowCreditCards: Boolean?,
+    val deferredParameters: GooglePayDeferredParameters?,
+    val recurringParameters: GooglePayRecurringParameters?,
 ) : Parcelable {
     @Suppress("TooManyFunctions")
     class Builder {
@@ -55,6 +59,9 @@ class GooglePayConfiguration internal constructor(
 
         private var allowPrepaidCards: Boolean? = null
         private var allowCreditCards: Boolean? = null
+
+        private var deferredParameters: GooglePayDeferredParameters? = null
+        private var recurringParameters: GooglePayRecurringParameters? = null
 
         /**
          * Sets the environment.
@@ -135,6 +142,18 @@ class GooglePayConfiguration internal constructor(
         fun setAllowCreditCards(allowCreditCards: Boolean?) = apply { this.allowCreditCards = allowCreditCards }
 
         /**
+         * Sets Deferred MIT parameters.
+         * @see GooglePayDeferredParameters
+         */
+        fun setDeferredParameters(parameters: GooglePayDeferredParameters?) = apply { this.deferredParameters = parameters }
+
+        /**
+         * Sets Recurring MIT parameters.
+         * @see GooglePayRecurringParameters
+         */
+        fun setRecurringParameters(parameters: GooglePayRecurringParameters?) = apply { this.recurringParameters = parameters }
+
+        /**
          * Creates an instance of [GooglePayConfiguration] based on provided data in setters.
          * @throws IllegalArgumentException If environment or country code is null.
          * @throws IllegalArgumentException If any of the allowedCountryCodes are invalid.
@@ -158,9 +177,7 @@ class GooglePayConfiguration internal constructor(
                 merchantName = merchantName,
                 transactionCountryCode = countryCode,
                 transactionId = transactionId,
-                totalPriceStatus =
-                    totalPriceStatus
-                        ?: GooglePayPriceStatus.FINAL,
+                totalPriceStatus = totalPriceStatus ?: GooglePayPriceStatus.FINAL,
                 totalPriceLabel = totalPriceLabel,
                 checkoutOption = checkoutOption,
                 isEmailRequired = isEmailRequired,
@@ -170,6 +187,8 @@ class GooglePayConfiguration internal constructor(
                 shippingAddressParameters = shippingAddressParameters,
                 allowPrepaidCards = allowPrepaidCards,
                 allowCreditCards = allowCreditCards,
+                deferredParameters = deferredParameters,
+                recurringParameters = recurringParameters,
             )
         }
     }

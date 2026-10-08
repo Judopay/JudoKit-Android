@@ -177,6 +177,32 @@
         <item>Complete immediate purchase</item>
     </string-array>
 
+    <string-array name="google_pay_mit_type_values">
+        <item>NONE</item>
+        <item>DEFERRED</item>
+        <item>RECURRING</item>
+    </string-array>
+
+    <string-array name="google_pay_mit_type_entries">
+        <item>None</item>
+        <item>Deferred</item>
+        <item>Recurring</item>
+    </string-array>
+
+    <string-array name="google_pay_recurrence_period_values">
+        <item>YEAR</item>
+        <item>MONTH</item>
+        <item>WEEK</item>
+        <item>DAY</item>
+    </string-array>
+
+    <string-array name="google_pay_recurrence_period_entries">
+        <item>Year</item>
+        <item>Month</item>
+        <item>Week</item>
+        <item>Day</item>
+    </string-array>
+
     <string-array name="three_ds_two_challenge_request_indicator_values">
         <item>DON_T_SET</item>
         <item>NO_PREFERENCE</item>

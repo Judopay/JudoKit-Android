@@ -1,48 +1,45 @@
 package com.judopay.judokit.android.api.interceptor
 
 import android.content.Context
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.google.gson.JsonParser
-import com.google.gson.JsonSyntaxException
-import com.judopay.devicedna.DeviceDNA
+import com.judopay.judokit.android.api.DeviceDetailsProvider
 import okhttp3.Interceptor
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import okio.Buffer
 import java.io.IOException
 
-private const val CLIENT_DETAILS = "clientDetails"
-private const val METHOD_POST = "POST"
-private val MEDIA_TYPE_APPLICATION_JSON = "application/json".toMediaTypeOrNull()
+private const val DEVICE_DETAILS = "deviceDetails"
 
 internal class DeviceDnaInterceptor(
     context: Context,
+    private val deviceDetailsProvider: DeviceDetailsProvider = DeviceDetailsProvider(context),
 ) : Interceptor {
-    private val deviceDna = DeviceDNA(context)
+    private val gson = Gson()
 
     @Throws(IOException::class)
-    @Suppress("SwallowedException", "TooGenericExceptionCaught", "ReturnCount")
+    @Suppress("ReturnCount")
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val body = request.body
 
-        if (!request.isPost || body == null) {
+        if (request.method != "POST" || body == null || !body.isRewritableJson) {
             return chain.proceed(request)
         }
 
         val postJson = body.bodyAsJsonObject()
 
-        if (postJson == null || postJson.get(CLIENT_DETAILS) != null) {
+        if (postJson == null || postJson.has(DEVICE_DETAILS)) {
             return chain.proceed(request)
         }
 
-        addClientDetails(postJson)
+        postJson.add(DEVICE_DETAILS, gson.toJsonTree(deviceDetailsProvider.deviceDetails))
 
-        val requestBody = postJson.toString().toRequestBody(MEDIA_TYPE_APPLICATION_JSON)
+        val requestBody = postJson.toString().toRequestBody(body.contentType())
 
         return chain.proceed(
             request
@@ -52,30 +49,19 @@ internal class DeviceDnaInterceptor(
         )
     }
 
-    private fun addClientDetails(json: JsonObject) {
-        val signals = deviceDna.dna
-        val clientDetailsJson = JsonObject()
-        for ((key, value) in signals) {
-            clientDetailsJson.addProperty(key, value)
-        }
-        json.add(CLIENT_DETAILS, clientDetailsJson)
-    }
-
-    private fun RequestBody.bodyAsJsonObject(): JsonObject? {
+    private fun RequestBody.bodyAsJsonObject(): JsonObject? =
         try {
-            val buffer = Buffer()
-            writeTo(buffer)
-            val body = buffer.readUtf8()
-            val jsonElement = JsonParser.parseString(body)
-            return jsonElement.asJsonObject
+            val buffer = Buffer().also { writeTo(it) }
+            JsonParser.parseString(buffer.readUtf8()).asJsonObject
         } catch (ignore: IOException) {
+            null
         } catch (ignore: JsonParseException) {
-        } catch (ignore: JsonSyntaxException) {
+            null
         } catch (ignore: IllegalStateException) {
+            null
         }
-        return null
-    }
 }
 
-private val Request.isPost: Boolean
-    get() = METHOD_POST == method
+// A one-shot body cannot be buffered here and then written again when the request is sent.
+private val RequestBody.isRewritableJson: Boolean
+    get() = !isOneShot() && contentType()?.subtype == "json"

@@ -34,8 +34,7 @@ import com.judokit.android.examples.settings.readImportedJson
 import com.judokit.android.examples.settings.showImportSettingsDialog
 import com.judopay.judokit.android.JUDO_OPTIONS
 import com.judopay.judokit.android.JudoActivityResultContracts
-import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
-import com.judopay.judokit.android.api.factory.RecommendationApiServiceFactory
+import com.judopay.judokit.android.api.factory.JudoHttpInterceptors
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.PaymentWidgetType
 import kotlinx.coroutines.launch
@@ -117,6 +116,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
         setupRecyclerView()
 
         PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false)
+        PreferenceManager.setDefaultValues(this, R.xml.google_pay_preferences, false)
         notificationPermissionLauncher.requestPermissionIfNeeded()
 
         lifecycleScope.launch {
@@ -137,8 +137,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
                     .alwaysReadResponseBody(false)
                     .build(),
             )
-        JudoApiServiceFactory.externalInterceptors = interceptors
-        RecommendationApiServiceFactory.externalInterceptors = interceptors
+        JudoHttpInterceptors.interceptors = interceptors
     }
 
     private fun setupRecyclerView() {
