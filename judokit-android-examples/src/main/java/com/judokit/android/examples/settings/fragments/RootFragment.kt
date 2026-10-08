@@ -19,6 +19,7 @@ import com.judokit.android.examples.apiclient.ApiClient
 import com.judokit.android.examples.apiclient.CreatePaymentSessionRequest
 import com.judokit.android.examples.apiclient.CreatePaymentSessionResponse
 import com.judopay.judokit.android.model.ApiEnvironment
+import com.judopay.judokit.android.service.DsCertificateCache
 import com.judopay.judokit.android.ui.common.ButtonState
 import com.judopay.judokit.android.ui.common.ProgressButton
 import okhttp3.OkHttpClient
@@ -67,6 +68,12 @@ class RootFragment : PreferenceFragmentCompat() {
             View.OnClickListener {
                 createPaymentSession(it as ProgressButton)
             }
+
+        findPreference<Preference>("clear_ds_certificate_cache")?.setOnPreferenceClickListener {
+            DsCertificateCache.clear(requireContext())
+            Toast.makeText(activity, R.string.clear_ds_certificate_cache_done, Toast.LENGTH_SHORT).show()
+            true
+        }
     }
 
     private fun createPaymentSession(progressButton: ProgressButton) {

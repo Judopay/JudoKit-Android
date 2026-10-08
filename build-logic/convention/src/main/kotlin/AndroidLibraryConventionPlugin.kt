@@ -1,4 +1,4 @@
-import com.android.build.gradle.LibraryExtension
+import com.android.build.api.dsl.LibraryExtension
 import com.judopay.judokit.configureAndroidCommon
 import com.judopay.judokit.configureAndroidLibrary
 import com.judopay.judokit.configureBinaryCompatibilityValidator

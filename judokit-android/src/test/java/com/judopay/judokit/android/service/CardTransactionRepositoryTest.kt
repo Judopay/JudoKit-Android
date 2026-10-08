@@ -20,11 +20,13 @@ import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.toPaymentRequest
 import com.judopay.judokit.android.model.toPreAuthTokenRequest
 import com.judopay.judokit.android.model.toTokenRequest
+import com.judopay.judokit.android.service.DsCertificateRepository
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
@@ -44,6 +46,7 @@ internal class CardTransactionRepositoryTest {
     private val judoApiService: JudoApiService = mockk(relaxed = true)
     private val threeDS2Service: ThreeDS2Service = mockk(relaxed = true)
     private val recommendationService: RecommendationService = mockk(relaxed = true)
+    private val dsCertificateRepository: DsCertificateRepository = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
     private val transaction: Transaction = mockk(relaxed = true)
@@ -61,7 +64,16 @@ internal class CardTransactionRepositoryTest {
         every { recommendationService.isRecommendationFeatureAvailable(any()) } returns false
         every { threeDS2Service.createTransaction(any(), any()) } returns transaction
 
-        sut = CardTransactionRepository(judo, judoApiService, threeDS2Service, recommendationService, resources, context)
+        sut =
+            CardTransactionRepository(
+                judo,
+                judoApiService,
+                threeDS2Service,
+                recommendationService,
+                dsCertificateRepository,
+                resources,
+                context,
+            )
     }
 
     @AfterEach
@@ -257,6 +269,24 @@ internal class CardTransactionRepositoryTest {
                 val result = sut.preAuthWithToken(details) { _, _ -> null }
 
                 assertTrue(result is JudoPaymentResult.Error)
+            }
+    }
+
+    @Nested
+    @DisplayName("DS certificate provider")
+    inner class DsCertificateProviderTests {
+        @DisplayName("setCertificateProvider is called before createTransaction")
+        @Test
+        fun registersProviderBeforeCreateTransaction() =
+            runTest {
+                val details: TransactionDetails = mockk(relaxed = true)
+                val call: Call<JudoApiCallResult<Receipt>> = mockk(relaxed = true)
+                every { judoApiService.payment(any()) } returns call
+                coEvery { call.await() } returns JudoApiCallResult.Failure()
+
+                sut.payment(details) { _, _ -> null }
+
+                verify { threeDS2Service.setCertificateProvider(any()) }
             }
     }
 

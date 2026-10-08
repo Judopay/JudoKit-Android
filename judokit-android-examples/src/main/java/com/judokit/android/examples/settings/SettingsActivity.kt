@@ -30,22 +30,24 @@ class SettingsActivity :
 
         setContentView(R.layout.settings_activity)
 
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.settings, RootFragment())
-            .commit()
+        if (savedInstanceState == null) {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.settings, RootFragment())
+                .commit()
+        }
 
         setSupportActionBar(findViewById(R.id.toolbar))
 
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
-            title = getString(R.string.title_settings)
         }
 
         supportFragmentManager.addOnBackStackChangedListener {
             updateToolbarTitle()
         }
+        updateToolbarTitle()
     }
 
     private fun updateToolbarTitle() {
