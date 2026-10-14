@@ -9,7 +9,6 @@ import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.core.view.postDelayed
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -52,6 +51,7 @@ import com.judopay.judokit.android.ui.paymentmethods.USER_CANCELLED
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 private const val BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME = 300L
 private const val BOTTOM_SHEET_EXPAND_ANIMATION_TIME = BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME / 6
@@ -143,7 +143,7 @@ class CardEntryFragment : BottomSheetDialogFragment() {
             override fun onSubmit() {
                 binding.root.dismissKeyboard()
                 viewLifecycleOwner.lifecycleScope.launch {
-                    delay(KEYBOARD_DISMISS_TIMEOUT)
+                    delay(KEYBOARD_DISMISS_TIMEOUT.milliseconds)
                     viewModel.send(CardEntryAction.SubmitCardEntryForm)
                 }
             }
@@ -280,16 +280,15 @@ class CardEntryFragment : BottomSheetDialogFragment() {
         bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
         viewLifecycleOwner.lifecycleScope.launch {
-            delay(BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME)
+            delay(BOTTOM_SHEET_COLLAPSE_ANIMATION_TIME.milliseconds)
             with(binding.cardEntryViewAnimator) {
                 when (navigationEvent) {
                     is CardEntryNavigation.Card -> showCard()
                     is CardEntryNavigation.Billing -> showBilling()
                 }
-                postDelayed(BOTTOM_SHEET_EXPAND_ANIMATION_TIME) {
-                    bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                }
             }
+            delay(BOTTOM_SHEET_EXPAND_ANIMATION_TIME.milliseconds)
+            bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
 
