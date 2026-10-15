@@ -1,0 +1,8 @@
+name: Android Test Sample Apps with Maestro
+
+on:
+  workflow_dispatch:
+jobs:
+  maestro_tests:
+    uses: Judopay/github-actions/.github/workflows/android-test-sample-apps-maestro.yml@master
+    secrets: inherit
