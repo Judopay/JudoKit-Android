@@ -4,6 +4,5 @@ on:
   workflow_dispatch:
 jobs:
   maestro_tests:
-    # Points at the branch until the shared workflow merges, then becomes @master.
-    uses: Judopay/github-actions/.github/workflows/android-test-sample-apps-maestro.yml@feature/DO-3542/maestro-android
+    uses: Judopay/github-actions/.github/workflows/android-test-sample-apps-maestro.yml@master
     secrets: inherit
