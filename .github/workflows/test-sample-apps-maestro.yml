@@ -2,7 +2,21 @@ name: Android Test Sample Apps with Maestro
 
 on:
   workflow_dispatch:
+    inputs:
+      include_tags:
+        description: Tags to run, comma separated. Empty runs every flow.
+        required: false
+        type: string
+        default: default
+      exclude_tags:
+        description: Tags to skip, comma separated
+        required: false
+        type: string
+        default: ios_only,objc_only
 jobs:
   maestro_tests:
     uses: Judopay/github-actions/.github/workflows/android-test-sample-apps-maestro.yml@master
     secrets: inherit
+    with:
+      include_tags: ${{ inputs.include_tags }}
+      exclude_tags: ${{ inputs.exclude_tags }}
