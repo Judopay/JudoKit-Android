@@ -15,7 +15,7 @@ on:
         default: ios_only,objc_only
 jobs:
   maestro_tests:
-    uses: Judopay/github-actions/.github/workflows/android-test-sample-apps-maestro.yml@master
+    uses: Judopay/github-actions/.github/workflows/android-test-sample-apps-maestro.yml@feature/DO-3542/production-builds
     secrets: inherit
     with:
       include_tags: ${{ inputs.include_tags }}
