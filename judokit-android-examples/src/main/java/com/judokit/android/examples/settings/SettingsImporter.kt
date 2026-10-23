@@ -26,9 +26,9 @@ object SettingsImporter {
             "recommendation" to
                 listOf(
                     "is_recommendation_enabled",
-                    "recommendation_url",
+                    "url",
                     "rsa_key",
-                    "recommendation_timeout",
+                    "timeout",
                     "is_recommendation_halt_transaction_enabled",
                 ),
             "three_ds" to
