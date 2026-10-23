@@ -128,7 +128,7 @@ fun updateRecommendationUrlWith(suffix: String) {
     sharedPrefs
         .edit()
         .apply {
-            putString("url", recommendationURL + suffix)
+            putString("recommendation_url", recommendationURL + suffix)
         }.commit()
 
     onView(withId(Examples.id.action_settings))

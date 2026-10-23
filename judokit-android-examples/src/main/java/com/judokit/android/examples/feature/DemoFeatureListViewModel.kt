@@ -377,9 +377,9 @@ class DemoFeatureListViewModel(
             if (!prefs.getBoolean("is_recommendation_enabled", false)) return null
             return RecommendationConfiguration
                 .Builder()
-                .setRsaPublicKey(prefs.getString("rsa_key", null))
-                .setUrl(prefs.getString("url", null))
-                .setTimeout(prefs.getString("timeout", null)?.toInt())
+                .setRsaPublicKey(prefs.getString("recommendation_rsa_key", null))
+                .setUrl(prefs.getString("recommendation_url", null))
+                .setTimeout(prefs.getString("recommendation_timeout", null)?.toInt())
                 .setShouldHaltTransactionInCaseOfAnyError(prefs.getBoolean("is_recommendation_halt_transaction_enabled", false))
                 .build()
         }
