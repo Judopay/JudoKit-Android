@@ -69,7 +69,7 @@ class RavelinIntegrationTest {
                 putString("currency", "GBP")
                 putBoolean("should_ask`_for_csc", false)
                 putBoolean("is_recommendation_enabled", true)
-                putString("rsa_key", BuildConfig.RSA_KEY)
+                putString("recommendation_rsa_key", BuildConfig.RSA_KEY)
                 putStringSet("payment_methods", setOf("CARD"))
                 putBoolean("is_address_enabled", false)
             }.commit()
