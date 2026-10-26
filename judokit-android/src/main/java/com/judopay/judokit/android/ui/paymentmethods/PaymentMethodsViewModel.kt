@@ -17,6 +17,7 @@ import com.judopay.judokit.android.model.formatted
 import com.judopay.judokit.android.model.paymentButtonType
 import com.judopay.judokit.android.ui.cardentry.model.CardEntryOptions
 import com.judopay.judokit.android.ui.common.ButtonState
+import com.judopay.judokit.android.ui.common.PaymentResultEmitter
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodGenericItem
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItem
 import com.judopay.judokit.android.ui.paymentmethods.adapter.model.PaymentMethodItemType
@@ -31,6 +32,7 @@ import com.judopay.judokit.android.ui.paymentmethods.model.CardViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.GooglePayPaymentMethodModel
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentCardViewModel
 import com.judopay.judokit.android.ui.paymentmethods.model.PaymentMethodModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -39,7 +41,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 // view-model actions
-sealed class PaymentMethodsAction {
+internal sealed class PaymentMethodsAction {
     data class DeleteCard(
         val cardId: Int,
     ) : PaymentMethodsAction()
@@ -71,6 +73,14 @@ sealed class PaymentMethodsAction {
     ) : PaymentMethodsAction()
 
     object Update : PaymentMethodsAction()
+
+    /**
+     * Sent when the view is created, with whether a transaction started before (possibly by a
+     * Fragment instance destroyed since, or before process death) is still in progress.
+     */
+    internal data class ViewCreated(
+        val isTransactionInProgress: Boolean,
+    ) : PaymentMethodsAction()
 }
 
 sealed class StartTransactionEffect {
@@ -84,7 +94,7 @@ sealed class StartTransactionEffect {
 }
 
 @Suppress("DEPRECATION")
-class PaymentMethodsViewModel
+internal class PaymentMethodsViewModel
     internal constructor(
         private val cardDate: CardDate,
         private val cardRepository: TokenizedCardRepository,
@@ -94,8 +104,10 @@ class PaymentMethodsViewModel
         private val _uiState = MutableStateFlow<PaymentMethodsModel?>(null)
         val uiState: StateFlow<PaymentMethodsModel?> = _uiState.asStateFlow()
 
-        private val _paymentResultEffect = MutableSharedFlow<JudoPaymentResult>(extraBufferCapacity = 1)
-        val paymentResultEffect: SharedFlow<JudoPaymentResult> = _paymentResultEffect
+        private val paymentResultEmitter = PaymentResultEmitter(TAG)
+
+        /** The payment results for the Fragment to collect; see [PaymentResultEmitter]. */
+        internal val paymentResults: Flow<JudoPaymentResult> = paymentResultEmitter.results
 
         private val _cardEntryEffect = MutableSharedFlow<CardEntryOptions>(extraBufferCapacity = 1)
         val cardEntryEffect: SharedFlow<CardEntryOptions> = _cardEntryEffect
@@ -135,7 +147,7 @@ class PaymentMethodsViewModel
         }
 
         @Suppress("CyclomaticComplexMethod")
-        fun send(action: PaymentMethodsAction) {
+        internal fun send(action: PaymentMethodsAction) {
             when (action) {
                 is PaymentMethodsAction.DeleteCard -> {
                     deleteCardWithId(action.cardId)
@@ -163,6 +175,8 @@ class PaymentMethodsViewModel
                         isLoading = !action.buttonEnabled,
                     )
                 is PaymentMethodsAction.EditMode -> buildModel(isInEditMode = action.isInEditMode)
+                // Keep the pay button disabled until that transaction's result arrives, so it isn't paid twice.
+                is PaymentMethodsAction.ViewCreated -> if (action.isTransactionInProgress) buildModel(isLoading = true)
                 is PaymentMethodsAction.TransactionResult -> {
                     when (action.result) {
                         is JudoPaymentResult.Error,
@@ -170,9 +184,7 @@ class PaymentMethodsViewModel
                         -> buildModel()
                         is JudoPaymentResult.Success -> Unit
                     }
-                    if (!_paymentResultEffect.tryEmit(action.result)) {
-                        Log.w(TAG, "Payment result effect dropped: ${action.result}")
-                    }
+                    paymentResultEmitter.emit(action.result)
                 }
                 is PaymentMethodsAction.PayWithCard -> {
                     buildModel(isLoading = true)

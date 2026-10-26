@@ -168,16 +168,26 @@ public abstract interface class com/judopay/judokit/android/JudoCardTransactionC
 public final class com/judopay/judokit/android/JudoCardTransactionClient {
 	public static final field Companion Lcom/judopay/judokit/android/JudoCardTransactionClient$Companion;
 	public final fun check (Landroid/content/Context;Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)V
+	public final fun check (Lcom/judopay/judokit/android/model/TransactionDetails;)V
 	public static final fun create (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Lcom/judopay/judokit/android/JudoCardTransactionClient;
+	public static final fun create (Landroidx/activity/ComponentActivity;Lcom/judopay/judokit/android/Judo;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)Lcom/judopay/judokit/android/JudoCardTransactionClient;
+	public static final fun create (Landroidx/fragment/app/Fragment;Lcom/judopay/judokit/android/Judo;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)Lcom/judopay/judokit/android/JudoCardTransactionClient;
 	public final fun payment (Landroid/content/Context;Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)V
+	public final fun payment (Lcom/judopay/judokit/android/model/TransactionDetails;)V
 	public final fun paymentWithToken (Landroid/content/Context;Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)V
+	public final fun paymentWithToken (Lcom/judopay/judokit/android/model/TransactionDetails;)V
 	public final fun preAuth (Landroid/content/Context;Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)V
+	public final fun preAuth (Lcom/judopay/judokit/android/model/TransactionDetails;)V
 	public final fun preAuthWithToken (Landroid/content/Context;Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)V
+	public final fun preAuthWithToken (Lcom/judopay/judokit/android/model/TransactionDetails;)V
 	public final fun save (Landroid/content/Context;Lcom/judopay/judokit/android/model/TransactionDetails;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)V
+	public final fun save (Lcom/judopay/judokit/android/model/TransactionDetails;)V
 }
 
 public final class com/judopay/judokit/android/JudoCardTransactionClient$Companion {
 	public final fun create (Landroid/content/Context;Lcom/judopay/judokit/android/Judo;)Lcom/judopay/judokit/android/JudoCardTransactionClient;
+	public final fun create (Landroidx/activity/ComponentActivity;Lcom/judopay/judokit/android/Judo;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)Lcom/judopay/judokit/android/JudoCardTransactionClient;
+	public final fun create (Landroidx/fragment/app/Fragment;Lcom/judopay/judokit/android/Judo;Lcom/judopay/judokit/android/JudoCardTransactionCallback;)Lcom/judopay/judokit/android/JudoCardTransactionClient;
 }
 
 public final class com/judopay/judokit/android/JudoCardTransactionClientKt {
@@ -3136,77 +3146,6 @@ public final class com/judopay/judokit/android/service/PayloadService {
 	public final fun getEnhancedPaymentDetail ()Lcom/judopay/judokit/android/api/model/EnhancedPaymentDetail;
 }
 
-public abstract class com/judopay/judokit/android/ui/cardentry/CardEntryAction {
-}
-
-public final class com/judopay/judokit/android/ui/cardentry/CardEntryAction$BillingFieldChanged : com/judopay/judokit/android/ui/cardentry/CardEntryAction {
-	public fun <init> (Lcom/judopay/judokit/android/ui/cardentry/model/BillingDetailsFieldType;Ljava/lang/String;Lcom/judopay/judokit/android/ui/cardentry/model/FormFieldEvent;)V
-	public final fun component1 ()Lcom/judopay/judokit/android/ui/cardentry/model/BillingDetailsFieldType;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Lcom/judopay/judokit/android/ui/cardentry/model/FormFieldEvent;
-	public final fun copy (Lcom/judopay/judokit/android/ui/cardentry/model/BillingDetailsFieldType;Ljava/lang/String;Lcom/judopay/judokit/android/ui/cardentry/model/FormFieldEvent;)Lcom/judopay/judokit/android/ui/cardentry/CardEntryAction$BillingFieldChanged;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/ui/cardentry/CardEntryAction$BillingFieldChanged;Lcom/judopay/judokit/android/ui/cardentry/model/BillingDetailsFieldType;Ljava/lang/String;Lcom/judopay/judokit/android/ui/cardentry/model/FormFieldEvent;ILjava/lang/Object;)Lcom/judopay/judokit/android/ui/cardentry/CardEntryAction$BillingFieldChanged;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getEvent ()Lcom/judopay/judokit/android/ui/cardentry/model/FormFieldEvent;
-	public final fun getFieldType ()Lcom/judopay/judokit/android/ui/cardentry/model/BillingDetailsFieldType;
-	public final fun getValue ()Ljava/lang/String;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/judopay/judokit/android/ui/cardentry/CardEntryAction$CardFieldChanged : com/judopay/judokit/android/ui/cardentry/CardEntryAction {
-	public fun <init> (Lcom/judopay/judokit/android/ui/cardentry/model/CardDetailsFieldType;Ljava/lang/String;Lcom/judopay/judokit/android/ui/cardentry/model/FormFieldEvent;)V
-	public final fun component1 ()Lcom/judopay/judokit/android/ui/cardentry/model/CardDetailsFieldType;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Lcom/judopay/judokit/android/ui/cardentry/model/FormFieldEvent;
-	public final fun copy (Lcom/judopay/judokit/android/ui/cardentry/model/CardDetailsFieldType;Ljava/lang/String;Lcom/judopay/judokit/android/ui/cardentry/model/FormFieldEvent;)Lcom/judopay/judokit/android/ui/cardentry/CardEntryAction$CardFieldChanged;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/ui/cardentry/CardEntryAction$CardFieldChanged;Lcom/judopay/judokit/android/ui/cardentry/model/CardDetailsFieldType;Ljava/lang/String;Lcom/judopay/judokit/android/ui/cardentry/model/FormFieldEvent;ILjava/lang/Object;)Lcom/judopay/judokit/android/ui/cardentry/CardEntryAction$CardFieldChanged;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getEvent ()Lcom/judopay/judokit/android/ui/cardentry/model/FormFieldEvent;
-	public final fun getFieldType ()Lcom/judopay/judokit/android/ui/cardentry/model/CardDetailsFieldType;
-	public final fun getValue ()Ljava/lang/String;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/judopay/judokit/android/ui/cardentry/CardEntryAction$Initialize : com/judopay/judokit/android/ui/cardentry/CardEntryAction {
-	public static final field INSTANCE Lcom/judopay/judokit/android/ui/cardentry/CardEntryAction$Initialize;
-}
-
-public final class com/judopay/judokit/android/ui/cardentry/CardEntryAction$InsertCard : com/judopay/judokit/android/ui/cardentry/CardEntryAction {
-	public fun <init> (Lcom/judopay/judokit/android/api/model/response/CardToken;)V
-	public final fun component1 ()Lcom/judopay/judokit/android/api/model/response/CardToken;
-	public final fun copy (Lcom/judopay/judokit/android/api/model/response/CardToken;)Lcom/judopay/judokit/android/ui/cardentry/CardEntryAction$InsertCard;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/ui/cardentry/CardEntryAction$InsertCard;Lcom/judopay/judokit/android/api/model/response/CardToken;ILjava/lang/Object;)Lcom/judopay/judokit/android/ui/cardentry/CardEntryAction$InsertCard;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getTokenizedCard ()Lcom/judopay/judokit/android/api/model/response/CardToken;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/judopay/judokit/android/ui/cardentry/CardEntryAction$PressBackButton : com/judopay/judokit/android/ui/cardentry/CardEntryAction {
-	public static final field INSTANCE Lcom/judopay/judokit/android/ui/cardentry/CardEntryAction$PressBackButton;
-}
-
-public final class com/judopay/judokit/android/ui/cardentry/CardEntryAction$ScanCard : com/judopay/judokit/android/ui/cardentry/CardEntryAction {
-	public fun <init> (Lcom/judopay/judokit/android/model/CardScanningResult;)V
-	public final fun component1 ()Lcom/judopay/judokit/android/model/CardScanningResult;
-	public final fun copy (Lcom/judopay/judokit/android/model/CardScanningResult;)Lcom/judopay/judokit/android/ui/cardentry/CardEntryAction$ScanCard;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/ui/cardentry/CardEntryAction$ScanCard;Lcom/judopay/judokit/android/model/CardScanningResult;ILjava/lang/Object;)Lcom/judopay/judokit/android/ui/cardentry/CardEntryAction$ScanCard;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getResult ()Lcom/judopay/judokit/android/model/CardScanningResult;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/judopay/judokit/android/ui/cardentry/CardEntryAction$SubmitBillingDetailsForm : com/judopay/judokit/android/ui/cardentry/CardEntryAction {
-	public static final field INSTANCE Lcom/judopay/judokit/android/ui/cardentry/CardEntryAction$SubmitBillingDetailsForm;
-}
-
-public final class com/judopay/judokit/android/ui/cardentry/CardEntryAction$SubmitCardEntryForm : com/judopay/judokit/android/ui/cardentry/CardEntryAction {
-	public static final field INSTANCE Lcom/judopay/judokit/android/ui/cardentry/CardEntryAction$SubmitCardEntryForm;
-}
-
 public final class com/judopay/judokit/android/ui/cardentry/CardEntryFragment : com/google/android/material/bottomsheet/BottomSheetDialogFragment {
 	public fun <init> ()V
 	public fun getTheme ()I
@@ -3247,20 +3186,6 @@ public final class com/judopay/judokit/android/ui/cardentry/CardEntryNavigation$
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/judopay/judokit/android/ui/cardentry/CardEntryViewModel : androidx/lifecycle/AndroidViewModel {
-	public static final field Companion Lcom/judopay/judokit/android/ui/cardentry/CardEntryViewModel$Companion;
-	public final fun getCardEntryToPaymentMethodResultEffect ()Lkotlinx/coroutines/flow/SharedFlow;
-	public final fun getNavigationEffect ()Lkotlinx/coroutines/flow/SharedFlow;
-	public final fun getNavigationState ()Lkotlinx/coroutines/flow/StateFlow;
-	public final fun getPaymentResultEffect ()Lkotlinx/coroutines/flow/SharedFlow;
-	public final fun getUiState ()Lkotlinx/coroutines/flow/StateFlow;
-	public final fun onChallengeResult (Ljava/lang/String;)V
-	public final fun send (Lcom/judopay/judokit/android/ui/cardentry/CardEntryAction;)V
-}
-
-public final class com/judopay/judokit/android/ui/cardentry/CardEntryViewModel$Companion {
 }
 
 public abstract interface class com/judopay/judokit/android/ui/cardentry/components/BillingDetailsFormListener {
@@ -3989,96 +3914,9 @@ public final class com/judopay/judokit/android/ui/paymentmethods/MappersKt {
 	public static final fun toTokenizedCardEntity (Lcom/judopay/judokit/android/api/model/response/CardToken;Landroid/content/Context;Ljava/lang/String;)Lcom/judopay/judokit/android/db/entity/TokenizedCardEntity;
 }
 
-public abstract class com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction {
-}
-
-public final class com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$DeleteCard : com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction {
-	public fun <init> (I)V
-	public final fun component1 ()I
-	public final fun copy (I)Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$DeleteCard;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$DeleteCard;IILjava/lang/Object;)Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$DeleteCard;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getCardId ()I
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$EditMode : com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction {
-	public fun <init> (Z)V
-	public final fun component1 ()Z
-	public final fun copy (Z)Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$EditMode;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$EditMode;ZILjava/lang/Object;)Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$EditMode;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public final fun isInEditMode ()Z
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$InitiateSelectedCardPayment : com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction {
-	public static final field INSTANCE Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$InitiateSelectedCardPayment;
-}
-
-public final class com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$PayWithCard : com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction {
-	public fun <init> (Lcom/judopay/judokit/android/model/TransactionDetails$Builder;)V
-	public final fun component1 ()Lcom/judopay/judokit/android/model/TransactionDetails$Builder;
-	public final fun copy (Lcom/judopay/judokit/android/model/TransactionDetails$Builder;)Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$PayWithCard;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$PayWithCard;Lcom/judopay/judokit/android/model/TransactionDetails$Builder;ILjava/lang/Object;)Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$PayWithCard;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getTransactionDetail ()Lcom/judopay/judokit/android/model/TransactionDetails$Builder;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$SelectPaymentMethod : com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction {
-	public fun <init> (Lcom/judopay/judokit/android/model/PaymentMethod;)V
-	public final fun component1 ()Lcom/judopay/judokit/android/model/PaymentMethod;
-	public final fun copy (Lcom/judopay/judokit/android/model/PaymentMethod;)Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$SelectPaymentMethod;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$SelectPaymentMethod;Lcom/judopay/judokit/android/model/PaymentMethod;ILjava/lang/Object;)Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$SelectPaymentMethod;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getMethod ()Lcom/judopay/judokit/android/model/PaymentMethod;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$SelectStoredCard : com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction {
-	public fun <init> (I)V
-	public final fun component1 ()I
-	public final fun copy (I)Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$SelectStoredCard;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$SelectStoredCard;IILjava/lang/Object;)Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$SelectStoredCard;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getId ()I
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$TransactionResult : com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction {
-	public fun <init> (Lcom/judopay/judokit/android/model/JudoPaymentResult;)V
-	public final fun component1 ()Lcom/judopay/judokit/android/model/JudoPaymentResult;
-	public final fun copy (Lcom/judopay/judokit/android/model/JudoPaymentResult;)Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$TransactionResult;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$TransactionResult;Lcom/judopay/judokit/android/model/JudoPaymentResult;ILjava/lang/Object;)Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$TransactionResult;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getResult ()Lcom/judopay/judokit/android/model/JudoPaymentResult;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$Update : com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction {
-	public static final field INSTANCE Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$Update;
-}
-
-public final class com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$UpdateButtonState : com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction {
-	public fun <init> (Z)V
-	public final fun component1 ()Z
-	public final fun copy (Z)Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$UpdateButtonState;
-	public static synthetic fun copy$default (Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$UpdateButtonState;ZILjava/lang/Object;)Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction$UpdateButtonState;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getButtonEnabled ()Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
 public final class com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsFragment : androidx/fragment/app/Fragment {
 	public fun <init> ()V
+	public fun onCreate (Landroid/os/Bundle;)V
 	public fun onCreateView (Landroid/view/LayoutInflater;Landroid/view/ViewGroup;Landroid/os/Bundle;)Landroid/view/View;
 	public fun onDestroyView ()V
 	public fun onViewCreated (Landroid/view/View;Landroid/os/Bundle;)V
@@ -4095,18 +3933,6 @@ public final class com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsM
 	public final fun getHeaderModel ()Lcom/judopay/judokit/android/ui/paymentmethods/components/PaymentMethodsHeaderViewModel;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsViewModel : androidx/lifecycle/AndroidViewModel {
-	public static final field Companion Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsViewModel$Companion;
-	public final fun getCardEntryEffect ()Lkotlinx/coroutines/flow/SharedFlow;
-	public final fun getPaymentResultEffect ()Lkotlinx/coroutines/flow/SharedFlow;
-	public final fun getStartTransactionEffect ()Lkotlinx/coroutines/flow/SharedFlow;
-	public final fun getUiState ()Lkotlinx/coroutines/flow/StateFlow;
-	public final fun send (Lcom/judopay/judokit/android/ui/paymentmethods/PaymentMethodsAction;)V
-}
-
-public final class com/judopay/judokit/android/ui/paymentmethods/PaymentMethodsViewModel$Companion {
 }
 
 public abstract class com/judopay/judokit/android/ui/paymentmethods/StartTransactionEffect {

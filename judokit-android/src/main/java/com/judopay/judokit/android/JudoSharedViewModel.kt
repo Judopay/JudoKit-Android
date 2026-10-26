@@ -16,8 +16,10 @@ import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.model.isGooglePayWidget
 import com.judopay.judokit.android.model.isPaymentMethodsWidget
 import com.judopay.judokit.android.service.JudoGooglePayService
+import com.judopay.judokit.android.ui.common.PaymentResultEmitter
 import com.judopay.judokit.android.ui.common.toGooglePayRequest
 import com.judopay.judokit.android.ui.common.toPreAuthGooglePayRequest
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
@@ -48,8 +50,15 @@ class JudoSharedViewModel(
     private val resources = application.resources
 
     // used to share a card payment result between fragments (card input / payment methods)
+    private val paymentResultEmitter = PaymentResultEmitter(TAG)
+
+    // Public API, kept for compatibility. Like any replay = 0 SharedFlow, it drops a result emitted
+    // while nothing collects; Judo's own UI collects paymentResults instead.
     private val _paymentResultEffect = MutableSharedFlow<JudoPaymentResult>(extraBufferCapacity = 1)
     val paymentResultEffect: SharedFlow<JudoPaymentResult> = _paymentResultEffect
+
+    /** What Judo's own UI collects; see [PaymentResultEmitter]. */
+    internal val paymentResults: Flow<JudoPaymentResult> = paymentResultEmitter.results
 
     private val _paymentMethodsResultEffect = MutableSharedFlow<JudoPaymentResult>(extraBufferCapacity = 1)
     val paymentMethodsResultEffect: SharedFlow<JudoPaymentResult> = _paymentMethodsResultEffect
@@ -62,9 +71,8 @@ class JudoSharedViewModel(
     internal val error = JudoError()
 
     fun postPaymentResult(result: JudoPaymentResult) {
-        if (!_paymentResultEffect.tryEmit(result)) {
-            Log.w(TAG, "Payment result effect dropped: $result")
-        }
+        _paymentResultEffect.tryEmit(result)
+        paymentResultEmitter.emit(result)
     }
 
     fun postCardEntryToPaymentMethodResult(builder: TransactionDetails.Builder) {
@@ -165,10 +173,7 @@ class JudoSharedViewModel(
         val type = judo.paymentWidgetType
 
         when {
-            type.isGooglePayWidget ->
-                if (!_paymentResultEffect.tryEmit(result)) {
-                    Log.w(TAG, "Payment result effect dropped: $result")
-                }
+            type.isGooglePayWidget -> postPaymentResult(result)
             type.isPaymentMethodsWidget ->
                 if (!_paymentMethodsResultEffect.tryEmit(result)) {
                     Log.w(TAG, "Payment methods result effect dropped: $result")

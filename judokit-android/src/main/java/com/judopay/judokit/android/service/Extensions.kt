@@ -5,6 +5,8 @@ package com.judopay.judokit.android.service
 import com.judopay.judo3ds2.model.CompletionEvent
 import com.judopay.judo3ds2.model.ProtocolErrorEvent
 import com.judopay.judo3ds2.model.RuntimeErrorEvent
+import com.judopay.judo3ds2.transaction.challenge.ErrorMessage
+import com.judopay.judo3ds2.ui.challenge.ChallengeActivityResult
 
 internal object ThreeDSSDKChallengeStatus {
     const val CANCELLED = "Cancelled"
@@ -25,17 +27,23 @@ private fun buildEventString(
         }
     }
 
-internal fun CompletionEvent.toFormattedEventString(): String =
+private fun formatCompleted(
+    sdkTransactionId: String?,
+    transactionStatus: String?,
+): String =
     buildEventString(
         ThreeDSSDKChallengeStatus.COMPLETED,
-        "SDKTransactionID" to sdkTransactionID,
+        "SDKTransactionID" to sdkTransactionId,
         "transactionStatus" to transactionStatus,
     )
 
-internal fun ProtocolErrorEvent.toFormattedEventString(): String =
+private fun formatProtocolError(
+    sdkTransactionId: String?,
+    errorMessage: ErrorMessage,
+): String =
     buildEventString(
         ThreeDSSDKChallengeStatus.PROTOCOL_ERROR,
-        "SDKTransactionID" to sdkTransactionID,
+        "SDKTransactionID" to sdkTransactionId,
         "errorMessage" to
             buildString {
                 append("{")
@@ -56,9 +64,35 @@ internal fun ProtocolErrorEvent.toFormattedEventString(): String =
             },
     )
 
-internal fun RuntimeErrorEvent.toFormattedEventString(): String =
+private fun formatRuntimeError(
+    errorCode: String?,
+    errorMessage: String?,
+): String =
     buildEventString(
         ThreeDSSDKChallengeStatus.RUNTIME_ERROR,
         "errorCode" to errorCode,
         "errorMessage" to errorMessage,
     )
+
+internal fun CompletionEvent.toFormattedEventString(): String = formatCompleted(sdkTransactionID, transactionStatus)
+
+internal fun ProtocolErrorEvent.toFormattedEventString(): String = formatProtocolError(sdkTransactionID, errorMessage)
+
+internal fun RuntimeErrorEvent.toFormattedEventString(): String = formatRuntimeError(errorCode, errorMessage)
+
+/** The `threeDSSDKChallengeStatus` string for a challenge that could not run at all. */
+internal fun runtimeErrorChallengeStatus(errorMessage: String): String = formatRuntimeError(null, errorMessage)
+
+/**
+ * Formats a [ChallengeActivityResult] into the same `threeDSSDKChallengeStatus` string the
+ * legacy `ChallengeStatusReceiver` callbacks produce, so `complete3ds2` receives identical values
+ * regardless of which 3DS2 SDK API ran the challenge.
+ */
+internal fun ChallengeActivityResult.toFormattedEventString(): String =
+    when (this) {
+        is ChallengeActivityResult.Completed -> formatCompleted(sdkTransactionId, transactionStatus)
+        is ChallengeActivityResult.Cancelled -> ThreeDSSDKChallengeStatus.CANCELLED
+        is ChallengeActivityResult.TimedOut -> ThreeDSSDKChallengeStatus.TIMEOUT
+        is ChallengeActivityResult.ProtocolError -> formatProtocolError(sdkTransactionId, errorMessage)
+        is ChallengeActivityResult.RuntimeError -> formatRuntimeError(errorCode, errorMessage)
+    }

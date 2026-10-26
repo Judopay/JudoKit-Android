@@ -5,6 +5,7 @@ import androidx.core.os.ConfigurationCompat
 import androidx.core.os.LocaleListCompat
 import com.google.common.truth.Truth.assertThat
 import com.judopay.judokit.android.Judo
+import com.judopay.judokit.android.PendingChallenge
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.model.PaymentSessionAuthorization
 import com.judopay.judokit.android.api.model.response.CardToken
@@ -125,6 +126,7 @@ internal class CardEntryViewModelTest {
         widgetType: PaymentWidgetType = PaymentWidgetType.CARD_PAYMENT,
         uiConfig: UiConfiguration = UiConfiguration.Builder().build(),
         options: CardEntryOptions = CardEntryOptions(),
+        isResumingChallenge: Boolean = false,
     ): CardEntryViewModel =
         CardEntryViewModel(
             getJudo(widgetType, uiConfig),
@@ -134,6 +136,8 @@ internal class CardEntryViewModelTest {
             application,
             cardDetailsFormValidator = mockCardValidator,
             billingDetailsFormValidator = mockBillingValidator,
+            challengeRunner = { null },
+            isResumingChallenge = isResumingChallenge,
         )
 
     // Sends FOCUS_CHANGED for all enabled card fields so the ViewModel marks them valid.
@@ -194,6 +198,18 @@ internal class CardEntryViewModelTest {
             assertThat(slots.first().token).isEqualTo("token")
             assertThat(slots.first().network).isEqualTo(CardNetwork.VISA)
             assertThat(slots.first().cardholderName).isEqualTo("Bob")
+        }
+
+    @Test
+    fun `Given the form has no cardholder name, when InsertCard is sent, then the token's cardholder name is stored`() =
+        runTest {
+            val tokenizedCard = CardToken(lastFour = "1234", token = "token", type = CardNetwork.VISA.typeId, cardHolderName = "Alice")
+            sut.send(CardEntryAction.InsertCard(tokenizedCard))
+            advanceUntilIdle()
+
+            val slots = mutableListOf<TokenizedCardEntity>()
+            coVerify { repository.insert(capture(slots)) }
+            assertThat(slots.first().cardholderName).isEqualTo("Alice")
         }
 
     @Test
@@ -307,7 +323,7 @@ internal class CardEntryViewModelTest {
     @Test
     fun `Given send is called with SubmitCardEntryForm action, then update judoPaymentResult model`() =
         runTest {
-            val results = collectFlow(sut.paymentResultEffect)
+            val results = collectFlow(sut.paymentResults)
 
             makeCardFormValid()
             sut.send(CardEntryAction.SubmitCardEntryForm)
@@ -508,9 +524,9 @@ internal class CardEntryViewModelTest {
         }
 
     @Test
-    fun `Given send is called with SubmitBillingDetailsForm, then paymentResultEffect is emitted`() =
+    fun `Given send is called with SubmitBillingDetailsForm, then paymentResults is emitted`() =
         runTest {
-            val results = collectFlow(sut.paymentResultEffect)
+            val results = collectFlow(sut.paymentResults)
 
             sut.send(CardEntryAction.SubmitBillingDetailsForm)
             advanceUntilIdle()
@@ -624,12 +640,12 @@ internal class CardEntryViewModelTest {
     }
 
     @Test
-    fun `Given payment returns an error, then paymentResultEffect emits the error result`() =
+    fun `Given payment returns an error, then paymentResults emits the error result`() =
         runTest {
             val error = JudoPaymentResult.Error(JudoError(message = "network error"))
             coEvery { cardTransactionRepository.payment(any(), any()) } returns error
 
-            val results = collectFlow(sut.paymentResultEffect)
+            val results = collectFlow(sut.paymentResults)
 
             makeCardFormValid()
             sut.send(CardEntryAction.SubmitCardEntryForm)
@@ -786,4 +802,60 @@ internal class CardEntryViewModelTest {
         .setReference(Reference(consumerReference = "ref", paymentReference = UUID.randomUUID().toString()))
         .setUiConfiguration(uiConfiguration)
         .build()
+
+    @Test
+    fun `Given a challenge was showing when the process died, then the restored screen shows loading`() {
+        sut = createViewModel(isResumingChallenge = true)
+
+        assertThat(
+            sut.uiState.value
+                ?.formModel
+                ?.cardDetailsInputModel
+                ?.actionButtonState,
+        ).isEqualTo(ButtonState.Loading)
+    }
+
+    @Test
+    fun `Given a challenge was showing when the process died, then Initialize does not send the token payment again`() =
+        runTest {
+            sut = createViewModel(PaymentWidgetType.TOKEN_PAYMENT, isResumingChallenge = true)
+
+            sut.send(CardEntryAction.Initialize)
+            advanceUntilIdle()
+
+            coVerify(exactly = 0) { cardTransactionRepository.paymentWithToken(any(), any()) }
+        }
+
+    @Test
+    fun `Given a challenge was showing when the process died, then its outcome completes the transaction without CV2`() =
+        runTest {
+            val completed = JudoPaymentResult.Success(JudoResult())
+            coEvery { cardTransactionRepository.complete3ds2("receipt-1", "2.2.0", null, "Cancelled") } returns completed
+            sut = createViewModel(isResumingChallenge = true)
+            val results = collectFlow(sut.paymentResults)
+
+            sut.send(CardEntryAction.CompleteRestoredChallenge(PendingChallenge("receipt-1", "2.2.0"), "Cancelled"))
+            advanceUntilIdle()
+
+            assertThat(results).containsExactly(completed)
+            assertThat(
+                sut.uiState.value
+                    ?.formModel
+                    ?.cardDetailsInputModel
+                    ?.actionButtonState,
+            ).isNotEqualTo(ButtonState.Loading)
+        }
+
+    @Test
+    fun `Given a result is emitted while nothing collects, then paymentResults still delivers it later`() =
+        runTest {
+            makeCardFormValid()
+            sut.send(CardEntryAction.SubmitCardEntryForm)
+            advanceUntilIdle()
+
+            val results = collectFlow(sut.paymentResults)
+            advanceUntilIdle()
+
+            assertThat(results).hasSize(1)
+        }
 }

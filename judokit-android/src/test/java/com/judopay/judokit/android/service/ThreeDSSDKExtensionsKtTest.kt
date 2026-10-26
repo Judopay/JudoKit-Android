@@ -4,6 +4,7 @@ import com.judopay.judo3ds2.model.CompletionEvent
 import com.judopay.judo3ds2.model.ProtocolErrorEvent
 import com.judopay.judo3ds2.model.RuntimeErrorEvent
 import com.judopay.judo3ds2.transaction.challenge.ErrorMessage
+import com.judopay.judo3ds2.ui.challenge.ChallengeActivityResult
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -110,5 +111,34 @@ class ThreeDSSDKExtensionsKtTest {
         val expected = "RuntimeError|errorCode=|errorMessage="
 
         assertEquals(expected, result)
+    }
+
+    @Test
+    fun `toFormattedEventString formats ChallengeActivityResult Completed like CompletionEvent`() {
+        val result = ChallengeActivityResult.Completed("12345", "Y").toFormattedEventString()
+
+        assertEquals(CompletionEvent("12345", "Y").toFormattedEventString(), result)
+    }
+
+    @Test
+    fun `toFormattedEventString formats ChallengeActivityResult Cancelled and TimedOut`() {
+        assertEquals(ThreeDSSDKChallengeStatus.CANCELLED, ChallengeActivityResult.Cancelled.toFormattedEventString())
+        assertEquals(ThreeDSSDKChallengeStatus.TIMEOUT, ChallengeActivityResult.TimedOut.toFormattedEventString())
+    }
+
+    @Test
+    fun `toFormattedEventString formats ChallengeActivityResult ProtocolError like ProtocolErrorEvent`() {
+        val errorMessage = ErrorMessage("404", "A", "Not Found", null, "MessageType", "2.1.0")
+
+        val result = ChallengeActivityResult.ProtocolError("12345", errorMessage).toFormattedEventString()
+
+        assertEquals(ProtocolErrorEvent("12345", errorMessage).toFormattedEventString(), result)
+    }
+
+    @Test
+    fun `toFormattedEventString formats ChallengeActivityResult RuntimeError like RuntimeErrorEvent`() {
+        val result = ChallengeActivityResult.RuntimeError(null, "boom").toFormattedEventString()
+
+        assertEquals(RuntimeErrorEvent(null, "boom").toFormattedEventString(), result)
     }
 }
