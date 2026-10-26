@@ -92,7 +92,7 @@
         <EditTextPreference
             app:dependency="is_recommendation_enabled"
             app:iconSpaceReserved="false"
-            app:key="rsa_key"
+            app:key="recommendation_rsa_key"
             app:summary="@string/rsa_key_summary"
             app:title="@string/rsa_key_title" />
 
