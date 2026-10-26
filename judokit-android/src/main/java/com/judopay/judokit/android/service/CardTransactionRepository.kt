@@ -11,6 +11,8 @@ import com.judopay.judo3ds2.service.ThreeDS2Service
 import com.judopay.judo3ds2.service.ThreeDS2ServiceImpl
 import com.judopay.judo3ds2.transaction.Transaction
 import com.judopay.judo3ds2.transaction.challenge.ChallengeParameters
+import com.judopay.judo3ds2.ui.challenge.model.ChallengeExtra
+import com.judopay.judo3ds2.ui.challenge.model.toChallengeExtra
 import com.judopay.judokit.android.Judo
 import com.judopay.judokit.android.api.JudoApiService
 import com.judopay.judokit.android.api.factory.JudoApiServiceFactory
@@ -45,13 +47,13 @@ import retrofit2.await
 /**
  * A suspend-function-based callback for performing the native 3DS2 challenge.
  *
- * The caller (typically a Fragment) receives the [Transaction] and
- * [ChallengeParameters], invokes `transaction.doChallenge()` on the UI
- * thread with its [androidx.fragment.app.FragmentActivity], and returns
+ * The caller (typically a Fragment) receives the [ChallengeData], launches
+ * [ChallengeData.challengeExtra] via
+ * [com.judopay.judo3ds2.ui.challenge.ChallengeActivityResultContract], and returns
  * the raw `threeDSSDKChallengeStatus` string to forward to the
  * `complete3ds2` API endpoint.
  */
-internal typealias ChallengeRunner = suspend (Transaction, ChallengeParameters) -> String?
+internal typealias ChallengeRunner = suspend (ChallengeData) -> String?
 
 /**
  * The type of card transaction being performed.
@@ -81,17 +83,36 @@ internal const val THREE_DS_TWO_MIN_TIMEOUT = 5
 private const val SHOULD_USE_FABRICK_DS_ID = "shouldUseFabrickDsId"
 
 /**
- * Data emitted to the UI layer when a 3DS2 native challenge must be performed.
+ * What a [ChallengeRunner] needs to run a 3DS2 native challenge.
  *
- * The Fragment collects this, calls [Transaction.doChallenge] with the
- * current [androidx.fragment.app.FragmentActivity], and feeds the result
- * back via [com.judopay.judokit.android.ui.cardentry.CardEntryViewModel.onChallengeResult]
- * or the equivalent in [com.judopay.judokit.android.ui.paymentmethods.PaymentMethodsViewModel].
+ * [toChallengeExtra] builds what [com.judopay.judo3ds2.ui.challenge.ChallengeActivityResultContract]
+ * launches. [transaction] and [challengeParameters] are also used directly by the deprecated
+ * [Transaction.doChallenge] path of the `Context`-based
+ * [com.judopay.judokit.android.JudoCardTransactionClient] methods, which never builds the extra.
+ *
+ * [receiptId] and [messageVersion] are what [CardTransactionRepository.complete3ds2] needs to finish
+ * the transaction once the challenge ends. Neither is card data, so callers may persist them to
+ * finish the transaction after process death.
  */
 internal data class ChallengeData(
     val transaction: Transaction,
     val challengeParameters: ChallengeParameters,
-)
+    val directoryServerId: String,
+    val receiptId: String,
+    val messageVersion: String,
+) {
+    /**
+     * Builds the [ChallengeExtra] to launch. `getAuthenticationRequestParameters()` returns the
+     * instance already sent in the request, so it carries the SDK key pair the ACS derived its
+     * secret from.
+     *
+     * @throws IllegalArgumentException if the challenge parameters miss a required value.
+     */
+    fun toChallengeExtra(): ChallengeExtra =
+        transaction
+            .getAuthenticationRequestParameters()
+            .toChallengeExtra(challengeParameters, THREE_DS_TWO_MIN_TIMEOUT, directoryServerId)
+}
 
 /**
  * Executes card transactions (payment, pre-auth, save, check, token variants)
@@ -245,7 +266,7 @@ internal class CardTransactionRepository
 
             return try {
                 val apiResult = buildApiRequest(type, details, transaction, overrides).await()
-                handleApiResult(type, details, transaction, runChallenge, apiResult)
+                handleApiResult(type, details, transaction, directoryServerId, runChallenge, apiResult)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -257,10 +278,12 @@ internal class CardTransactionRepository
             }
         }
 
+        @Suppress("LongParameterList")
         private suspend fun handleApiResult(
             type: TransactionType,
             details: TransactionDetails,
             transaction: Transaction,
+            directoryServerId: String,
             runChallenge: ChallengeRunner,
             result: JudoApiCallResult<Receipt>,
         ): JudoPaymentResult =
@@ -273,7 +296,7 @@ internal class CardTransactionRepository
                         type.canBeSoftDeclined && receipt.isSoftDeclined ->
                             handleStepUp(type, details, transaction, runChallenge, receipt.receiptId!!)
                         receipt.isThreeDSecureTwoRequired ->
-                            handleThreeDSecure2(details, receipt, transaction, runChallenge)
+                            handleThreeDSecure2(details, receipt, transaction, directoryServerId, runChallenge)
                         else -> result.toJudoPaymentResult(resources)
                     }
                 }
@@ -303,22 +326,54 @@ internal class CardTransactionRepository
          * Delegates the 3DS2 native challenge to [runChallenge] and then completes
          * the transaction via the `complete3ds2` API endpoint.
          */
+        @Suppress("TooGenericExceptionCaught")
         private suspend fun handleThreeDSecure2(
             details: TransactionDetails,
             receipt: Receipt,
             transaction: Transaction,
+            directoryServerId: String,
             runChallenge: ChallengeRunner,
         ): JudoPaymentResult {
-            val challengeStatus = runChallenge(transaction, receipt.getChallengeParameters())
             val receiptId = receipt.receiptId ?: ""
             val version = receipt.getCReqParameters()?.messageVersion ?: judo.threeDSTwoMessageVersion
-            val cv2 = details.securityNumber
-            val result =
-                judoApiService
-                    .complete3ds2(receiptId, Complete3DS2Request(version, cv2, challengeStatus))
-                    .await()
-            return result.toJudoPaymentResult(resources)
+            // Whatever goes wrong running the challenge, complete3ds2 is still sent so the backend
+            // learns how the challenge ended, as the ChallengeStatusReceiver.runtimeError path did.
+            val challengeStatus =
+                try {
+                    runChallenge(ChallengeData(transaction, receipt.getChallengeParameters(), directoryServerId, receiptId, version))
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    Log.w(TAG, "3DS2 challenge failed to run", e)
+                    runtimeErrorChallengeStatus(e.message ?: "Failed to run the 3DS2 challenge.")
+                }
+            return complete3ds2(receiptId, version, details.securityNumber, challengeStatus)
         }
+
+        /**
+         * Completes a 3DS2 transaction after its challenge via the `complete3ds2` API endpoint.
+         *
+         * Also called directly when a challenge outcome arrives after process death, when the
+         * original [performTransaction] coroutine no longer exists; [cv2] is then `null`, since card
+         * data is never persisted.
+         */
+        @Suppress("TooGenericExceptionCaught")
+        suspend fun complete3ds2(
+            receiptId: String,
+            messageVersion: String,
+            cv2: String?,
+            challengeStatus: String?,
+        ): JudoPaymentResult =
+            try {
+                judoApiService
+                    .complete3ds2(receiptId, Complete3DS2Request(messageVersion, cv2, challengeStatus))
+                    .await()
+                    .toJudoPaymentResult(resources)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                JudoPaymentResult.Error(JudoError.judoInternalError(e.message))
+            }
 
         private fun buildApiRequest(
             type: TransactionType,

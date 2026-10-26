@@ -16,6 +16,7 @@ import com.judokit.android.examples.common.parcelable
 import com.judokit.android.examples.databinding.ActivityDemoNoUiPaymentBinding
 import com.judopay.judokit.android.JUDO_OPTIONS
 import com.judopay.judokit.android.Judo
+import com.judopay.judokit.android.JudoCardTransactionClient
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.code
 import com.judopay.judokit.android.model.toIntent
@@ -25,6 +26,7 @@ import kotlinx.coroutines.launch
 class DemoNoUiPaymentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDemoNoUiPaymentBinding
     private lateinit var viewModel: DemoNoUiPaymentViewModel
+    private lateinit var client: JudoCardTransactionClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -45,8 +47,12 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
         viewModel =
             ViewModelProvider(
                 this,
-                DemoNoUiPaymentViewModel.Factory(application, judo),
+                DemoNoUiPaymentViewModel.Factory(judo),
             )[DemoNoUiPaymentViewModel::class.java]
+
+        // Created on every onCreate (before STARTED) so a recreated Activity, even after process
+        // death during the 3DS2 challenge, re-registers the challenge launcher and gets the result.
+        client = JudoCardTransactionClient.create(this, judo) { viewModel.onResult(it) }
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.nestedScrollView) { view, insets ->
             val imeBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
@@ -61,14 +67,15 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
         binding.cardholderNameEditText.setText(initial.cardholderName)
         binding.securityNumberEditText.setText(initial.securityNumber)
 
-        binding.payWithCardButton.setOnClickListener { viewModel.payment(this, currentCardInput()) }
-        binding.preAuthWithCardButton.setOnClickListener { viewModel.preAuth(this, currentCardInput()) }
-        binding.checkCardButton.setOnClickListener { viewModel.check(this, currentCardInput()) }
+        binding.payWithCardButton.setOnClickListener { viewModel.payment(currentCardInput()) }
+        binding.preAuthWithCardButton.setOnClickListener { viewModel.preAuth(currentCardInput()) }
+        binding.checkCardButton.setOnClickListener { viewModel.check(currentCardInput()) }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.uiState.collect { handleState(it) } }
                 launch { viewModel.paymentResult.collect { onTransactionResult(it) } }
+                launch { viewModel.transactionRequest.collect { startTransaction(it) } }
             }
         }
     }
@@ -88,6 +95,14 @@ class DemoNoUiPaymentActivity : AppCompatActivity() {
             cardholderName = binding.cardholderNameEditText.text.toString(),
             securityNumber = binding.securityNumberEditText.text.toString(),
         )
+
+    private fun startTransaction(request: TransactionRequest) {
+        when (request) {
+            is TransactionRequest.Payment -> client.payment(request.details)
+            is TransactionRequest.PreAuth -> client.preAuth(request.details)
+            is TransactionRequest.Check -> client.check(request.details)
+        }
+    }
 
     private fun onTransactionResult(result: JudoPaymentResult) {
         setResult(result.code, result.toIntent())

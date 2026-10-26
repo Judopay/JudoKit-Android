@@ -17,10 +17,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.judopay.judo3ds2.model.CompletionEvent
-import com.judopay.judo3ds2.model.ProtocolErrorEvent
-import com.judopay.judo3ds2.model.RuntimeErrorEvent
-import com.judopay.judo3ds2.transaction.challenge.ChallengeStatusReceiver
+import com.judopay.judokit.android.ChallengeHost
+import com.judopay.judokit.android.ChallengeSessions
 import com.judopay.judokit.android.JudoSharedViewModel
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.cardRepository
@@ -32,8 +30,6 @@ import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.isCardPaymentWidget
 import com.judopay.judokit.android.model.isPaymentMethodsWidget
 import com.judopay.judokit.android.service.CardTransactionRepository
-import com.judopay.judokit.android.service.THREE_DS_TWO_MIN_TIMEOUT
-import com.judopay.judokit.android.service.ThreeDSSDKChallengeStatus
 import com.judopay.judokit.android.service.toFormattedEventString
 import com.judopay.judokit.android.ui.cardentry.components.BillingDetailsFormListener
 import com.judopay.judokit.android.ui.cardentry.components.CardEntryFormListener
@@ -60,6 +56,13 @@ private const val KEYBOARD_DISMISS_TIMEOUT = 500L
 
 @Suppress("DEPRECATION")
 class CardEntryFragment : BottomSheetDialogFragment() {
+    // Created on every creation, so a Fragment recreated while the challenge screen is showing (even
+    // after process death) still receives its outcome. Results are delivered by the ViewModel.
+    private val challengeHost =
+        ChallengeHost.of(this, receiver = null) { _, pending, result ->
+            viewModel.send(CardEntryAction.CompleteRestoredChallenge(pending, result.toFormattedEventString()))
+        }
+
     private val viewModel: CardEntryViewModel by viewModels {
         val cardEntryOptions = arguments?.parcelable<CardEntryOptions>(CARD_ENTRY_OPTIONS) ?: CardEntryOptions()
         viewModelFactory {
@@ -69,6 +72,11 @@ class CardEntryFragment : BottomSheetDialogFragment() {
                 cardRepository(),
                 cardEntryOptions,
                 requireActivity().application,
+                // Bound to the session, not to this Fragment instance, which the ViewModel outlives.
+                challengeRunner = ChallengeSessions.runner(challengeHost.resolveSessionId()),
+                // A ViewModel created while a transaction is in progress was recreated after the
+                // process died during its 3DS2 challenge.
+                isResumingChallenge = challengeHost.isTransactionInProgress(),
             )
         }
     }
@@ -232,39 +240,11 @@ class CardEntryFragment : BottomSheetDialogFragment() {
     }
 
     private fun initializeViewModelObserving() {
-        // The 3DS2 challenge runs on top of JudoActivity, which drops to STOPPED during the challenge.
-        // Using pendingChallenge (StateFlow) instead of a one-shot SharedFlow means a Fragment
-        // recreated during a configuration change immediately re-sees any in-progress challenge and
-        // re-calls doChallenge with the fresh Activity. The receiver calls viewModel.onChallengeResult
-        // directly, so it survives even if this coroutine is later cancelled.
-        // repeatOnLifecycle(STARTED) is safe here because StateFlow replays its current value when
-        // STARTED is re-entered, so a recreated Fragment will immediately receive any pending challenge.
+        // The 3DS2 challenge is launched and its outcome received by challengeHost.
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.pendingChallenge.filterNotNull().collect { data ->
-                        data.transaction.doChallenge(
-                            requireActivity(),
-                            data.challengeParameters,
-                            object : ChallengeStatusReceiver {
-                                override fun completed(event: CompletionEvent) = viewModel.onChallengeResult(event.toFormattedEventString())
-
-                                override fun cancelled() = viewModel.onChallengeResult(ThreeDSSDKChallengeStatus.CANCELLED)
-
-                                override fun protocolError(event: ProtocolErrorEvent) =
-                                    viewModel.onChallengeResult(event.toFormattedEventString())
-
-                                override fun runtimeError(event: RuntimeErrorEvent) =
-                                    viewModel.onChallengeResult(event.toFormattedEventString())
-
-                                override fun timedout() = viewModel.onChallengeResult(ThreeDSSDKChallengeStatus.TIMEOUT)
-                            },
-                            THREE_DS_TWO_MIN_TIMEOUT,
-                        )
-                    }
-                }
                 launch { viewModel.uiState.filterNotNull().collect { updateWithModel(it) } }
-                launch { viewModel.paymentResultEffect.collect { dispatchResult(it) } }
+                launch { viewModel.paymentResults.collect { dispatchResult(it) } }
                 launch {
                     viewModel.cardEntryToPaymentMethodResultEffect.collect {
                         sharedViewModel.postCardEntryToPaymentMethodResult(it)
