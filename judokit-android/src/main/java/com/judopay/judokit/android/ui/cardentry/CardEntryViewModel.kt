@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.judopay.judokit.android.Judo
+import com.judopay.judokit.android.PendingChallenge
 import com.judopay.judokit.android.R
 import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.db.entity.TokenizedCardEntity
@@ -20,7 +21,7 @@ import com.judopay.judokit.android.model.formatted
 import com.judopay.judokit.android.model.isTokenPayment
 import com.judopay.judokit.android.model.toInputModel
 import com.judopay.judokit.android.service.CardTransactionRepository
-import com.judopay.judokit.android.service.ThreeDSChallengeDelegate
+import com.judopay.judokit.android.service.ChallengeRunner
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsFieldType
 import com.judopay.judokit.android.ui.cardentry.model.BillingDetailsInputModel
 import com.judopay.judokit.android.ui.cardentry.model.CardDetailsFieldType
@@ -33,9 +34,11 @@ import com.judopay.judokit.android.ui.cardentry.validation.BillingDetailsFormVal
 import com.judopay.judokit.android.ui.cardentry.validation.CardDetailsFormValidator
 import com.judopay.judokit.android.ui.cardentry.validation.ValidationResult
 import com.judopay.judokit.android.ui.common.ButtonState
+import com.judopay.judokit.android.ui.common.PaymentResultEmitter
 import com.judopay.judokit.android.ui.paymentmethods.toTokenizedCardEntity
 import com.judopay.judokit.android.withWhitespacesRemoved
 import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -55,7 +58,7 @@ data class CardEntryFragmentModel(
     val isUserInputRequired: Boolean = true,
 )
 
-sealed class CardEntryAction {
+internal sealed class CardEntryAction {
     data class CardFieldChanged(
         val fieldType: CardDetailsFieldType,
         val value: String,
@@ -83,10 +86,19 @@ sealed class CardEntryAction {
     object PressBackButton : CardEntryAction()
 
     object Initialize : CardEntryAction()
+
+    /**
+     * A 3DS2 challenge that was showing when the process died has ended. The coroutine that
+     * launched it died with the process, so the transaction is completed from [pending].
+     */
+    internal data class CompleteRestoredChallenge(
+        val pending: PendingChallenge,
+        val challengeStatus: String,
+    ) : CardEntryAction()
 }
 
 @Suppress("DEPRECATION", "LongParameterList")
-class CardEntryViewModel
+internal class CardEntryViewModel
     internal constructor(
         private val judo: Judo,
         private val cardTransactionRepository: CardTransactionRepository,
@@ -97,23 +109,22 @@ class CardEntryViewModel
             CardDetailsFormValidator(judo.supportedCardNetworks.toList()),
         private val billingDetailsFormValidator: BillingDetailsFormValidator =
             BillingDetailsFormValidator(),
+        private val challengeRunner: ChallengeRunner,
+        isResumingChallenge: Boolean = false,
     ) : AndroidViewModel(application) {
         private val _uiState = MutableStateFlow<CardEntryFragmentModel?>(null)
         val uiState: StateFlow<CardEntryFragmentModel?> = _uiState.asStateFlow()
 
-        private val _paymentResultEffect = MutableSharedFlow<JudoPaymentResult>(extraBufferCapacity = 1)
-        val paymentResultEffect: SharedFlow<JudoPaymentResult> = _paymentResultEffect
+        private val paymentResultEmitter = PaymentResultEmitter(TAG)
+
+        /** The payment results for the Fragment to collect; see [PaymentResultEmitter]. */
+        internal val paymentResults: Flow<JudoPaymentResult> = paymentResultEmitter.results
 
         private val _cardEntryToPaymentMethodResultEffect = MutableSharedFlow<TransactionDetails.Builder>(extraBufferCapacity = 1)
         val cardEntryToPaymentMethodResultEffect: SharedFlow<TransactionDetails.Builder> = _cardEntryToPaymentMethodResultEffect
 
         private val _navigationEffect = MutableSharedFlow<CardEntryNavigation>(extraBufferCapacity = 1)
         val navigationEffect: SharedFlow<CardEntryNavigation> = _navigationEffect
-
-        private val threeDSDelegate = ThreeDSChallengeDelegate()
-
-        /** Emits the active 3DS2 challenge data while a challenge is in progress, null otherwise. */
-        internal val pendingChallenge: StateFlow<com.judopay.judokit.android.service.ChallengeData?> = threeDSDelegate.pendingChallenge
 
         private val context = application
 
@@ -157,11 +168,19 @@ class CardEntryViewModel
                     adminDivisionRequired = billingDetailsFormValidator.adminDivisionRequired,
                 )
 
-            buildModel()
+            if (isResumingChallenge) {
+                // The process died during a 3DS2 challenge. Its outcome arrives through the
+                // Fragment's challenge launcher; until then, show the transaction as in progress and
+                // never start a new one (a token payment would otherwise be sent again on Initialize).
+                isInitialized = true
+                buildModel(isLoading = true)
+            } else {
+                buildModel()
+            }
         }
 
         @Suppress("LongMethod", "CyclomaticComplexMethod")
-        fun send(action: CardEntryAction) {
+        internal fun send(action: CardEntryAction) {
             when (action) {
                 is CardEntryAction.Initialize -> {
                     if (!isInitialized) {
@@ -171,7 +190,9 @@ class CardEntryViewModel
                     }
                 }
                 is CardEntryAction.InsertCard -> {
-                    val entity = action.tokenizedCard.toTokenizedCardEntity(context, cardDetailsModel.cardHolderName)
+                    // The form is empty for a challenge restored after process death: fall back to the token's name.
+                    val cardholderName = cardDetailsModel.cardHolderName.ifBlank { action.tokenizedCard.cardHolderName.orEmpty() }
+                    val entity = action.tokenizedCard.toTokenizedCardEntity(context, cardholderName)
                     insert(entity)
                 }
                 is CardEntryAction.CardFieldChanged -> handleCardFieldChanged(action)
@@ -207,6 +228,7 @@ class CardEntryViewModel
                     cardDetailsModel = action.result.toInputModel()
                     buildModel(isCardDetailsValid = true)
                 }
+                is CardEntryAction.CompleteRestoredChallenge -> completeRestoredChallenge(action)
                 is CardEntryAction.PressBackButton -> {
                     _navigationState.value = CardEntryNavigation.Card
                     buildModel(isCardDetailsValid = true)
@@ -217,10 +239,13 @@ class CardEntryViewModel
             }
         }
 
-        /**
-         * Called by the Fragment after the native 3DS2 challenge completes.
-         */
-        fun onChallengeResult(status: String?) = threeDSDelegate.onChallengeResult(status)
+        private fun completeRestoredChallenge(action: CardEntryAction.CompleteRestoredChallenge) =
+            viewModelScope.launch {
+                val pending = action.pending
+                val result = cardTransactionRepository.complete3ds2(pending.receiptId, pending.messageVersion, null, action.challengeStatus)
+                buildModel(isLoading = false)
+                paymentResultEmitter.emit(result)
+            }
 
         private fun handleCardFieldChanged(action: CardEntryAction.CardFieldChanged) {
             val type = action.fieldType
@@ -433,22 +458,22 @@ class CardEntryViewModel
 
                 val result =
                     when (judo.paymentWidgetType) {
-                        PaymentWidgetType.CARD_PAYMENT -> cardTransactionRepository.payment(details, threeDSDelegate.challengeRunner)
-                        PaymentWidgetType.PRE_AUTH -> cardTransactionRepository.preAuth(details, threeDSDelegate.challengeRunner)
-                        PaymentWidgetType.CHECK_CARD -> cardTransactionRepository.check(details, threeDSDelegate.challengeRunner)
+                        PaymentWidgetType.CARD_PAYMENT -> cardTransactionRepository.payment(details, challengeRunner)
+                        PaymentWidgetType.PRE_AUTH -> cardTransactionRepository.preAuth(details, challengeRunner)
+                        PaymentWidgetType.CHECK_CARD -> cardTransactionRepository.check(details, challengeRunner)
                         PaymentWidgetType.PAYMENT_METHODS,
                         PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS,
                         PaymentWidgetType.CREATE_CARD_TOKEN,
-                        -> cardTransactionRepository.save(details, threeDSDelegate.challengeRunner)
+                        -> cardTransactionRepository.save(details, challengeRunner)
                         PaymentWidgetType.TOKEN_PAYMENT ->
                             cardTransactionRepository.paymentWithToken(
                                 getTransactionDetailsForTokenPayment(),
-                                threeDSDelegate.challengeRunner,
+                                challengeRunner,
                             )
                         PaymentWidgetType.TOKEN_PRE_AUTH ->
                             cardTransactionRepository.preAuthWithToken(
                                 getTransactionDetailsForTokenPayment(),
-                                threeDSDelegate.challengeRunner,
+                                challengeRunner,
                             )
                         PaymentWidgetType.GOOGLE_PAY,
                         PaymentWidgetType.PRE_AUTH_GOOGLE_PAY,
@@ -457,9 +482,7 @@ class CardEntryViewModel
                     }
 
                 buildModel(isLoading = false)
-                if (!_paymentResultEffect.tryEmit(result)) {
-                    Log.w(TAG, "Payment result effect dropped: $result")
-                }
+                paymentResultEmitter.emit(result)
             }
 
         private fun getTransactionDetailsForTokenPayment(): TransactionDetails {
