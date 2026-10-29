@@ -26,3 +26,17 @@ allprojects {
     group = Namespaces.GROUP
     version = Versions.VERSION_NAME
 }
+
+subprojects {
+    configurations.matching { it.name.contains("dokka", ignoreCase = true) }.configureEach {
+        resolutionStrategy.eachDependency {
+            if (requested.group?.startsWith("com.fasterxml.jackson") == true) {
+                useVersion(libs.versions.jackson.get())
+                because(
+                    "Pin Jackson versions used by Dokka to address critical jackson-databind findings " +
+                        "(Snyk: org.jetbrains.dokka:dokka-core:2.2.0 → com.fasterxml.jackson.core:jackson-databind:2.15.3)",
+                )
+            }
+        }
+    }
+}
