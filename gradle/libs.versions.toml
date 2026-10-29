@@ -42,6 +42,8 @@ testRunner = "1.6.1"
 
 nexusPublish = "2.0.0"
 dokka = "2.2.0"
+# Dokka pulls jackson-databind transitively; pin to a patched release (Snyk).
+jackson = "2.18.12"
 detekt = "1.23.8"
 kover = "0.9.7"
 ktlint = "14.2.0"
