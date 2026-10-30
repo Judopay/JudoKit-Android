@@ -42,6 +42,8 @@ testRunner = "1.6.1"
 
 nexusPublish = "2.0.0"
 dokka = "2.2.0"
+# AGP Unified Test Platform pulls netty-handler transitively; pin to a patched release (Snyk).
+netty = "4.1.139.Final"
 detekt = "1.23.8"
 kover = "0.9.7"
 ktlint = "14.2.0"
