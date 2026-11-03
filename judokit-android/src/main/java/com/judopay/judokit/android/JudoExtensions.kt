@@ -24,6 +24,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.ViewAnimator
+import androidx.core.graphics.Insets
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
@@ -101,8 +102,10 @@ fun <T : View> View.parentOfType(parentType: Class<T>): T? {
     return null
 }
 
-internal fun View.applyHorizontalCutoutPadding(insets: WindowInsetsCompat) {
-    val cutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+internal fun View.applyHorizontalCutoutPadding(insets: WindowInsetsCompat) =
+    applyHorizontalCutoutPadding(insets.getInsets(WindowInsetsCompat.Type.displayCutout()))
+
+internal fun View.applyHorizontalCutoutPadding(cutout: Insets) {
     setPadding(
         maxOf(paddingLeft, cutout.left),
         paddingTop,
