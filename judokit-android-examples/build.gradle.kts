@@ -39,6 +39,8 @@ dependencies {
 
     implementation(libs.squareup.retrofit2)
     implementation(libs.squareup.retrofit2.converter.gson)
+    // Pin gson to the catalog version so the app and androidTest runtime classpaths resolve consistently.
+    implementation(libs.gson)
     implementation(libs.ravelin.encrypt)
     implementation(libs.androidx.material3.android)
 
