@@ -17,7 +17,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.ViewAnimator
-import androidx.core.view.WindowInsetsCompat
+import androidx.core.graphics.Insets
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
@@ -729,15 +729,20 @@ internal class JudoExtensionsTest {
         assertEquals(listOf(deepChild), result)
     }
 
+    // WindowInsetsCompat can't be loaded on the JVM stub android.jar (its static init NPEs since
+    // core 1.18), so the padding logic is tested through the Insets overload.
     @DisplayName("applyHorizontalCutoutPadding calls setPadding with cutout insets")
     @Test
     fun applyHorizontalCutoutPaddingCallsSetPadding() {
         val view = mockk<View>(relaxed = true)
-        val insets = mockk<WindowInsetsCompat>(relaxed = true)
+        every { view.paddingLeft } returns 5
+        every { view.paddingTop } returns 1
+        every { view.paddingRight } returns 30
+        every { view.paddingBottom } returns 2
 
-        view.applyHorizontalCutoutPadding(insets)
+        view.applyHorizontalCutoutPadding(Insets.of(20, 0, 10, 0))
 
-        verify { view.setPadding(any(), any(), any(), any()) }
+        verify { view.setPadding(20, 1, 30, 2) }
     }
 
     @DisplayName("Given Judo with non-null metaData, toPaymentRequest includes metadata")

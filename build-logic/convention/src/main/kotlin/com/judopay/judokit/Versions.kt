@@ -10,6 +10,9 @@ object Versions {
     const val TARGET_SDK: Int = 36
     const val COMPILE_SDK: Int = 36
     const val MIN_SDK: Int = 23
+
+    // Oldest Kotlin version consumers (like judokit-reactnative) can compile against the published AAR with
+    const val MIN_CONSUMER_KOTLIN: String = "2.1.20"
 }
 
 private const val EXAMPLE_APP_VERSION_CODE = "android.injected.version.code"
