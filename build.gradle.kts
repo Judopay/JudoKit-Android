@@ -26,3 +26,18 @@ allprojects {
     group = Namespaces.GROUP
     version = Versions.VERSION_NAME
 }
+
+subprojects {
+    configurations.configureEach {
+        resolutionStrategy.eachDependency {
+            if (requested.group == "io.netty") {
+                useVersion(libs.versions.netty.get())
+                because(
+                    "Pin Netty versions used by AGP Unified Test Platform to address critical netty-handler findings " +
+                        "(Snyk: com.android.tools.utp:android-test-plugin-result-listener-gradle → " +
+                        "com.google.testing.platform:core:0.0.9-alpha04 → io.netty:netty-handler:4.1.93.Final)",
+                )
+            }
+        }
+    }
+}
