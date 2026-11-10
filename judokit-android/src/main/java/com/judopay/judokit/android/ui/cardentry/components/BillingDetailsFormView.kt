@@ -1,5 +1,6 @@
 package com.judopay.judokit.android.ui.cardentry.components
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.telephony.PhoneNumberFormattingTextWatcher
 import android.util.AttributeSet
@@ -135,6 +136,10 @@ class BillingDetailsFormView
                 addTextChangedListener(phoneCountryCodeFormatter)
             }
 
+        // The country-code constructor of PhoneNumberFormattingTextWatcher is @WorkerThread because it loads
+        // libphonenumber region metadata, but the watcher has to be attached to the EditText on the main thread.
+        // The metadata lookup is small and cached after the first use, so we build it here on focus.
+        @SuppressLint("ThreadConstraint")
         private fun setupMobileNumberFormatter() =
             with(editTextForType(BillingDetailsFieldType.MOBILE_NUMBER)) {
                 if (mobileNumberFormatter != null) {
