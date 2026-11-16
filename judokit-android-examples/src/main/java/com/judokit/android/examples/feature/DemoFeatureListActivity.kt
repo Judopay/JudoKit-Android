@@ -30,6 +30,7 @@ import com.judokit.android.examples.feature.tokenpayments.TokenPaymentsActivity
 import com.judokit.android.examples.model.DemoFeature
 import com.judokit.android.examples.settings.SettingsActivity
 import com.judokit.android.examples.settings.applyImportSettings
+import com.judokit.android.examples.settings.importSettingsFromIntent
 import com.judokit.android.examples.settings.readImportedJson
 import com.judokit.android.examples.settings.showImportSettingsDialog
 import com.judopay.judokit.android.JUDO_OPTIONS
@@ -117,6 +118,8 @@ class DemoFeatureListActivity : AppCompatActivity() {
 
         PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false)
         PreferenceManager.setDefaultValues(this, R.xml.google_pay_preferences, false)
+        // A recreated Activity gets its original intent back, so only import on a fresh start.
+        if (savedInstanceState == null) importSettingsFromIntent(intent)
         notificationPermissionLauncher.requestPermissionIfNeeded()
 
         lifecycleScope.launch {
@@ -124,6 +127,11 @@ class DemoFeatureListActivity : AppCompatActivity() {
                 viewModel.effects.collect { handleEffect(it) }
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        importSettingsFromIntent(intent)
     }
 
     private fun setupChucker() {
