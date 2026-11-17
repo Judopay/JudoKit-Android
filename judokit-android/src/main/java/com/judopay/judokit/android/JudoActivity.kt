@@ -63,8 +63,9 @@ class JudoActivity : AppCompatActivity() {
         setContentView(R.layout.judopay_activity)
 
         // Treat the content of the window as secure, preventing it from appearing in screenshots
-        // or from being viewed on non-secure displays.
-        if (!BuildConfig.DEBUG) {
+        // or from being viewed on non-secure displays. DISABLE_SECURE_FLAG is only ever true in
+        // internal sample-app builds distributed via Firebase; it is always false in published artifacts.
+        if (!BuildConfig.DEBUG && !BuildConfig.DISABLE_SECURE_FLAG) {
             val secureFlag = WindowManager.LayoutParams.FLAG_SECURE
             window.setFlags(secureFlag, secureFlag)
         }

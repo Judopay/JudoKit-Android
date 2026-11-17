@@ -9,9 +9,22 @@ plugins {
     id("judokit.maven-publish")
 }
 
+// Internal toggle for sample-app builds distributed via Firebase (set by fastlane's
+// `build_sample_app` lane) so screenshots/screen recordings work for testers.
+// Defaults to false; published artifacts must never be built with it enabled.
+val disableSecureFlag = providers.gradleProperty("judoDisableSecureFlag").orNull == "true"
+
+if (disableSecureFlag && gradle.startParameter.taskNames.any { it.contains("publish", ignoreCase = true) }) {
+    throw GradleException("judoDisableSecureFlag=true must not be used when publishing judokit-android.")
+}
+
 android {
     namespace = Namespaces.LIBRARY
     version = Versions.VERSION_NAME
+
+    defaultConfig {
+        buildConfigField("boolean", "DISABLE_SECURE_FLAG", disableSecureFlag.toString())
+    }
 }
 
 dependencies {

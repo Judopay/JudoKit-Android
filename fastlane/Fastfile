@@ -132,7 +132,8 @@ platform :android do
         "android.injected.signing.store.password" => ENV['ANDROID_KEYSTORE_PASSWORD'],
         "android.injected.signing.key.alias" => "1",
         "android.injected.signing.key.password" => ENV['ANDROID_KEYSTORE_PASSWORD'],
-        "applicationIdSuffix" => options[:environment] == "staging" ? "staging" : ""
+        "applicationIdSuffix" => options[:environment] == "staging" ? "staging" : "",
+        "judoDisableSecureFlag" => "true"
       }
     )
 
