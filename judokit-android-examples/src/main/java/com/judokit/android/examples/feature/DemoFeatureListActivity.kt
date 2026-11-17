@@ -48,7 +48,6 @@ class DemoFeatureListActivity : AppCompatActivity() {
     private lateinit var viewModel: DemoFeatureListViewModel
     private lateinit var notificationPermissionLauncher: NotificationPermissionLauncher
 
-    private var deepLinkIntent = intent
     private var getTransactionDialog: AlertDialog? = null
 
     private val judoLaunchers =
@@ -159,10 +158,7 @@ class DemoFeatureListActivity : AppCompatActivity() {
         }
     }
 
-    private fun onJudoResult(result: JudoPaymentResult) {
-        deepLinkIntent = intent
-        viewModel.handleJudoPaymentResult(result)
-    }
+    private fun onJudoResult(result: JudoPaymentResult) = viewModel.handleJudoPaymentResult(result)
 
     private fun handleEffect(effect: DemoFeatureListEffect) {
         when (effect) {

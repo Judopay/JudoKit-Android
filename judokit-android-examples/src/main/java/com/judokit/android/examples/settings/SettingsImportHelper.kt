@@ -17,6 +17,10 @@ import java.io.IOException
  * Intent extra holding a settings JSON, base64 encoded, to import at launch. Lets UI tests set up the
  * app in one step, e.g. `adb shell am start -n <app>/.feature.DemoFeatureListActivity
  * --es import_settings_base64 <base64 JSON>`.
+ *
+ * `DemoFeatureListActivity` is `singleTop`: if it is already on top the extra arrives through
+ * `onNewIntent`, otherwise a new instance imports it in `onCreate`. Any screen above it, such as an
+ * in-progress payment, is left in place.
  */
 const val IMPORT_SETTINGS_EXTRA = "import_settings_base64"
 

@@ -48,15 +48,13 @@
         <activity
             android:name="com.judokit.android.examples.feature.DemoFeatureListActivity"
             android:exported="true"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.DemoApp"
             android:windowSoftInputMode="adjustResize" >
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
