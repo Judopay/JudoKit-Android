@@ -5,7 +5,9 @@ import androidx.core.os.ConfigurationCompat
 import androidx.core.os.LocaleListCompat
 import com.google.common.truth.Truth.assertThat
 import com.judopay.judokit.android.Judo
+import com.judopay.judokit.android.PendingChallenge
 import com.judopay.judokit.android.R
+import com.judopay.judokit.android.SessionTransactionLauncher
 import com.judopay.judokit.android.api.model.PaymentSessionAuthorization
 import com.judopay.judokit.android.api.model.response.CardToken
 import com.judopay.judokit.android.collectFlow
@@ -36,8 +38,11 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -67,6 +72,25 @@ internal class CardEntryViewModelTest {
     private val mockBillingValidator: BillingDetailsFormValidator = mockk(relaxed = true)
 
     private lateinit var sut: CardEntryViewModel
+
+    /** Transactions started through [transactionLauncher], not yet finished. */
+    private var transactionsInProgress = 0
+
+    /**
+     * Like the session's launcher: runs the transaction outside the ViewModel and delivers its result
+     * to whichever ViewModel is current when it finishes, as the Fragment's challenge host does.
+     */
+    private val transactionLauncher =
+        SessionTransactionLauncher { block ->
+            if (transactionsInProgress > 0) return@SessionTransactionLauncher false
+            transactionsInProgress++
+            CoroutineScope(testDispatcher).launch {
+                val result = block { null }
+                transactionsInProgress--
+                sut.send(CardEntryAction.TransactionFinished(result))
+            }
+            true
+        }
     private val defaultLocale: Locale = Locale.getDefault()
 
     @BeforeEach
@@ -125,6 +149,7 @@ internal class CardEntryViewModelTest {
         widgetType: PaymentWidgetType = PaymentWidgetType.CARD_PAYMENT,
         uiConfig: UiConfiguration = UiConfiguration.Builder().build(),
         options: CardEntryOptions = CardEntryOptions(),
+        isTransactionInProgress: Boolean = false,
     ): CardEntryViewModel =
         CardEntryViewModel(
             getJudo(widgetType, uiConfig),
@@ -134,6 +159,8 @@ internal class CardEntryViewModelTest {
             application,
             cardDetailsFormValidator = mockCardValidator,
             billingDetailsFormValidator = mockBillingValidator,
+            transactionLauncher = transactionLauncher,
+            isTransactionInProgress = isTransactionInProgress,
         )
 
     // Sends FOCUS_CHANGED for all enabled card fields so the ViewModel marks them valid.
@@ -194,6 +221,18 @@ internal class CardEntryViewModelTest {
             assertThat(slots.first().token).isEqualTo("token")
             assertThat(slots.first().network).isEqualTo(CardNetwork.VISA)
             assertThat(slots.first().cardholderName).isEqualTo("Bob")
+        }
+
+    @Test
+    fun `Given the form has no cardholder name, when InsertCard is sent, then the token's cardholder name is stored`() =
+        runTest {
+            val tokenizedCard = CardToken(lastFour = "1234", token = "token", type = CardNetwork.VISA.typeId, cardHolderName = "Alice")
+            sut.send(CardEntryAction.InsertCard(tokenizedCard))
+            advanceUntilIdle()
+
+            val slots = mutableListOf<TokenizedCardEntity>()
+            coVerify { repository.insert(capture(slots)) }
+            assertThat(slots.first().cardholderName).isEqualTo("Alice")
         }
 
     @Test
@@ -307,7 +346,7 @@ internal class CardEntryViewModelTest {
     @Test
     fun `Given send is called with SubmitCardEntryForm action, then update judoPaymentResult model`() =
         runTest {
-            val results = collectFlow(sut.paymentResultEffect)
+            val results = collectFlow(sut.paymentResults)
 
             makeCardFormValid()
             sut.send(CardEntryAction.SubmitCardEntryForm)
@@ -508,9 +547,9 @@ internal class CardEntryViewModelTest {
         }
 
     @Test
-    fun `Given send is called with SubmitBillingDetailsForm, then paymentResultEffect is emitted`() =
+    fun `Given send is called with SubmitBillingDetailsForm, then paymentResults is emitted`() =
         runTest {
-            val results = collectFlow(sut.paymentResultEffect)
+            val results = collectFlow(sut.paymentResults)
 
             sut.send(CardEntryAction.SubmitBillingDetailsForm)
             advanceUntilIdle()
@@ -624,12 +663,12 @@ internal class CardEntryViewModelTest {
     }
 
     @Test
-    fun `Given payment returns an error, then paymentResultEffect emits the error result`() =
+    fun `Given payment returns an error, then paymentResults emits the error result`() =
         runTest {
             val error = JudoPaymentResult.Error(JudoError(message = "network error"))
             coEvery { cardTransactionRepository.payment(any(), any()) } returns error
 
-            val results = collectFlow(sut.paymentResultEffect)
+            val results = collectFlow(sut.paymentResults)
 
             makeCardFormValid()
             sut.send(CardEntryAction.SubmitCardEntryForm)
@@ -786,4 +825,161 @@ internal class CardEntryViewModelTest {
         .setReference(Reference(consumerReference = "ref", paymentReference = UUID.randomUUID().toString()))
         .setUiConfiguration(uiConfiguration)
         .build()
+
+    @Test
+    fun `Given a challenge was showing when the process died, then the restored screen shows loading`() {
+        sut = createViewModel(isTransactionInProgress = true)
+
+        assertThat(
+            sut.uiState.value
+                ?.formModel
+                ?.cardDetailsInputModel
+                ?.actionButtonState,
+        ).isEqualTo(ButtonState.Loading)
+    }
+
+    @Test
+    fun `Given a challenge was showing when the process died, then Initialize does not send the token payment again`() =
+        runTest {
+            sut = createViewModel(PaymentWidgetType.TOKEN_PAYMENT, isTransactionInProgress = true)
+
+            sut.send(CardEntryAction.Initialize)
+            advanceUntilIdle()
+
+            coVerify(exactly = 0) { cardTransactionRepository.paymentWithToken(any(), any()) }
+        }
+
+    @Test
+    fun `Given a challenge was showing when the process died, then its outcome completes the transaction without CV2`() =
+        runTest {
+            val completed = JudoPaymentResult.Success(JudoResult())
+            coEvery { cardTransactionRepository.complete3ds2("receipt-1", "2.2.0", null, "Cancelled") } returns completed
+            sut = createViewModel(isTransactionInProgress = true)
+            val results = collectFlow(sut.paymentResults)
+
+            sut.send(CardEntryAction.CompleteRestoredChallenge(PendingChallenge("receipt-1", "2.2.0"), "Cancelled"))
+            advanceUntilIdle()
+
+            assertThat(results).containsExactly(completed)
+            assertThat(
+                sut.uiState.value
+                    ?.formModel
+                    ?.cardDetailsInputModel
+                    ?.actionButtonState,
+            ).isNotEqualTo(ButtonState.Loading)
+        }
+
+    @Test
+    fun `Given a result is emitted while nothing collects, then paymentResults still delivers it later`() =
+        runTest {
+            makeCardFormValid()
+            sut.send(CardEntryAction.SubmitCardEntryForm)
+            advanceUntilIdle()
+
+            val results = collectFlow(sut.paymentResults)
+            advanceUntilIdle()
+
+            assertThat(results).hasSize(1)
+        }
+
+    private fun actionButtonState() =
+        sut.uiState.value
+            ?.formModel
+            ?.cardDetailsInputModel
+            ?.actionButtonState
+
+    @Test
+    fun `Given a transaction is in progress, when a card field changes, then the submit button stays Loading`() =
+        runTest {
+            val response = CompletableDeferred<JudoPaymentResult>()
+            coEvery { cardTransactionRepository.payment(any(), any()) } coAnswers { response.await() }
+            makeCardFormValid()
+            sut.send(CardEntryAction.SubmitCardEntryForm)
+            advanceUntilIdle()
+
+            // The form reports a focus change when the 3DS2 challenge covers it, and when it is back.
+            sut.send(CardEntryAction.CardFieldChanged(CardDetailsFieldType.SECURITY_NUMBER, "333", FormFieldEvent.FOCUS_CHANGED))
+
+            assertThat(actionButtonState()).isEqualTo(ButtonState.Loading)
+
+            response.complete(JudoPaymentResult.Success(JudoResult()))
+            advanceUntilIdle()
+            assertThat(actionButtonState()).isNotEqualTo(ButtonState.Loading)
+        }
+
+    @Test
+    fun `Given a transaction is in progress, when a billing field changes, then the billing submit button stays Loading`() =
+        runTest {
+            val response = CompletableDeferred<JudoPaymentResult>()
+            coEvery { cardTransactionRepository.payment(any(), any()) } coAnswers { response.await() }
+            sut.send(CardEntryAction.SubmitBillingDetailsForm)
+            advanceUntilIdle()
+
+            sut.send(CardEntryAction.BillingFieldChanged(BillingDetailsFieldType.CITY, "London", FormFieldEvent.FOCUS_CHANGED))
+
+            assertThat(
+                sut.uiState.value
+                    ?.formModel
+                    ?.billingDetailsInputModel
+                    ?.submitButtonState,
+            ).isEqualTo(ButtonState.Loading)
+            response.complete(JudoPaymentResult.Success(JudoResult()))
+            advanceUntilIdle()
+        }
+
+    @Test
+    fun `Given the ViewModel is cleared while its transaction runs, then the recreated one shows loading and delivers its result`() =
+        runTest {
+            val response = CompletableDeferred<JudoPaymentResult>()
+            coEvery { cardTransactionRepository.payment(any(), any()) } coAnswers { response.await() }
+            makeCardFormValid()
+            sut.send(CardEntryAction.SubmitCardEntryForm)
+            advanceUntilIdle()
+
+            // Android destroyed the screen behind the 3DS2 challenge, clearing its ViewModel; the
+            // transaction keeps running, with the card details it started with.
+            sut = createViewModel(isTransactionInProgress = true)
+            val results = collectFlow(sut.paymentResults)
+            assertThat(actionButtonState()).isEqualTo(ButtonState.Loading)
+
+            val success = JudoPaymentResult.Success(JudoResult())
+            response.complete(success)
+            advanceUntilIdle()
+
+            assertThat(results).containsExactly(success)
+            assertThat(actionButtonState()).isNotEqualTo(ButtonState.Loading)
+            coVerify(exactly = 0) { cardTransactionRepository.complete3ds2(any(), any(), any(), any()) }
+        }
+
+    @Test
+    fun `Given a transaction is in progress, when the form is submitted again, then no second transaction starts`() =
+        runTest {
+            val response = CompletableDeferred<JudoPaymentResult>()
+            coEvery { cardTransactionRepository.payment(any(), any()) } coAnswers { response.await() }
+            makeCardFormValid()
+            sut.send(CardEntryAction.SubmitCardEntryForm)
+            advanceUntilIdle()
+
+            sut.send(CardEntryAction.SubmitCardEntryForm)
+            advanceUntilIdle()
+
+            coVerify(exactly = 1) { cardTransactionRepository.payment(any(), any()) }
+            response.complete(JudoPaymentResult.Success(JudoResult()))
+            advanceUntilIdle()
+        }
+
+    @Test
+    fun `Given a token payment finished before the screen was recreated, then Initialize does not send it again`() =
+        runTest {
+            sut = createViewModel(PaymentWidgetType.TOKEN_PAYMENT)
+            val results = collectFlow(sut.paymentResults)
+
+            // The result, held while no screen existed, reaches the recreated screen before it initializes.
+            sut.send(CardEntryAction.TransactionFinished(JudoPaymentResult.Success(JudoResult())))
+            sut.send(CardEntryAction.Initialize)
+            advanceUntilIdle()
+
+            assertThat(results).hasSize(1)
+            coVerify(exactly = 0) { cardTransactionRepository.paymentWithToken(any(), any()) }
+        }
 }

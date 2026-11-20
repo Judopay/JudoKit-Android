@@ -392,6 +392,18 @@ internal class JudoSharedViewModelTest {
             assertEquals(expected, results[0])
         }
 
+    @DisplayName("Given postPaymentResult is called while nothing collects, then paymentResults delivers it once collected")
+    @Test
+    fun postPaymentResultIsBufferedUntilCollected() =
+        runTest(testScheduler) {
+            val expected = JudoPaymentResult.UserCancelled()
+            sut.postPaymentResult(expected)
+
+            val results = collectFlow(sut.paymentResults)
+
+            assertEquals(listOf(expected), results)
+        }
+
     @DisplayName("Given postCardEntryToPaymentMethodResult is called, then cardEntryToPaymentMethodResultEffect emits the builder")
     @Test
     fun postCardEntryToPaymentMethodResultEmitsToCardEntryToPaymentMethodResultEffect() =

@@ -29,13 +29,16 @@ internal class TransactionTypeTest {
     }
 
     @Test
-    @DisplayName("ChallengeData stores transaction and challengeParameters")
+    @DisplayName("ChallengeData stores its fields")
     fun challengeDataStoresFields() {
         val transaction = mockk<Transaction>()
         val params = mockk<ChallengeParameters>()
-        val data = ChallengeData(transaction, params)
+        val data = ChallengeData(transaction, params, "ds-1", "receipt-1", "2.2.0")
         assertEquals(transaction, data.transaction)
         assertEquals(params, data.challengeParameters)
+        assertEquals("ds-1", data.directoryServerId)
+        assertEquals("receipt-1", data.receiptId)
+        assertEquals("2.2.0", data.messageVersion)
     }
 
     @Test
@@ -43,8 +46,8 @@ internal class TransactionTypeTest {
     fun challengeDataEqualsAndHashCode() {
         val transaction = mockk<Transaction>()
         val params = mockk<ChallengeParameters>()
-        val data1 = ChallengeData(transaction, params)
-        val data2 = ChallengeData(transaction, params)
+        val data1 = ChallengeData(transaction, params, "ds-1", "receipt-1", "2.2.0")
+        val data2 = ChallengeData(transaction, params, "ds-1", "receipt-1", "2.2.0")
         assertEquals(data1, data2)
         assertEquals(data1.hashCode(), data2.hashCode())
     }
@@ -54,7 +57,7 @@ internal class TransactionTypeTest {
     fun challengeDataToStringContainsClassName() {
         val transaction = mockk<Transaction>()
         val params = mockk<ChallengeParameters>()
-        val data = ChallengeData(transaction, params)
+        val data = ChallengeData(transaction, params, "ds-1", "receipt-1", "2.2.0")
         assertTrue(data.toString().contains("ChallengeData"))
     }
 }

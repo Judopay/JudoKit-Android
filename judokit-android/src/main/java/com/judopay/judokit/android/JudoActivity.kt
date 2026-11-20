@@ -82,7 +82,7 @@ class JudoActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.paymentResultEffect.collect { dispatchPaymentResult(it) }
+                viewModel.paymentResults.collect { dispatchPaymentResult(it) }
             }
         }
 

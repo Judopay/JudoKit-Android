@@ -1,19 +1,16 @@
 package com.judokit.android.examples.feature.noui
 
-import android.content.Context
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.judopay.judokit.android.Judo
-import com.judopay.judokit.android.JudoCardTransactionClient
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.TransactionDetails
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 
 sealed class ActivityState {
     object Idle : ActivityState()
@@ -54,54 +51,68 @@ private fun buildTransactionDetails(
         .setSecurityNumber(cardInput.securityNumber)
         .build()
 
+/** A transaction the Activity should start on its [com.judopay.judokit.android.JudoCardTransactionClient]. */
+sealed class TransactionRequest {
+    abstract val details: TransactionDetails
+
+    data class Payment(
+        override val details: TransactionDetails,
+    ) : TransactionRequest()
+
+    data class PreAuth(
+        override val details: TransactionDetails,
+    ) : TransactionRequest()
+
+    data class Check(
+        override val details: TransactionDetails,
+    ) : TransactionRequest()
+}
+
+/**
+ * The [com.judopay.judokit.android.JudoCardTransactionClient] is bound to the Activity (it registers
+ * the 3DS2 challenge launcher), so the Activity owns it: this ViewModel only asks it to start a
+ * transaction via [transactionRequest] and receives the outcome via [onResult].
+ */
 class DemoNoUiPaymentViewModel(
-    private val client: JudoCardTransactionClient,
     private val judo: Judo,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<ActivityState>(ActivityState.Idle)
     val uiState: StateFlow<ActivityState> = _uiState.asStateFlow()
 
-    private val _paymentResult = MutableSharedFlow<JudoPaymentResult>(extraBufferCapacity = 1)
-    val paymentResult: SharedFlow<JudoPaymentResult> = _paymentResult.asSharedFlow()
+    private val _transactionRequest = Channel<TransactionRequest>(Channel.BUFFERED)
+    val transactionRequest: Flow<TransactionRequest> = _transactionRequest.receiveAsFlow()
+
+    // A Channel rather than a SharedFlow: after process death the result can arrive while the
+    // Activity is only CREATED and not yet collecting, and must not be dropped.
+    private val _paymentResult = Channel<JudoPaymentResult>(Channel.BUFFERED)
+    val paymentResult: Flow<JudoPaymentResult> = _paymentResult.receiveAsFlow()
 
     val initialCardInput = CardInputState()
 
-    fun payment(
-        activity: FragmentActivity,
-        cardInput: CardInputState,
-    ) {
+    fun payment(cardInput: CardInputState) {
         _uiState.value = ActivityState.PayWithCard
-        client.payment(activity, buildTransactionDetails(judo, cardInput)) { onResult(it) }
+        _transactionRequest.trySend(TransactionRequest.Payment(buildTransactionDetails(judo, cardInput)))
     }
 
-    fun preAuth(
-        activity: FragmentActivity,
-        cardInput: CardInputState,
-    ) {
+    fun preAuth(cardInput: CardInputState) {
         _uiState.value = ActivityState.PreAuthWithCard
-        client.preAuth(activity, buildTransactionDetails(judo, cardInput)) { onResult(it) }
+        _transactionRequest.trySend(TransactionRequest.PreAuth(buildTransactionDetails(judo, cardInput)))
     }
 
-    fun check(
-        activity: FragmentActivity,
-        cardInput: CardInputState,
-    ) {
+    fun check(cardInput: CardInputState) {
         _uiState.value = ActivityState.CheckCard
-        client.check(activity, buildTransactionDetails(judo, cardInput)) { onResult(it) }
+        _transactionRequest.trySend(TransactionRequest.Check(buildTransactionDetails(judo, cardInput)))
     }
 
-    private fun onResult(result: JudoPaymentResult) {
+    fun onResult(result: JudoPaymentResult) {
         _uiState.value = ActivityState.Idle
-        _paymentResult.tryEmit(result)
+        _paymentResult.trySend(result)
     }
 
     class Factory(
-        context: Context,
         private val judo: Judo,
     ) : ViewModelProvider.Factory {
-        private val client = JudoCardTransactionClient.create(context, judo)
-
         @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T = DemoNoUiPaymentViewModel(client, judo) as T
+        override fun <T : ViewModel> create(modelClass: Class<T>): T = DemoNoUiPaymentViewModel(judo) as T
     }
 }
