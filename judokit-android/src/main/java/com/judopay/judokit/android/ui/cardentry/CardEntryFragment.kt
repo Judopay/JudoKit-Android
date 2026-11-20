@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -57,9 +58,14 @@ private const val KEYBOARD_DISMISS_TIMEOUT = 500L
 @Suppress("DEPRECATION")
 class CardEntryFragment : BottomSheetDialogFragment() {
     // Created on every creation, so a Fragment recreated while the challenge screen is showing (even
-    // after process death) still receives its outcome. Results are delivered by the ViewModel.
+    // after process death) still receives its outcome. Transactions run outside the ViewModel (see
+    // ChallengeSessions.launchTransaction) and their results reach whichever instance of this
+    // Fragment, and its ViewModel, is current; the ViewModel then delivers them.
     private val challengeHost =
-        ChallengeHost.of(this, receiver = null) { _, pending, result ->
+        ChallengeHost.of(
+            this,
+            receiver = { result -> viewModel.send(CardEntryAction.TransactionFinished(result)) },
+        ) { _, pending, result ->
             viewModel.send(CardEntryAction.CompleteRestoredChallenge(pending, result.toFormattedEventString()))
         }
 
@@ -73,10 +79,16 @@ class CardEntryFragment : BottomSheetDialogFragment() {
                 cardEntryOptions,
                 requireActivity().application,
                 // Bound to the session, not to this Fragment instance, which the ViewModel outlives.
-                challengeRunner = ChallengeSessions.runner(challengeHost.resolveSessionId()),
-                // A ViewModel created while a transaction is in progress was recreated after the
-                // process died during its 3DS2 challenge.
-                isResumingChallenge = challengeHost.isTransactionInProgress(),
+                // The process-wide scope keeps a transaction running if Android destroys this screen
+                // while its 3DS2 challenge shows, which clears the ViewModel.
+                transactionLauncher =
+                    ChallengeSessions.transactionLauncher(
+                        challengeHost.resolveSessionId(),
+                        ProcessLifecycleOwner.get().lifecycleScope,
+                    ),
+                // A ViewModel created while a transaction is in progress belongs to a screen recreated
+                // during it: in the same process, or after the process died during its 3DS2 challenge.
+                isTransactionInProgress = challengeHost.isTransactionInProgress(),
             )
         }
     }

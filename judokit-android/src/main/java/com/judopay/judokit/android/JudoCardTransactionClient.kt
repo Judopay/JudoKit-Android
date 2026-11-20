@@ -24,7 +24,6 @@ import com.judopay.judokit.android.service.ChallengeRunner
 import com.judopay.judokit.android.service.THREE_DS_TWO_MIN_TIMEOUT
 import com.judopay.judokit.android.service.ThreeDSSDKChallengeStatus
 import com.judopay.judokit.android.service.toFormattedEventString
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -336,8 +335,7 @@ class JudoCardTransactionClient internal constructor(
             else -> {
                 // The runner is bound to the session, not to this host instance: if the Activity/Fragment is
                 // recreated before the API responds, the challenge is launched through the recreated one.
-                val runChallenge = ChallengeSessions.runner(sessionId, callbackDispatcher)
-                launchTransaction(sessionId) { block(runChallenge) }
+                launchTransaction(sessionId, block)
             }
         }
     }
@@ -372,8 +370,7 @@ class JudoCardTransactionClient internal constructor(
 
     /**
      * Runs a transaction of [sessionId] in the process-wide [coroutineScope] and delivers its result
-     * through the session. A failure is delivered as an error result, so the transaction never stays
-     * in progress.
+     * through the session (see [ChallengeSessions.launchTransaction]).
      *
      * The repository is resolved here and only it is handed to the coroutine: the coroutine can
      * outlive the host Activity/Fragment, so it must not capture this client, which references it.
@@ -381,7 +378,7 @@ class JudoCardTransactionClient internal constructor(
     @Suppress("TooGenericExceptionCaught")
     private fun launchTransaction(
         sessionId: String,
-        block: suspend CardTransactionRepository.() -> JudoPaymentResult,
+        block: suspend CardTransactionRepository.(ChallengeRunner) -> JudoPaymentResult,
     ) {
         val repository =
             try {
@@ -391,18 +388,8 @@ class JudoCardTransactionClient internal constructor(
                 ChallengeSessions.deliver(sessionId, transactionFailed(e))
                 return
             }
-        coroutineScope.launch(callbackDispatcher) {
-            val result =
-                try {
-                    repository.block()
-                } catch (e: CancellationException) {
-                    ChallengeSessions.abandon(sessionId)
-                    throw e
-                } catch (e: Exception) {
-                    Log.e(TAG, "The card transaction failed.", e)
-                    transactionFailed(e)
-                }
-            ChallengeSessions.deliver(sessionId, result)
+        ChallengeSessions.launchTransaction(sessionId, coroutineScope, callbackDispatcher) { runChallenge ->
+            repository.block(runChallenge)
         }
     }
 

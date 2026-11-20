@@ -22,6 +22,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -484,4 +486,62 @@ internal class ChallengeHostTest {
 
         assertTrue(fake.host.isTransactionInProgress())
     }
+
+    private fun FakeHost.transactionLauncher() = ChallengeSessions.transactionLauncher(sessionId, CoroutineScope(dispatcher), dispatcher)
+
+    @Test
+    @DisplayName("A transaction keeps running while its host is destroyed and recreated, and its result reaches the recreated host")
+    fun transactionSurvivesHostRecreation() =
+        runTest(dispatcher) {
+            val original = startedHost()
+            val success = JudoPaymentResult.Success(JudoResult())
+            var status: String? = null
+
+            assertTrue(
+                original.transactionLauncher().launch { runChallenge ->
+                    status = runChallenge(data)
+                    success
+                },
+            )
+            verify { original.launcher.launch(extra) }
+
+            // Android destroys the screen behind the challenge (e.g. "Don't keep activities") and
+            // recreates it when the challenge ends; the process stays alive.
+            val recreated = original.recreate()
+            recreated.challengeEnds(ChallengeActivityResult.Cancelled)
+
+            assertEquals(ThreeDSSDKChallengeStatus.CANCELLED, status)
+            assertEquals(listOf<JudoPaymentResult>(success), recreated.results)
+            assertTrue(original.results.isEmpty())
+            assertFalse(recreated.host.isTransactionInProgress())
+        }
+
+    @Test
+    @DisplayName("The transaction launcher starts nothing while a transaction of the session is in progress")
+    fun transactionLauncherRunsOneAtATime() =
+        runTest(dispatcher) {
+            val fake = startedHost()
+            val launcher = fake.transactionLauncher()
+            val response = CompletableDeferred<JudoPaymentResult>()
+
+            assertTrue(launcher.launch { response.await() })
+            assertTrue(fake.host.isTransactionInProgress())
+            assertFalse(launcher.launch { JudoPaymentResult.Success(JudoResult()) })
+
+            response.complete(JudoPaymentResult.Success(JudoResult()))
+            assertEquals(1, fake.results.size)
+            assertFalse(fake.host.isTransactionInProgress())
+        }
+
+    @Test
+    @DisplayName("A failing transaction delivers an error result and is no longer in progress")
+    fun failingTransactionDeliversError() =
+        runTest(dispatcher) {
+            val fake = startedHost()
+
+            fake.transactionLauncher().launch { error("The API call failed.") }
+
+            assertTrue(fake.results.single() is JudoPaymentResult.Error)
+            assertFalse(fake.host.isTransactionInProgress())
+        }
 }

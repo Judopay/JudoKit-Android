@@ -20,9 +20,12 @@ import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.service.ChallengeData
 import com.judopay.judokit.android.service.ChallengeRunner
 import com.judopay.judokit.android.service.toFormattedEventString
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -32,6 +35,20 @@ private const val KEY_SESSION_ID = "sessionId"
 private const val KEY_RECEIPT_ID = "receiptId"
 private const val KEY_MESSAGE_VERSION = "messageVersion"
 private val TAG = ChallengeHost::class.java.name
+
+/**
+ * Starts a transaction of one [ChallengeHost] session in a scope that outlives the host and its
+ * ViewModels; its result is delivered to the session's current receiver (see
+ * [ChallengeSessions.launchTransaction]). Lets a ViewModel start a transaction without owning it.
+ */
+internal fun interface SessionTransactionLauncher {
+    /**
+     * Starts [block] with the session's [ChallengeRunner]. Returns `false`, starting nothing, if a
+     * transaction of the session is already in progress.
+     */
+    @MainThread
+    fun launch(block: suspend (ChallengeRunner) -> JudoPaymentResult): Boolean
+}
 
 /** What `complete3ds2` needs to finish a transaction whose challenge is showing. Holds no card data. */
 internal data class PendingChallenge(
@@ -282,6 +299,51 @@ internal object ChallengeSessions {
             else -> session.undelivered = result
         }
         pruneIfDone(sessionId, session)
+    }
+
+    /**
+     * Runs [block], a transaction of [sessionId] that has already begun (see [tryBegin]), in
+     * [scope] and delivers its result through the session. [scope] must outlive the host and
+     * anything bound to it, such as a ViewModel: Android can destroy a host's screen while its
+     * challenge shows and recreate it later in the same process, and the transaction must keep
+     * running meanwhile. A failure is delivered as an error result, so the transaction never stays
+     * in progress.
+     *
+     * [block] runs after this returns, so it must not capture the host or anything referencing it.
+     */
+    @MainThread
+    fun launchTransaction(
+        sessionId: String,
+        scope: CoroutineScope,
+        dispatcher: CoroutineDispatcher,
+        block: suspend (ChallengeRunner) -> JudoPaymentResult,
+    ) {
+        val runChallenge = runner(sessionId, dispatcher)
+        scope.launch(dispatcher) {
+            val result =
+                try {
+                    block(runChallenge)
+                } catch (e: CancellationException) {
+                    abandon(sessionId)
+                    throw e
+                } catch (
+                    @Suppress("TooGenericExceptionCaught") e: Exception,
+                ) {
+                    Log.e(TAG, "The card transaction failed.", e)
+                    JudoPaymentResult.Error(JudoError.judoInternalError(e.message ?: "The card transaction failed."))
+                }
+            deliver(sessionId, result)
+        }
+    }
+
+    /** A [SessionTransactionLauncher] that runs the transactions of [sessionId] in [scope]; see [launchTransaction]. */
+    @MainThread
+    fun transactionLauncher(
+        sessionId: String,
+        scope: CoroutineScope,
+        dispatcher: CoroutineDispatcher = Dispatchers.Main.immediate,
+    ) = SessionTransactionLauncher { block ->
+        tryBegin(sessionId).also { begun -> if (begun) launchTransaction(sessionId, scope, dispatcher, block) }
     }
 
     /** Ends a client transaction that was cancelled, so it no longer counts as in progress. */
