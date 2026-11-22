@@ -19,7 +19,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.judopay.judokit.android.JudoCardTransactionCallback
 import com.judopay.judokit.android.JudoCardTransactionClient
 import com.judopay.judokit.android.JudoSharedAction
 import com.judopay.judokit.android.JudoSharedViewModel
@@ -70,9 +69,19 @@ class PaymentMethodsFragment : Fragment() {
         }
     }
     private val sharedViewModel: JudoSharedViewModel by activityViewModels()
-    private val transactionClient by lazy { JudoCardTransactionClient.create(requireContext(), judo) }
+    private lateinit var transactionClient: JudoCardTransactionClient
     private var viewBinding: PaymentMethodsFragmentBinding? = null
     private val binding get() = viewBinding!!
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Created on every creation (judo needs the Activity, so not as a field), so a Fragment
+        // recreated during a 3DS2 challenge, even after process death, still receives the result.
+        transactionClient =
+            JudoCardTransactionClient.create(this, judo) { result ->
+                viewModel.send(PaymentMethodsAction.TransactionResult(result))
+            }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,6 +102,7 @@ class PaymentMethodsFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.send(PaymentMethodsAction.ViewCreated(transactionClient.isTransactionInProgress))
         binding.headerView.fromEditMode = true
         setupWindowInsetsListeners()
         setupRecyclerView()
@@ -105,7 +115,7 @@ class PaymentMethodsFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.uiState.filterNotNull().collect { updateWithModel(it) } }
-                launch { viewModel.paymentResultEffect.collect { sharedViewModel.postPaymentResult(it) } }
+                launch { viewModel.paymentResults.collect { sharedViewModel.postPaymentResult(it) } }
                 launch {
                     viewModel.cardEntryEffect.collect { cardEntryOptions ->
                         findNavController().navigate(
@@ -143,15 +153,9 @@ class PaymentMethodsFragment : Fragment() {
                 }
                 launch {
                     viewModel.startTransactionEffect.collect { effect ->
-                        val callback =
-                            JudoCardTransactionCallback { result ->
-                                viewModel.send(PaymentMethodsAction.TransactionResult(result))
-                            }
                         when (effect) {
-                            is StartTransactionEffect.PayWithToken ->
-                                transactionClient.paymentWithToken(requireActivity(), effect.details, callback)
-                            is StartTransactionEffect.PreAuthWithToken ->
-                                transactionClient.preAuthWithToken(requireActivity(), effect.details, callback)
+                            is StartTransactionEffect.PayWithToken -> transactionClient.paymentWithToken(effect.details)
+                            is StartTransactionEffect.PreAuthWithToken -> transactionClient.preAuthWithToken(effect.details)
                         }
                     }
                 }

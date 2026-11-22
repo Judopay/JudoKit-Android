@@ -147,6 +147,34 @@ internal class PaymentMethodsViewModelTest {
     }
 
     @Test
+    @DisplayName("Given ViewCreated with a transaction in progress, then payment button state is Loading")
+    fun loadingWhenViewCreatedDuringTransaction() {
+        sut.send(PaymentMethodsAction.ViewCreated(isTransactionInProgress = true))
+
+        val buttonState =
+            sut.uiState.value
+                ?.headerModel
+                ?.callToActionModel
+                ?.paymentButtonState
+        assertEquals(ButtonState.Loading, buttonState)
+    }
+
+    @Test
+    @DisplayName("Given ViewCreated with no transaction in progress, then a Loading payment button stays Loading")
+    fun viewCreatedWithoutTransactionKeepsState() {
+        sut.send(PaymentMethodsAction.UpdateButtonState(false))
+
+        sut.send(PaymentMethodsAction.ViewCreated(isTransactionInProgress = false))
+
+        val buttonState =
+            sut.uiState.value
+                ?.headerModel
+                ?.callToActionModel
+                ?.paymentButtonState
+        assertEquals(ButtonState.Loading, buttonState)
+    }
+
+    @Test
     @DisplayName("Given Update is sent, then payment button state is Disabled")
     fun updateUiStateOnUpdateAction() {
         sut.send(PaymentMethodsAction.Update)
@@ -262,11 +290,11 @@ internal class PaymentMethodsViewModelTest {
         }
 
     @Test
-    @DisplayName("Given TransactionResult is sent, then paymentResultEffect is emitted")
+    @DisplayName("Given TransactionResult is sent, then paymentResults is emitted")
     fun emitPaymentResultEffectOnTransactionResult() =
         runTest(testScheduler) {
             val expectedResult = JudoPaymentResult.Success(mockk(relaxed = true))
-            val results = collectFlow(sut.paymentResultEffect)
+            val results = collectFlow(sut.paymentResults)
 
             sut.send(PaymentMethodsAction.TransactionResult(expectedResult))
 
@@ -274,7 +302,19 @@ internal class PaymentMethodsViewModelTest {
         }
 
     @Test
-    @DisplayName("Given TransactionResult is sent after payment, then paymentResultEffect emits correct result")
+    @DisplayName("Given TransactionResult is sent while nothing collects, then paymentResults delivers it once collected")
+    fun bufferTransactionResultUntilCollected() =
+        runTest(testScheduler) {
+            val expectedResult = JudoPaymentResult.Success(mockk(relaxed = true))
+            sut.send(PaymentMethodsAction.TransactionResult(expectedResult))
+
+            val results = collectFlow(sut.paymentResults)
+
+            assertEquals(listOf(expectedResult), results)
+        }
+
+    @Test
+    @DisplayName("Given TransactionResult is sent after payment, then paymentResults emits correct result")
     fun emitPaymentResultEffectAfterStartTransactionEffect() =
         runTest(testScheduler) {
             every { judo.uiConfiguration.shouldAskForBillingInformation } returns false
@@ -285,7 +325,7 @@ internal class PaymentMethodsViewModelTest {
 
             val expectedResult: JudoPaymentResult = mockk(relaxed = true)
 
-            val results = collectFlow(sut.paymentResultEffect)
+            val results = collectFlow(sut.paymentResults)
 
             val card = buildMockedCard()
             coEvery { cardRepository.findWithId(CARD_ID) } returns card
@@ -542,14 +582,14 @@ internal class PaymentMethodsViewModelTest {
         }
 
     @Test
-    @DisplayName("Given PRE_AUTH_PAYMENT_METHODS and TransactionResult, then paymentResultEffect emits preAuthWithToken result")
+    @DisplayName("Given PRE_AUTH_PAYMENT_METHODS and TransactionResult, then paymentResults emits preAuthWithToken result")
     fun preAuthResultEmittedInPaymentResultEffect() =
         runTest(testScheduler) {
             every { judo.paymentWidgetType } returns PaymentWidgetType.PRE_AUTH_PAYMENT_METHODS
 
             val expectedResult = JudoPaymentResult.Success(mockk(relaxed = true))
 
-            val results = collectFlow(sut.paymentResultEffect)
+            val results = collectFlow(sut.paymentResults)
 
             val card = buildMockedCard()
             coEvery { cardRepository.findWithId(CARD_ID) } returns card

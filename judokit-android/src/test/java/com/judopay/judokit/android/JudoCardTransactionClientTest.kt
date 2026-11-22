@@ -1,22 +1,34 @@
+// Also covers the deprecated Context-based API.
+@file:Suppress("DEPRECATION")
+
 package com.judopay.judokit.android
 
 import androidx.fragment.app.FragmentActivity
+import com.judopay.judo3ds2.ui.challenge.ChallengeActivityResult
 import com.judopay.judokit.android.model.JudoPaymentResult
 import com.judopay.judokit.android.model.JudoResult
 import com.judopay.judokit.android.model.TransactionDetails
 import com.judopay.judokit.android.service.CardTransactionRepository
+import com.judopay.judokit.android.service.ThreeDSSDKChallengeStatus
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 @ExperimentalCoroutinesApi
 @DisplayName("Testing JudoCardTransactionClient")
@@ -176,6 +188,132 @@ internal class JudoCardTransactionClientTest {
                 sut.check(activity, details) { callbackResult = it }
 
                 assertEquals(successResult, callbackResult)
+            }
+    }
+
+    @Nested
+    @DisplayName("Activity/Fragment-bound client")
+    inner class HostedTests {
+        private val host: ChallengeHost = mockk(relaxed = true) { every { resolveSessionId() } returns "session-1" }
+        private val delivered = mutableListOf<JudoPaymentResult>()
+        private lateinit var hosted: JudoCardTransactionClient
+
+        @BeforeEach
+        fun setUpHosted() {
+            hosted = JudoCardTransactionClient({ repository }, testScope, UnconfinedTestDispatcher()) { host }
+            ChallengeSessions.attach("session-1", mockk(relaxed = true)) { delivered += it }
+        }
+
+        @AfterEach
+        fun tearDownHosted() = ChallengeSessions.reset()
+
+        @DisplayName("When payment is called, then the result is delivered to the session's receiver")
+        @Test
+        fun paymentDeliversToReceiver() =
+            runTest {
+                hosted.payment(details)
+
+                coVerify { repository.payment(details, any()) }
+                assertEquals(listOf<JudoPaymentResult>(successResult), delivered)
+            }
+
+        @DisplayName("Every transaction type delivers to the session's receiver")
+        @Test
+        fun allTransactionTypesDeliverToReceiver() =
+            runTest {
+                hosted.preAuth(details)
+                hosted.paymentWithToken(details)
+                hosted.preAuthWithToken(details)
+                hosted.save(details)
+                hosted.check(details)
+
+                assertEquals(5, delivered.size)
+            }
+
+        @DisplayName("When a transaction is in progress, then another one is ignored")
+        @Test
+        fun secondTransactionIsIgnored() =
+            runTest {
+                val pending = CompletableDeferred<JudoPaymentResult>()
+                coEvery { repository.payment(any(), any()) } coAnswers { pending.await() }
+
+                hosted.payment(details)
+                assertTrue(ChallengeSessions.isTransactionInProgress("session-1"))
+                hosted.payment(details)
+
+                coVerify(exactly = 1) { repository.payment(any(), any()) }
+                pending.complete(successResult)
+                assertFalse(ChallengeSessions.isTransactionInProgress("session-1"))
+                assertEquals(listOf<JudoPaymentResult>(successResult), delivered)
+            }
+
+        @DisplayName("When the host was destroyed for good, then a transaction is rejected with an error")
+        @Test
+        fun retiredHostRejectsTransaction() =
+            runTest {
+                val rejected = mutableListOf<JudoPaymentResult>()
+                every { host.isRetired } returns true
+                every { host.receiver } returns JudoCardTransactionCallback { rejected += it }
+
+                hosted.payment(details)
+
+                coVerify(exactly = 0) { repository.payment(any(), any()) }
+                assertTrue(rejected.single() is JudoPaymentResult.Error)
+                assertFalse(ChallengeSessions.isTransactionInProgress("session-1"))
+            }
+
+        @DisplayName("When the transaction throws, then an error is delivered and the client is free again")
+        @Test
+        fun transactionFailureDeliversError() =
+            runTest {
+                coEvery { repository.payment(any(), any()) } throws IllegalStateException("boom")
+
+                hosted.payment(details)
+
+                assertTrue(delivered.single() is JudoPaymentResult.Error)
+                assertFalse(ChallengeSessions.isTransactionInProgress("session-1"))
+            }
+
+        @DisplayName("When the repository cannot be created, then an error is delivered and the client is free again")
+        @Test
+        fun repositoryFailureDeliversError() =
+            runTest {
+                val failing = JudoCardTransactionClient({ error("no context") }, testScope, UnconfinedTestDispatcher()) { host }
+
+                failing.payment(details)
+
+                assertTrue(delivered.single() is JudoPaymentResult.Error)
+                assertFalse(ChallengeSessions.isTransactionInProgress("session-1"))
+            }
+
+        @DisplayName("When the transaction is cancelled, then it is no longer in progress")
+        @Test
+        fun cancelledTransactionIsNotInProgress() =
+            runTest {
+                coEvery { repository.payment(any(), any()) } throws CancellationException("cancelled")
+
+                hosted.payment(details)
+
+                assertTrue(delivered.isEmpty())
+                assertFalse(ChallengeSessions.isTransactionInProgress("session-1"))
+            }
+
+        @DisplayName("When a client created from a Context calls a hosted method, then it throws")
+        @Test
+        fun legacyClientRejectsHostedMethods() {
+            assertThrows<IllegalStateException> { sut.payment(details) }
+        }
+
+        @DisplayName("An orphaned challenge outcome is completed via complete3ds2 without CV2")
+        @Test
+        fun orphanedChallengeIsCompleted() =
+            runTest {
+                coEvery { repository.complete3ds2("receipt-1", "2.2.0", null, ThreeDSSDKChallengeStatus.CANCELLED) } returns successResult
+
+                hosted.completeOrphanedChallenge("session-1", PendingChallenge("receipt-1", "2.2.0"), ChallengeActivityResult.Cancelled)
+
+                assertEquals(listOf<JudoPaymentResult>(successResult), delivered)
+                assertFalse(ChallengeSessions.isTransactionInProgress("session-1"))
             }
     }
 }
