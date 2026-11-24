@@ -12,3 +12,4 @@ jobs:
     with:
       include_tags: default
       exclude_tags: ios_only,objc_only
+      tests_ref: chore/DO-3542/test-typo-fix
